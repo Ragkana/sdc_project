@@ -1,0 +1,58 @@
+{% load static %}
+{% include "structure/header_n_footer.html" %}
+{% include "structure/sidebar.html" %}
+{% include "structure/topnavbar.html" %}
+{% block content %}
+
+<div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
+    <!-- Page Header -->
+    <div class="page-header row no-gutters py-4">
+        <div class="col-12 text-center text-sm-left">
+            <h3 class="page-title">Disaster Analytics</h3>
+        </div>
+        <!-- Country Tab -->
+        <div class="col-12 d-flex align-items-center py-3">
+            <div class="btn-group btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto" role="group"
+                aria-label="Page actions">
+                <a href="#" class="btn btn-white active"> Laos </a>
+                <a href="#" class="btn btn-white"> Myanmar </a>
+                <a href="#" class="btn btn-white"> Cambodia </a>
+            </div>
+        </div>
+    </div>
+    <!-- End Page Header -->
+
+    <!-- Map Box-->
+    <div class="card">
+        <div class="card-body py-4">
+            <div id="map"></div>
+
+        </div>
+    </div>
+
+    <!-- End Map Box-->
+</div>
+
+
+<!-- Leaflet JS -->
+<script src="{% static 'scripts/leaflet.js' %}"></script>
+
+<script type="text/javascript">
+
+    // Base map 
+    //const base_map = L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g');
+    const base_map = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }
+    );
+    // Initialize the map
+    const map = L.map('map', {
+        layers: [base_map],  // Call Map function
+        zoomControl: false,
+        renderer: L.canvas(),
+        minZoom: 6,     // Max Zoom out
+        maxZoom: 12,    // Max Zoom in
+    }).setView([12.5657, 104.9910], 3) //[Latitude, Longtitude], level
+</script>
+
+{% endblock content %}

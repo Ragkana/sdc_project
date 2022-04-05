@@ -1,0 +1,35 @@
+{% load static %}
+{% include "structure/header_n_footer.html" %}
+{% include "structure/sidebar.html" %}
+{% include "structure/topnavbar.html" %}
+{% block content %}
+
+<div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
+<!-- Page Header -->
+<div class="page-header row no-gutters py-4">
+    <div class="col-12 col-sm-4 text-center text-sm-left mb-4 mb-sm-0">
+        <span class="text-uppercase page-subtitle">Overview</span>
+        <h3 class="page-title">Dashboard</h3>
+    </div>
+    <div class="col-12 col-sm-4 d-flex align-items-center">
+        <div class="btn-group btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto" role="group"
+            aria-label="Page actions">
+            <a href="#" class="btn btn-white active"> Laos </a>
+            <a href="#" class="btn btn-white"> Myanmar </a>
+            <a href="#" class="btn btn-white"> Cambodia </a>
+        </div>
+    </div>
+
+</div>
+<!-- End Page Header -->
+
+ <!-- Calendar -->
+ <div class="card">
+    <div class="card-body py-4">
+      <div id="calendar"></div>
+    </div>
+  </div>
+  <!-- End Calendar -->
+
+  </div>
+{% endblock content %}

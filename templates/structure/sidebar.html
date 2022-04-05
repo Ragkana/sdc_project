@@ -1,0 +1,111 @@
+{% extends "structure/header_n_footer.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Main Sidebar -->
+        <aside class="main-sidebar col-12 col-md-3 col-lg-2 px-0">
+            <div class="main-navbar">
+                <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
+                    <!--<a class="navbar-brand w-100 mr-0" href="#" style="line-height: 25px;">-->
+                    <a class="navbar-brand w-100 mr-0" href="{% url 'weather_forecast' %}" style="line-height: 25px;background: #0b2d5a;">
+                        <div class="d-table m-auto">
+                            <img id="main-logo" class="d-inline-block align-top mr-1" style="max-width: 25px;"
+                                src="{% static 'images/shards-dashboards-logo.svg' %}" alt="Shards Dashboard">
+                            <span class="d-none d-md-inline ml-1">SDC Project</span>
+                        </div>
+                    </a>
+                    <a class="toggle-sidebar d-sm-inline d-md-none d-lg-none">
+                        <i class="material-icons">&#xE5C4;</i>
+                    </a>
+                </nav>
+            </div>
+            <!-- For Phone viewer -->
+           <form action="#" class="main-sidebar__search w-100 border-right d-sm-flex d-md-none d-lg-none">
+                <div class="input-group input-group-seamless ml-3">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                    <input class="navbar-search form-control" type="text" placeholder="Search for something..."
+                        aria-label="Search">
+                </div>
+            </form>
+
+<!--Main  Side bar menu -->
+    <div class="nav-wrapper">
+      <h6 class="main-sidebar__nav-title border-top">Disaster Analytics</h6>
+      <ul class="nav nav--no-borders flex-column">
+        <li class="nav-item">
+            <a class="nav-link {% if url_name == 'hazard_ana' %}active{% endif %}" href="{% url 'hazard_ana' %}">
+                <i class="fa-solid fa-circle-exclamation" style="font-size: 1.25rem;"></i>
+                <span>Hazard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if url_name == 'disaster_ana' %}active{% endif %}" href="{% url 'disaster_ana' %}">
+                <i class="fa-solid fa-circle-exclamation" style="font-size: 1.25rem;"></i>
+                <span>Disaster</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-circle-exclamation" style="font-size: 1.25rem;"></i>
+                <span>Vulnerability</span>
+            </a>
+        </li>
+      </ul>
+      <h6 class="main-sidebar__nav-title">Climate Analytics</h6>
+      <ul class="nav nav--no-borders flex-column">
+
+        <li class="nav-item">
+            <a class="nav-link {% if url_name == 'weather_forecast' %}active{% endif %}" href="{% url 'weather_forecast' %}">
+                <i class="fa-solid fa-cloud-sun" style="font-size: 1.25rem;"></i>
+                <span>Weather Forecast</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if url_name == 'observation' %}active{% endif %}" href="{% url 'observation' %}">
+                <i class="fa-solid fa-layer-group" style="font-size: 1.25rem;"></i>
+                <span>Observation</span>
+            </a>
+        </li>
+</ul>
+      <h6 class="main-sidebar__nav-title">Earthquake Analytics</h6>
+      <ul class="nav nav--no-borders flex-column">
+        <li class="nav-item">
+            <a class="nav-link {% if url_name == 'earthquake' %}active{% endif %}" href="{% url 'earthquake' %}">
+                <i class="fa-solid fa-house-crack" style="font-size: 1.25rem;"></i>
+                <span>Earthquake Threats</span>
+            </a>
+        </li>
+
+      </ul>
+      <h6 class="main-sidebar__nav-title">Reports & Project</h6>
+      <ul class="nav nav--no-borders flex-column">
+        <li class="nav-item">
+            <a class="nav-link {% if url_name == 'sdc_project' %}active{% endif %}" href="{% url 'sdc_project' %}">
+                <i class="fa-solid fa-book" style="font-size: 1.25rem;"></i>
+                <span>SDC Projects</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if url_name == 'share_data' %}active{% endif %}" href="{% url 'share_data' %}">
+                <i class="fa-solid fa-arrow-up-from-bracket" style="font-size: 1.25rem;"></i>
+                <span>Share Data</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if url_name == 'reports' %}active{% endif %}" href="{% url 'reports' %}">
+                <i class="fa-solid fa-square-poll-vertical" style="font-size: 1.25rem;"></i>
+                <span>Reports</span>
+            </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+<!-- End of Main Side bar Menu -->
+
+        {% endblock content %}

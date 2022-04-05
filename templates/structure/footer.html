@@ -1,0 +1,44 @@
+{% extends "structure/header_n_footer.html" %}
+{% load static %}
+{% block content %}
+  
+<!--<footer class="main-footer d-flex p-2 px-3 bg_color_main border-top">-->
+  <footer class="main-footer d-flex p-2 px-3 bg_color_main">
+    <span class="copyright ml-auto my-auto mr-2">Powered by <a href="https://www.rimes.int/" target="_blank" style="color: #2f96b2;">Regional Integrated Multi-Hazard Early Warning System</a></span>
+  </footer>
+
+      <!-- End for topbar and sidebar-->
+    </main>
+  </div>
+  </div>
+  
+  <script type="text/javascript">
+    /* Mobile toggle sidebar menu */
+     $(document).ready(function () {
+  /**
+   * Dropdown adjustments
+   */
+  $('.toggle-sidebar').click(function (e) {
+    $('.main-sidebar').toggleClass('open');
+  }); // Apply dynamic scroll to sidebar nav wrapper
+
+  $(window).resize(handleSidebarHeightCheck);
+
+  function handleSidebarHeightCheck() {
+    var $navWrapper = $('.nav-wrapper');
+    var height = $navWrapper.height();
+    var scrollHeight = $navWrapper[0].scrollHeight;
+
+    if (scrollHeight > height) {
+      $navWrapper.css('overflowY', 'auto');
+      return;
+    }
+
+    $navWrapper.css('overflowY', 'none');
+  }
+
+  handleSidebarHeightCheck();
+});
+
+</script>
+  {% endblock content %}

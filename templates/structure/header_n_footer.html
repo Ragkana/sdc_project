@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="no-js h-100" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDC Test Project</title>
+    <meta name="description"
+        content="A premium collection of beautiful hand-crafted Bootstrap 4 admin dashboard templates and dozens of custom components built for data-driven applications.">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" id="main-stylesheet" data-version="1.3.1"
+        href="{% static 'styles/shards-dashboards.1.3.1.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/extras.1.3.1.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/my-addition.css' %}">
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--Leaflet map-->
+    <link rel="stylesheet" href="{% static 'styles/leaflet.css' %}">
+</head>
+
+<body class="h-100">
+
+    {% block content %} {% endblock content %}
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>-->
+    <script src="{% static 'scripts/jquery-3.6.0.min.js' %}"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'scripts/chart.3.7.1.min.js' %}"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script> -->
+    <script src="https://unpkg.com/shards-ui@latest/dist/js/shards.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sharrre/2.0.1/jquery.sharrre.min.js"></script>
+    <script src="{% static 'scripts/extras.1.3.1.min.js' %}"></script>
+    <script src="{% static 'scripts/shards-dashboards.1.3.1.min.js' %}"></script>
+    <script src="{% static 'scripts/app/app-analytics-overview.1.3.1.js' %}"></script>
+    <!-- Import Font awesome Icon V.6 (Free use) -->
+    <script src="https://kit.fontawesome.com/9eecce53ff.js" crossorigin="anonymous"></script>
+    <!-- Leaflet JS -->
+    <script src="{% static 'scripts/leaflet.js' %}"></script>
+    <!-- Import wNumb for slider bar-->
+    <script src="{% static 'scripts/wNumb.js' %}"></script>
+
+
+</body>
+
+</html>

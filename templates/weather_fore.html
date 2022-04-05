@@ -1,0 +1,188 @@
+{% extends "structure/header_n_footer.html" %}
+{% block content %}
+{% load static %}
+{% include "structure/sidebar.html" %}
+{% include "structure/topnavbar.html" %}
+
+<div class="main-content-container container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
+  <!-- Page Header -->
+  <div class="page-header row no-gutters py-4">
+    <div class="col-12 text-center text-sm-left">
+      <!--<span class="text-uppercase page-subtitle">Overview</span>-->
+      <h3 class="page-title">Weather Forecast</h3>
+    </div>
+
+    <!-- Country Tab -->
+    <!-- Tab Bar -->
+    <div class="btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto py-3 justify-content-md-center"
+      role="group" aria-label="Page actions">
+      <ul class="nav" id="myTab">
+        <li class="nav-item ">
+          <a href="#cambodia" class="nav-link btn btn-white active">Cambodia</a>
+        </li>
+        <li class="nav-item">
+          <a href="#laos" class="nav-link btn btn-white">Laos</a>
+        </li>
+        <li class="nav-item">
+          <a href="#myanmar" class="nav-link btn btn-white">Myanmar</a>
+        </li>
+      </ul>
+    </div>
+    <!-- End Tab Bar -->
+    <div class="tab-content col-lg-12">
+
+      <div class="tab-pane fade show active" id="cambodia">
+
+        <h4>Cambodia Forecast</h4>
+
+        <div class="row justify-content-md-center">
+          <div class="btn-group py-3 col-lg-4 col-md-12 col-sm-12" data-toggle="buttons">
+            <input type="text" class="form-control" id="datepicker" placeholder="Choose forecast date">
+            <button type="button" class="btn btn-primary btn-squared"
+              style="border-color: #0b2d5a; background-color: #0b2d5a;">Load</button>
+          </div>
+          <!-- Date slider-->
+          <div class="col-lg-6 col-md-12 col-sm-12" id="shards-custom-slider">
+            <input type="hidden" class='custom-slider-input' name="custom-slider-value-1">
+          </div>
+        </div> <!-- End Date row-->
+        <!-- End date slider-->
+        <!-- Cambodia Map Box-->
+        <div class="map col-12 w-100" id="cam_map"></div>
+        <!-- End Map Box-->
+      </div>
+      <div class="tab-pane fade" id="laos">
+        <h4 class="mt-2">Laos Forecast</h4>
+        <div class="row justify-content-md-center">
+          <div class="btn-group py-3 col-lg-4 col-md-12 col-sm-12" data-toggle="buttons">
+            <input type="text" class="form-control" id="datepicker" placeholder="Choose forecast date">
+            <button type="button" class="btn btn-primary btn-squared"
+              style="border-color: #0b2d5a; background-color: #0b2d5a;">Load</button>
+          </div>
+          <!-- Date slider-->
+          <div class="col-lg-6 col-md-12 col-sm-12" id="shards-custom-slider">
+            <input type="hidden" class='custom-slider-input' name="custom-slider-value-1">
+          </div>
+        </div> <!-- End Date row-->
+        <!-- Laos Map Box-->
+
+        <div class="map" id="lao_map"></div>
+
+        <!-- End Map Box-->
+      </div>
+      <div class="tab-pane fade" id="myanmar">
+        <h4 class="mt-2">Myanmar Forecast</h4>
+        <div class="row justify-content-md-center">
+          <div class="btn-group py-3 col-lg-4 col-md-12 col-sm-12" data-toggle="buttons">
+            <input type="text" class="form-control" id="datepicker" placeholder="Choose forecast date">
+            <button type="button" class="btn btn-primary btn-squared"
+              style="border-color: #0b2d5a; background-color: #0b2d5a;">Load</button>
+          </div>
+          <!-- Date slider-->
+          <div class="col-lg-6 col-md-12 col-sm-12" id="shards-custom-slider">
+            <input type="hidden" class='custom-slider-input' name="custom-slider-value-1">
+          </div>
+        </div> <!-- End Date row-->
+        <!-- Myanmar Map Box-->
+
+        <div class="map" id="mya_map"></div>
+
+        <!-- End Map Box-->
+      </div>
+    </div><!-- End Country tab -->
+
+  </div><!-- End Page Header -->
+
+
+
+
+
+
+</div>
+<!-- End of Page content -->
+
+{% include "structure/footer.html" %}
+
+<script type="text/javascript">
+
+  // Cambodia map
+  var cam_map = L.map('cam_map', {
+    zoomControl: false,
+    minZoom: 3,     // Max Zoom out
+    maxZoom: 9,    // Max Zoom in
+  }).setView([11.562108, 104.888535], 7);
+  L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(cam_map);
+
+  // Laos map
+  var lao_map = L.map('lao_map', {
+    zoomControl: false,
+    minZoom: 3,     // Max Zoom out
+    maxZoom: 9,    // Max Zoom in
+  }).setView([17.6384, 105.2195], 7);
+  L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(lao_map);
+
+  // Myanmar map
+  var mya_map = L.map('mya_map', {
+    zoomControl: false,
+    minZoom: 3,     // Max Zoom out
+    maxZoom: 9,    // Max Zoom in
+  }).setView([20.00, 95.00], 6);
+  L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(mya_map);
+
+  // Tab
+  $(document).ready(function () {
+    $("#myTab a").click(function (e) {
+      e.preventDefault();
+      $(this).tab("show");
+    });
+  });
+  // Make the map avaliable in each tab
+  var camTab = document.getElementById('cambodia');
+  var observer1 = new MutationObserver(function () {
+    if (camTab.style.display != 'none') {
+      cam_map.invalidateSize();
+    }
+  });
+  observer1.observe(camTab, { attributes: true });
+
+  var laoTab = document.getElementById('laos');
+  var observer2 = new MutationObserver(function () {
+    if (laoTab.style.display != 'none') {
+      lao_map.invalidateSize();
+    }
+  });
+  observer2.observe(laoTab, { attributes: true });
+
+  var myaTab = document.getElementById('myanmar');
+  var observer3 = new MutationObserver(function () {
+    if (myaTab.style.display != 'none') {
+      mya_map.invalidateSize();
+    }
+  });
+  observer3.observe(myaTab, { attributes: true });
+
+  // Date picker
+  $('#datepicker').datepicker({
+    format: 'dd/mm/yyyy'
+  });
+
+  // Date Slider
+  $('#shards-custom-slider').customSlider({
+    start: [0],
+    tooltips: [
+      wNumb({
+        decimals: 0,
+        prefix: 'Day '
+      })],
+    step: 1,
+    connect: true,
+    range: {
+      'min': 1,
+      'max': 10
+    }
+  });
+
+
+</script>
+
+{% endblock content %}
