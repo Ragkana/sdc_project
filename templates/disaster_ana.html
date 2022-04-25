@@ -1,58 +1,275 @@
+{% extends "structure/header_n_footer.html" %}
+{% block content %}
 {% load static %}
-{% include "structure/header_n_footer.html" %}
 {% include "structure/sidebar.html" %}
 {% include "structure/topnavbar.html" %}
-{% block content %}
 
-<div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
+<div class="main-content-container container-fluid card" style="margin: 10px; width: auto; background-color: #dee1ea">
     <!-- Page Header -->
     <div class="page-header row no-gutters py-4">
         <div class="col-12 text-center text-sm-left">
-            <h3 class="page-title">Disaster Analytics</h3>
+            <h1 class="page-title">Disaster Analytics</h1>
         </div>
         <!-- Country Tab -->
-        <div class="col-12 d-flex align-items-center py-3">
-            <div class="btn-group btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto" role="group"
-                aria-label="Page actions">
-                <a href="#" class="btn btn-white active"> Laos </a>
-                <a href="#" class="btn btn-white"> Myanmar </a>
-                <a href="#" class="btn btn-white"> Cambodia </a>
+        <!-- Tab Bar -->
+        <div class="btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto py-3 justify-content-md-center"
+            role="group" aria-label="Page actions">
+            <ul class="nav" id="myTab">
+                <li class="nav-item">
+                    <a href="#cambodia" class="nav-link btn btn-white active">Cambodia</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#laos" class="nav-link btn btn-white">Laos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#myanmar" class="nav-link btn btn-white">Myanmar</a>
+                </li>
+            </ul>
+        </div>
+        <!-- End Tab Bar -->
+        <!-- End Page Header -->
+
+        <!-- Tab Content -->
+        <div class="tab-content col-lg-12">
+            <!-- Cambodia Tab content -->
+            <div class="tab-pane fade show active" id="cambodia">
+                <div class="row">
+                    <div class="card w-100">
+                        <div class="card card-small m-0">
+                            <div class="card-header border-bottom">
+                                <h6 class="m-0">Disaster Impact Profile of Cambodia</h6>
+                            </div>
+                            <!-- Cambodia Body -->
+                            <div class="card-body pt-0">
+                                <!-- Disaster select tab -->
+                                <div class="row border-bottom py-2 bg-light">
+                                    <div class="col-12 col-sm-6 d-flex mb-2 mb-sm-0 w-100">
+                                        <div class="btn-group btn-group-toggle d-flex my-auto mx-auto mx-sm-0"
+                                            role="group" aria-label="Page actions">
+                                            <ul class="nav" id="myTab">
+                                                <li class="nav-item">
+                                                    <a href="#drought"
+                                                        class="nav-link btn btn-white m-1 btn-pill active">Drought</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="#flood"
+                                                        class="nav-link btn btn-white m-1 btn-pill">Flood</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="#lightening"
+                                                        class="nav-link btn btn-white m-1 btn-pill">Lighthening</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="#riverbank"
+                                                        class="nav-link btn btn-white m-1 btn-pill">River bank</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="#storm"
+                                                        class="nav-link btn btn-white m-1 btn-pill">Storm</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Close disaster select section -->
+                                <!-- Graph -->
+                                <!-- Drought Cambodia Data-->
+                                <div class="tab-content col-lg-12">
+                                    <div class="tab-pane fade show active" id="drought">
+                                        <div class="row">
+                                            <!-- Disaster Impact selection form -->
+                                            <form method="post" class="w-100 py-2">
+                                                {% csrf_token %}
+                                                <div class="btn-group input-group">
+                                                    <div class="col-lg-5 col-md-12 col-sm-12">
+                                                        <span>Select Event / Impact :</span>
+                                                        <select class="form-control my-2" name="impact_selected">
+                                                            <option href="#" selected>
+                                                                Select an option
+                                                            </option>
+                                                            <option value="deaths">Deaths</option>
+                                                            <option value="injured">Injured</option>
+                                                            <option value="missing">Missing</option>
+                                                            <option value="houses_des">
+                                                                Houses Destroyed
+                                                            </option>
+                                                            <option value="houses_dam">Houses Damaged</option>
+                                                        </select>
+                                                    </div>
+                                                    <!-- location selection form -->
+                                                    <div class="col-lg-5 col-md-12 col-sm-12">
+                                                        <span>Select Level :</span>
+                                                        <select class="form-control my-2" name="level_selected">
+                                                            <option href="#" selected>
+                                                                Select an option
+                                                            </option>
+                                                            <option value="province">Province</option>
+                                                            <option value="district">District</option>
+                                                            <option value="commune">Commune</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-lg-2 col-md-12 col-sm-12">
+                                                        <span><br>&nbsp;</span>
+                                                        <button type="submit" class="btn btn-primary btn-squared my-2"
+                                                            style=" border-color: #0b2d5a; background-color: #0b2d5a;border-radius: 0.2rem;">
+                                                            Load
+                                                        </button>
+                                                    </div>
+                                                </div> <!-- Close button group -->
+                                            </form>
+                                        </div>
+                                        <!-- Map Chart -->
+                                        <div class="row">
+                                            <div id="hc_container"></div>
+                                        </div> <!-- Close map chart -->
+                                    </div>
+                                    <!-- Close Drought Cambodia Data-->
+
+                                    <!-- Flood Cambodia Data-->
+                                    <div class="tab-pane fade" id="flood">
+                                        <h4>Flood</h4>
+                                    </div>
+                                    <!-- Close Flood Cambodia Data-->
+
+                                    <!-- Lightening Cambodia Data-->
+                                    <div class="tab-pane fade" id="lightening">
+                                        <h4>Lightening</h4>
+                                    </div>
+                                    <!-- Close lightening Cambodia Data-->
+
+                                    <!-- Riverbank Cambodia Data-->
+                                    <div class="tab-pane fade" id="riverbank">
+                                        <h4>Riverbank</h4>
+                                    </div>
+                                    <!-- Close riverbank Cambodia Data-->
+
+                                    <!-- Storm Cambodia Data-->
+                                    <div class="tab-pane fade" id="storm">
+                                        <h4>Storm</h4>
+                                    </div>
+                                    <!-- Close Storm Cambodia Data-->
+                                </div>
+                                <!-- Close tab -->
+                            </div>
+                        </div>
+                        <!-- Close inner card -->
+                    </div>
+                    <!-- Close card-->
+                </div>
+                <!-- Close row -->
             </div>
+            <!-- Close Cambodia Tab -->
+
+            <!-- Laos Tab content -->
+            <div class="tab-pane fade" id="laos">
+                <h4 class="mt-2">Disaster Impact Profile of Laos</h4>
+
+                <!-- Laos Map Box-->
+
+                <!-- End Map Box-->
+            </div>
+            <!-- End Laos tab -->
+
+            <!-- Myanmar Tab content -->
+            <div class="tab-pane fade" id="myanmar">
+                <h4 class="mt-2">Disaster Impact Profile of Myanmar</h4>
+
+                <!-- Myanmar Map Box-->
+
+                <!-- End Map Box-->
+            </div>
+            <!-- End Myanmar tab -->
         </div>
+        <!-- End tab content -->
     </div>
-    <!-- End Page Header -->
-
-    <!-- Map Box-->
-    <div class="card">
-        <div class="card-body py-4">
-            <div id="map"></div>
-
-        </div>
-    </div>
-
-    <!-- End Map Box-->
+    <!-- Page header end tag -->
 </div>
 
-
-<!-- Leaflet JS -->
-<script src="{% static 'scripts/leaflet.js' %}"></script>
+{% include "structure/footer.html" %}
 
 <script type="text/javascript">
+    // HighChart Map
+    (async () => {
+        const topology = await fetch(
+            "{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}").then(response => response.json());
 
-    // Base map 
-    //const base_map = L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g');
-    const base_map = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }
-    );
-    // Initialize the map
-    const map = L.map('map', {
-        layers: [base_map],  // Call Map function
-        zoomControl: false,
-        renderer: L.canvas(),
-        minZoom: 6,     // Max Zoom out
-        maxZoom: 12,    // Max Zoom in
-    }).setView([12.5657, 104.9910], 3) //[Latitude, Longtitude], level
+        Highcharts.getJSON('', function (data) {
+            // Make codes uppercase to match the map data
+            data.forEach(function (p) {
+                p.code = p.code.toUpperCase();
+            });
+
+            // Instantiate the map
+            Highcharts.mapChart('hc_container', {
+                chart: {
+                    map: topology,
+                    borderWidth: 1
+                },
+
+                title: {
+                    text: 'US population density (/km²)'
+                },
+
+                exporting: {
+                    sourceWidth: 600,
+                    sourceHeight: 500
+                },
+
+                legend: {
+                    layout: 'horizontal',
+                    borderWidth: 0,
+                    backgroundColor: 'rgba(255,255,255,0.85)',
+                    floating: true,
+                    verticalAlign: 'top',
+                    y: 25
+                },
+
+                mapNavigation: {
+                    enabled: true
+                },
+
+                colorAxis: {
+                    min: 1,
+                    type: 'logarithmic',
+                    minColor: '#EEEEFF',
+                    maxColor: '#000022',
+                    stops: [
+                        [0, '#EFEFFF'],
+                        [0.67, '#4444FF'],
+                        [1, '#000022']
+                    ]
+                },
+
+                series: [{
+                    animation: {
+                        duration: 1000
+                    },
+                    data: data,
+                    joinBy: ['postal-code', 'code'],
+                    dataLabels: {
+                        enabled: true,
+                        color: '#FFFFFF',
+                        format: '{point.code}'
+                    },
+                    name: 'Population density',
+                    tooltip: {
+                        pointFormat: '{point.code}: {point.value}/km²'
+                    }
+                }]
+            });
+        });
+
+    })();
+    //-------------------------------------------------------------------//
+    // Tab
+    $(document).ready(function () {
+        $("#myTab a").click(function (e) {
+            e.preventDefault();
+            $(this).tab("show");
+        });
+    });
+    //-------------------------------------------------------------------//
+
 </script>
 
 {% endblock content %}

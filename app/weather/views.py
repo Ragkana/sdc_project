@@ -1,8 +1,10 @@
 from audioop import avg
+from datetime import date
+import datetime as dt
 from itertools import count
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import country, observation_metdata, province, district, commune
+from .models import country, observation_metdata, province, district, commune, weather_forecast
 from django.db.models import Avg, Count
 
 import pandas as pd
@@ -24,9 +26,34 @@ def register(request):
 def forgot_password(request):
     return render(request, "forgot-password.html")
 
-def weather_forecast(request):
-    
-    return render(request, "weather_fore.html", {'url_name': 'weather_forecast'})
+def weather_forecast_mod(request):
+    # Get input date from template
+    date_selected = request.POST.get('selected_date')
+    # filter by selected date and retrieve specific column
+    wf_date = weather_forecast.objects.filter(date_data=date_selected).values('province_name','rainfall','humidity','max_temp','min_temp','windspeed')
+    # save query as dataframe
+    wf = pd.DataFrame(wf_date)
+    # load GeoJSON file here
+    khm_obj = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
+    # Combine data
+    for index,row in wf.iterrows():
+        prov = row['province_name']
+        # Append in dict
+        for d in khm_obj['features']:
+            if d['properties']['Province'] == prov:
+                d['properties']['rainfall'] = float(row['rainfall'])
+                d['properties']['humidity'] = float(row['humidity'])
+                d['properties']['max_temp'] = float(row['max_temp'])
+                d['properties']['min_temp'] = float(row['min_temp'])
+                d['properties']['windspeed'] = float(row['windspeed'])
+            else :
+                pass
+    #test = khm_obj['features'][2]['properties']
+    khm_obj_json = json.dumps(khm_obj)
+    #f_date = weather_forecast.objects.values('date_data').annotate(count=Count('date_data')).order_by('date_data')
+    # Get input weather parameter from template
+    wf_param_selected = request.POST.get('wf_param')
+    return render(request, "weather_fore.html", {'url_name': 'weather_forecast', 'date_pick':date_selected, 'wfparam': wf_param_selected, 'khm_json':khm_obj_json})
 
 def observation(request):
     # obs : Group station in station name column **use in dropdown**
@@ -39,12 +66,6 @@ def observation(request):
     max_temp = avg_obs.values_list('max__temp__avg', flat=True)
     min_temp = avg_obs.values_list('min__temp__avg', flat=True)
     return render(request, "observation.html", {'url_name': 'observation', 'station':obs, 'rainfall':rainfall, 'max_temp':max_temp, 'min_temp':min_temp, 'station_n':selected_value})
-
-def hazard_ana(request):
-    return render(request, "hazard_ana.html", {'url_name': 'hazard_ana'})
-
-def disaster_ana(request):
-    return render(request, "disaster_ana.html", {'url_name': 'disaster_ana'})
 
 def earthquake(request):
     return render(request, "earthquake.html", {'url_name': 'earthquake'})

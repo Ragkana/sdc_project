@@ -15,21 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.weather import views
+from app.weather import views as wf_views
+from app.disaster_ana import views as da_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', views.dashboard, name= 'dashboard'), #Work with Homepage
-    path('login', views.login, name='login'),
-    path('register', views.register, name='register'),
-    path('forgot_password', views.forgot_password, name='forgot_password'),
-    path('', views.weather_forecast, name='weather_forecast'),
-    path('observation', views.observation, name='observation'),
-    path('hazard_analytics', views.hazard_ana, name='hazard_ana'),
-    path('disaster_analytics', views.disaster_ana, name='disaster_ana'),
-    path('earthquake', views.earthquake, name='earthquake'),
-    path('share_data', views.share_data, name='share_data'),
-    path('sdc_project', views.sdc_project, name='sdc_project'),
-    path('reports', views.reports, name='reports'),
+    path('login', wf_views.login, name='login'),
+    path('register', wf_views.register, name='register'),
+    path('forgot_password', wf_views.forgot_password, name='forgot_password'),
+    path('', wf_views.weather_forecast_mod, name='weather_forecast'),
+    path('observation', wf_views.observation, name='observation'),
+    path('hazard_analytics', da_views.hazard_ana, name='hazard_ana'),
+    path('disaster_analytics', da_views.disaster_ana, name='disaster_ana'),
+    path('earthquake', wf_views.earthquake, name='earthquake'),
+    path('share_data', wf_views.share_data, name='share_data'),
+    path('sdc_project', wf_views.sdc_project, name='sdc_project'),
+    path('reports', wf_views.reports, name='reports'),
 ]
      

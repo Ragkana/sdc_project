@@ -9,7 +9,7 @@
   <div class="page-header row no-gutters py-4">
     <div class="col-12 text-center text-sm-left">
       <!--<span class="text-uppercase page-subtitle">Overview</span>-->
-      <h3 class="page-title">Weather Forecast</h3>
+      <h1 class="page-title">Weather Forecast</h1>
     </div>
 
     <!-- Country Tab -->
@@ -29,28 +29,82 @@
       </ul>
     </div>
     <!-- End Tab Bar -->
-    <div class="tab-content col-lg-12">
 
+    <!-- Tab Content -->
+    <div class="tab-content col-lg-12">
+      <!-- Cambodia Tab Content -->
       <div class="tab-pane fade show active" id="cambodia">
 
-        <h4>Cambodia Forecast</h4>
+        <div class="row">
+          <div class="card w-100">
+            <div class="card-header border-bottom">
+              <h6 class="m-0">Cambodia overal weather forecast</h6>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <!-- Input Data content -->
+              <div class="row">
+                <div class="col-lg-3 col-md-12 col-sm-12">
 
-        <div class="row justify-content-md-center">
-          <div class="btn-group py-3 col-lg-4 col-md-12 col-sm-12" data-toggle="buttons">
-            <input type="text" class="form-control" id="datepicker" placeholder="Choose forecast date">
-            <button type="button" class="btn btn-primary btn-squared"
-              style="border-color: #0b2d5a; background-color: #0b2d5a;">Load</button>
+                  <!-- First row : Date picker-->
+                  <div class="row">
+                    <span>Select a weather forecast date</span>
+                    <form method="post" class="w-100 py-2">
+                      {% csrf_token %}
+                      <div class="btn-group input-group">
+                        <div class="input-group-append">
+                          <span class="input-group-text my-2">
+                            <i class='far fa-calendar-alt fa-sm' style='color:#0a1935'></i>
+                          </span>
+                        </div>
+                        <input type="text" class="form-control my-2 w-75" id="datepicker" placeholder="{{date_pick}}"
+                          name="selected_date">
+                        <span>Select a weather parameter</span>
+                        <select class="form-control w-100 my-2" name="wf_param">
+                          <option href="#">Select parameter</option>
+                          <option value='rainfall' {% if wfparam == 'rainfall' %}selected{% endif %}>Rainfall (mm)</option>
+                          <option value='humidity' {% if wfparam == 'humidity' %}selected{% endif %}>Relative Humidity (%)</option>
+                          <option value='max_temp' {% if wfparam == 'max_temp' %}selected{% endif %}>Max Temperature (°C)</option>
+                          <option value='min_temp' {% if wfparam == 'min_temp' %}selected{% endif %}>Min Temperature (°C)</option>
+                          <option value='windspeed' {% if wfparam == 'windspeed' %}selected{% endif %}>wind Speed (km/h)</option>
+                        </select>
+                        <button type="button submit" class="btn btn-primary btn-squared my-2"
+                          style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Load</button>
+                      </div>
+                    </form>
+                    <!-- End First row-->
+
+                  </div>
+                </div>
+                <!-- End Input data content-->
+
+                <!-- Cambodia Map Box-->
+                <div class="col-lg-9 col-md-12 col-sm-12">
+                  <div class="map w-100" style="height: calc(70vh - 7.5rem);" id="cam_map"></div>
+                </div>
+                <!-- End Map Box-->
+              </div> <!-- End card-body row-->
+            </div> <!-- End card body -->
+          </div><!-- End card -->
+        </div> <!-- End row-->
+
+        <!-- Start row for Cambodia province time series -->
+        <div class="row">
+          <div class="card w-100">
+            <!-- Header -->
+            <div class="card-header border-bottom">
+              <h6 class="m-0">Cambodia .... time series forecasting for 10 days in ..... </h6>
+            </div>
+            <!-- Content -->
+            <div class="card-body d-flex flex-column">
+            </div>
           </div>
-          <!-- Date slider-->
-          <div class="col-lg-6 col-md-12 col-sm-12" id="shards-custom-slider">
-            <input type="hidden" class='custom-slider-input' name="custom-slider-value-1">
-          </div>
-        </div> <!-- End Date row-->
-        <!-- End date slider-->
-        <!-- Cambodia Map Box-->
-        <div class="map col-12 w-100" id="cam_map"></div>
-        <!-- End Map Box-->
+        </div>
+        <!-- End Cambodia Province Time series -->
+
       </div>
+      <!-- End Canbodia Tab Content -->
+
+      <!-- Laos Tab content -->
       <div class="tab-pane fade" id="laos">
         <h4 class="mt-2">Laos Forecast</h4>
         <div class="row justify-content-md-center">
@@ -93,11 +147,6 @@
 
   </div><!-- End Page Header -->
 
-
-
-
-
-
 </div>
 <!-- End of Page content -->
 
@@ -110,9 +159,125 @@
     zoomControl: false,
     minZoom: 3,     // Max Zoom out
     maxZoom: 9,    // Max Zoom in
-  }).setView([11.562108, 104.888535], 7);
+  }).setView([12.562108, 104.888535], 7);
   L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(cam_map);
 
+  // load GeoJSON from an external file
+  //fetch("{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}").then(res => res.json()).then(data => {
+  // add GeoJSON layer to the map once the file is loaded
+  //  L.geoJson(data).addTo(cam_map);
+  //});
+
+  // Assigning color for selected parameter class
+  function getColor(param) {
+    return param > 90 ? '#062655' :
+    param > 80 ? '#08306B' :
+    param > 70 ? '#08519C' :
+    param > 60 ? '#2171B5' :
+    param > 40 ? '#4292C6' :
+    param > 30 ? '#6BAED6' :
+    param > 20 ? '#9ECAE1' :
+    param > 10 ? '#C6DBEF' :
+    param > 5 ? '#DEEBF7' :
+                '#F7FBFF';
+  }
+
+  function style(feature) {
+    return {
+      fillColor: getColor(feature.properties.{{ wfparam }}),
+    weight: 2,
+      opacity: 1,
+        color: 'white',
+          dashArray: '3',
+            fillOpacity: 0.7
+  };
+}
+
+  // load json data recieve from views.py
+  var khm_mapData = {{ khm_json| safe }};
+  //L.geoJson(khm_mapData, { style: style }).addTo(cam_map);
+
+  // Add info
+  var info = L.control();
+
+info.onAdd = function (cam_map) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
+
+// method that we will use to update the control based on feature properties passed
+info.update = function (props) {
+    this._div.innerHTML = (props ?
+        '<b>' + props.Province + '</b> : ' + props.{{wfparam}} : 'Hover over a state');
+};
+
+info.addTo(cam_map);
+
+  // Add Zoom button
+  L.control.zoom({
+     position:'topleft'
+}).addTo(cam_map);
+
+  // Add interaction
+  function highlightFeature(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+    }
+    info.update(layer.feature.properties);
+}
+
+function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+    info.update();
+}
+
+// Zoom
+function zoomToFeature(e) {
+    cam_map.fitBounds(e.target.getBounds());
+}
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+    });
+}
+
+geojson = L.geoJson(khm_mapData, {
+    style: style,
+    onEachFeature: onEachFeature
+}).addTo(cam_map);
+
+
+  // Add legend to map
+  var legend = L.control({ position: 'bottomright' });
+  legend.onAdd = function (cam_map) {
+
+    var div = L.DomUtil.create('div', 'info legend'),
+      grades = [0, 5, 10, 20, 30, 40, 60, 70, 80, 90],
+      labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+      div.innerHTML += '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+    return div;
+  };
+
+  legend.addTo(cam_map);
+            
+
+  //-------------------------------------------------------------------//
   // Laos map
   var lao_map = L.map('lao_map', {
     zoomControl: false,
@@ -121,6 +286,7 @@
   }).setView([17.6384, 105.2195], 7);
   L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(lao_map);
 
+  //-------------------------------------------------------------------//
   // Myanmar map
   var mya_map = L.map('mya_map', {
     zoomControl: false,
@@ -129,6 +295,7 @@
   }).setView([20.00, 95.00], 6);
   L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(mya_map);
 
+  //-------------------------------------------------------------------//
   // Tab
   $(document).ready(function () {
     $("#myTab a").click(function (e) {
@@ -136,6 +303,7 @@
       $(this).tab("show");
     });
   });
+
   // Make the map avaliable in each tab
   var camTab = document.getElementById('cambodia');
   var observer1 = new MutationObserver(function () {
@@ -161,27 +329,19 @@
   });
   observer3.observe(myaTab, { attributes: true });
 
+  //-------------------------------------------------------------------//
   // Date picker
   $('#datepicker').datepicker({
-    format: 'dd/mm/yyyy'
-  });
+    clearBtn: true,
+    todayHighlight: true,
+    autoclose: true, // When date has been selected
+    immediateUpdates: true,
+    language: 'en',
+    endDate: new Date(), // cant select tomorrow on date-picker
+    format: 'yyyy-mm-dd'
+  }).date();
 
-  // Date Slider
-  $('#shards-custom-slider').customSlider({
-    start: [0],
-    tooltips: [
-      wNumb({
-        decimals: 0,
-        prefix: 'Day '
-      })],
-    step: 1,
-    connect: true,
-    range: {
-      'min': 1,
-      'max': 10
-    }
-  });
-
+  //-------------------------------------------------------------------//
 
 </script>
 

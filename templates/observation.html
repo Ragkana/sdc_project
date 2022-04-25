@@ -51,9 +51,10 @@
                                         {% csrf_token %}
                                         <div class="input-group">
                                             <select class="form-control" name="station_selected">
-                                                <option selected>Choose a station</option>
+                                                <option href="#">Choose a station</option>
                                                 {% for i in station %}
-                                                <option value='{{ i.station_name }}'>{{ i.station_name }}</option>
+                                                <option value='{{ i.station_name }}' {% if i.station_name == station_n %}
+                                                    selected {% endif %}>{{ i.station_name }}</option>
                                                 {% endfor %}
                                             </select>
                                             <div class="input-group-append">
@@ -153,8 +154,60 @@
     }).setView([12.562108, 104.888535], 7);
     L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(cam_map);
 
-    // Line Chart
+    // GeoJSON style
+    function style(feature) {
+        return {
+            weight: 2,
+            opacity: 1,
+            color: '#2F96B2',
+            fillColor: '#C4C7D7',
+            dashArray: '3',
+            fillOpacity: 0.7
+        };
+    }
 
+  // Add interaction
+  function highlightFeature(e) {
+      var layer = e.target;
+      layer.setStyle({
+          weight: 5,
+          color: '#2F96B2',
+          fillColor: '#2F96B2',
+          dashArray: '',
+          fillOpacity: 0.7
+        });
+        
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+  }
+}
+
+function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+}
+
+
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight
+    })
+    
+    ;
+}
+
+
+// load GeoJSON from an external file
+fetch("{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}").then(res => res.json()).then(data => {
+// add GeoJSON layer to the map once the file is loaded
+//L.geoJson(data, {style: style}).addTo(cam_map);
+geojson = L.geoJson(data, {
+    style: style,
+    onEachFeature: onEachFeature
+}).addTo(cam_map);
+});
+
+    // Line Chart
     // Setup Block
     const labels = [
         'January',
@@ -176,20 +229,20 @@
             label: 'Min Temp',
             backgroundColor: '#2f96b2',
             borderColor: '#2f96b2',
-            data: [{% for a in rainfall %}{{a}},{% endfor %}],
-            yAxisID: 'A'
+            data: [{% for a in rainfall %}{{ a }}, {% endfor %}],
+    yAxisID: 'A'
         }, {
-            label: 'Max Temp',
+        label: 'Max Temp',
             backgroundColor: '#0b2d5a',
-            borderColor: '#0b2d5a',
-            data: [{% for b in max_temp %}{{b}},{% endfor %}],
-            yAxisID: 'A'
+                borderColor: '#0b2d5a',
+                    data: [{% for b in max_temp %} { { b } }, {% endfor %}],
+    yAxisID: 'A'
         }, {
-            label: 'Rainfall',
+        label: 'Rainfall',
             backgroundColor: '#c4c7d7',
-            borderColor: '#c4c7d7',
-            data: [{% for c in rainfall %}{{c}},{% endfor %}],
-            yAxisID: 'B'
+                borderColor: '#c4c7d7',
+                    data: [{% for c in rainfall %} { { c } }, {% endfor %}],
+    yAxisID: 'B'
         }
         ]
     };
@@ -200,9 +253,9 @@
         data: data,
         options: {
             scales: {
-                'A': { 
+                'A': {
                     title: {
-                        display: true, 
+                        display: true,
                         text: 'Temperature (°C)'
                     },
                     labels: 'Temperature',
@@ -210,7 +263,7 @@
                 },
                 'B': {
                     title: {
-                        display: true, 
+                        display: true,
                         text: 'Rainfall (mm)'
                     },
                     labels: 'Rainfall',

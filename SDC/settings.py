@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app.weather', # If you create app in folder dont forget to change the name in apps.py in your app folder too.
+    'app.disaster_ana',
 ]
 
 MIDDLEWARE = [
