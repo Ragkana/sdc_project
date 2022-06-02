@@ -81,7 +81,12 @@
                 <span>Earthquake Threats</span>
             </a>
         </li>
-
+        <li class="nav-item">
+            <a class="nav-link {% if url_name == 'earthquake-setting' %}active{% endif %}" href="{% url 'earthquake-setting' %}">
+                <i class="fa-solid fa-gear" style="font-size: 1.25rem;"></i>
+                <span>Settings</span>
+            </a>
+        </li>
       </ul>
       <h6 class="main-sidebar__nav-title">Reports & Project</h6>
       <ul class="nav nav--no-borders flex-column">

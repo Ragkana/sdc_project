@@ -57,7 +57,7 @@
                           </span>
                         </div>
                         <input type="text" class="form-control my-2 w-75" id="datepicker" placeholder="{{date_pick}}"
-                          name="selected_date">
+                          name="selected_date" value="{{date_pick}}">
                         <span>Select a weather parameter</span>
                         <select class="form-control w-100 my-2" name="wf_param">
                           <option href="#">Select parameter</option>
@@ -160,7 +160,8 @@
     minZoom: 3,     // Max Zoom out
     maxZoom: 9,    // Max Zoom in
   }).setView([12.562108, 104.888535], 7);
-  L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(cam_map);
+  //L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(cam_map);
+  L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(cam_map);
 
   // load GeoJSON from an external file
   //fetch("{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}").then(res => res.json()).then(data => {
@@ -187,7 +188,7 @@
       fillColor: getColor(feature.properties.{{ wfparam }}),
     weight: 2,
       opacity: 1,
-        color: 'white',
+        color: '#2F96B2',
           dashArray: '3',
             fillOpacity: 0.7
   };
@@ -196,24 +197,7 @@
   // load json data recieve from views.py
   var khm_mapData = {{ khm_json| safe }};
   //L.geoJson(khm_mapData, { style: style }).addTo(cam_map);
-
-  // Add info
-  var info = L.control();
-
-info.onAdd = function (cam_map) {
-    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-    this.update();
-    return this._div;
-};
-
-// method that we will use to update the control based on feature properties passed
-info.update = function (props) {
-    this._div.innerHTML = (props ?
-        '<b>' + props.Province + '</b> : ' + props.{{wfparam}} : 'Hover over a state');
-};
-
-info.addTo(cam_map);
-
+  
   // Add Zoom button
   L.control.zoom({
      position:'topleft'
@@ -225,7 +209,7 @@ info.addTo(cam_map);
 
     layer.setStyle({
         weight: 5,
-        color: '#666',
+        color: '#2F96B2',
         dashArray: '',
         fillOpacity: 0.7
     });
@@ -233,18 +217,20 @@ info.addTo(cam_map);
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
         layer.bringToFront();
     }
-    info.update(layer.feature.properties);
+    // Add Info popup when mouseover
+    layer.bindPopup('<b>'+ '{{wfparam}}' + '</b><br>' + layer.feature.properties.Province  + ' : ' + layer.feature.properties.{{wfparam}}).openPopup();
 }
 
 function resetHighlight(e) {
     geojson.resetStyle(e.target);
-    info.update();
 }
 
 // Zoom
 function zoomToFeature(e) {
     cam_map.fitBounds(e.target.getBounds());
 }
+
+
 function onEachFeature(feature, layer) {
     layer.on({
         mouseover: highlightFeature,
@@ -336,10 +322,13 @@ geojson = L.geoJson(khm_mapData, {
     todayHighlight: true,
     autoclose: true, // When date has been selected
     immediateUpdates: true,
+    orientation: 'auto bottom',
     language: 'en',
     endDate: new Date(), // cant select tomorrow on date-picker
     format: 'yyyy-mm-dd'
-  }).date();
+  });
+
+  $('#datepicker').datepicker('setDate', 'today').date();
 
   //-------------------------------------------------------------------//
 

@@ -47,14 +47,13 @@
                             <!-- Place Choose station dropdown bar -->
                             <div class="row border-bottom py-2 bg-light">
                                 <div class="col-12 col-sm-6 d-flex mb-2 mb-sm-0 w-100">
-                                    <form method="post">
+                                    <form method="post" class="w-100 py-2">
                                         {% csrf_token %}
                                         <div class="input-group">
                                             <select class="form-control" name="station_selected">
                                                 <option href="#">Choose a station</option>
                                                 {% for i in station %}
-                                                <option value='{{ i.station_name }}' {% if i.station_name == station_n %}
-                                                    selected {% endif %}>{{ i.station_name }}</option>
+                                                <option value='{{ i.station_name }}' {% if i.station_name == station_n %} selected {% endif %}>{{ i.station_name }}</option>
                                                 {% endfor %}
                                             </select>
                                             <div class="input-group-append">
@@ -76,23 +75,61 @@
                     </div>
                 </div>
                 <!-- End Map box -->
-
+                
                 <!-- Describe box -->
                 <div class="col-lg-6 col-md-6 col-sm-6 mb-4 mx-0">
                     <div class="card ubd-stats card-small m-0">
                         <div class="card-header border-bottom">
                             <h6 class="m-0">Last 30 Years Climatology of {{station_n}} station</h6>
                         </div>
-                        <div class="card-body d-flex flex-column">
-                            <div class="bg-light">
-                                <canvas id="myChart"></canvas>
+                        
+                        <div class="card-body pt-0">
+                            <!-- Select year -->
+                            <div class="row border-bottom py-2 bg-light">
+                                <div class="col-12 w-100">
+                                    <span>Select year</span>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="input-group">
+                                        <!-- Select Start year -->
+                                        <div class="col-lg-5 col-md-5 col-sm-12">
+                                            <select class="form-control my-2" name="start_year_selected" value="{{m.year}}">
+                                                <option href="#">Start year</option>
+                                                {% for m in year_start %}
+                                                <option value="{{m.year}}">{{m.year}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <span class="my-2"> - </span>
+                                        <!-- Select End year -->
+                                        <div class="col-lg-5 col-md-5 col-sm-12">
+                                            <select class="form-control my-2" name="end_year_selected">
+                                                <option href="#">End year</option>
+                                            </select>
+                                        </div>
+                                        <!-- Submit button -->
+                                        <div class="col-lg-1 col-md-1 col-sm-12">
+                                            <button type="button submit" class="btn btn-primary btn-squared my-2"
+                                                style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Load</button>
+                                        </div>
+                                        
+                                    </div>
+                                </form>
+
                             </div>
                         </div>
 
+                            <!-- End Select year -->
+
+                            
+                            <canvas id="myChart"></canvas>
+
+                        </div> <!-- End card body -->
+
                     </div>
-                </div>
+                </div><!-- End Describe box -->
             </div>
-            <!-- End Describe box -->
+
         </div>
         <!-- End Cambodia tab -->
         <!-- Laos tab -->
@@ -145,6 +182,7 @@
             $(this).tab("show");
         });
     });
+    //-----------------------------------------------------------------------------------------------//
 
     // Cambodia map
     var cam_map = L.map('cam_map', {
@@ -152,7 +190,18 @@
         minZoom: 3,     // Max Zoom out
         maxZoom: 9,    // Max Zoom in
     }).setView([12.562108, 104.888535], 7);
-    L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(cam_map);
+    //L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(cam_map);
+    L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(cam_map);
+
+    function getColor(khm_param) {
+        //return khm_param.Province == '{{station_n}}' ? '#000' : khm_param.Province !== '{{station_n}}' ? '#C4C7D7';
+        if (khm_param.Province == '{{station_n}}') {
+            return '#2F96B2';
+        } else {
+            return '#C4C7D7';
+        }
+
+    }
 
     // GeoJSON style
     function style(feature) {
@@ -160,53 +209,58 @@
             weight: 2,
             opacity: 1,
             color: '#2F96B2',
-            fillColor: '#C4C7D7',
-            dashArray: '3',
+            //fillColor: '#C4C7D7',
+            fillColor: getColor(feature.properties),
+            dashArray: '4',
             fillOpacity: 0.7
         };
     }
 
-  // Add interaction
-  function highlightFeature(e) {
-      var layer = e.target;
-      layer.setStyle({
-          weight: 5,
-          color: '#2F96B2',
-          fillColor: '#2F96B2',
-          dashArray: '',
-          fillOpacity: 0.7
+    // Add Zoom button
+    L.control.zoom({
+        position: 'topleft'
+    }).addTo(cam_map);
+
+    // Add interaction
+    function highlightFeature(e) {
+        var khm_layer = e.target;
+        khm_layer.setStyle({
+            weight: 5,
+            color: '#2F96B2',
+            //fillColor: '#2F96B2',
+            dashArray: '',
+            fillOpacity: 0.7
         });
-        
+
         if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-            layer.bringToFront();
-  }
-}
+            khm_layer.bringToFront();
+        }
+        // Add Info popup when mouseover
+        khm_layer.bindPopup(khm_layer.feature.properties.Province).openPopup();
+    }
 
-function resetHighlight(e) {
-    geojson.resetStyle(e.target);
-}
+    function resetHighlight(e) {
+        khm_geojson.resetStyle(e.target);
+    }
+
+    function onEachFeature(feature, layer) {
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight
+        });
+    }
+
+    //fetch("{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}").then(res => res.json()).then(khm_data => {
+    //    khm_geojson = L.geoJson(khm_data, {style:style, onEachFeature:onEachFeature}).addTo(cam_map);
+    //});
+    var khm_json = {{ khm_json| safe}};
+    khm_geojson = L.geoJson(khm_json, {
+        style: style,
+        onEachFeature: onEachFeature
+    }).addTo(cam_map);
 
 
-function onEachFeature(feature, layer) {
-    layer.on({
-        mouseover: highlightFeature,
-        mouseout: resetHighlight
-    })
-    
-    ;
-}
-
-
-// load GeoJSON from an external file
-fetch("{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}").then(res => res.json()).then(data => {
-// add GeoJSON layer to the map once the file is loaded
-//L.geoJson(data, {style: style}).addTo(cam_map);
-geojson = L.geoJson(data, {
-    style: style,
-    onEachFeature: onEachFeature
-}).addTo(cam_map);
-});
-
+    //--------------------------------------------------------------------------------------//   
     // Line Chart
     // Setup Block
     const labels = [
@@ -229,19 +283,19 @@ geojson = L.geoJson(data, {
             label: 'Min Temp',
             backgroundColor: '#2f96b2',
             borderColor: '#2f96b2',
-            data: [{% for a in rainfall %}{{ a }}, {% endfor %}],
+            data: [{% for a in min_temp %} {{ a }}, {% endfor %}],
     yAxisID: 'A'
         }, {
         label: 'Max Temp',
             backgroundColor: '#0b2d5a',
                 borderColor: '#0b2d5a',
-                    data: [{% for b in max_temp %} { { b } }, {% endfor %}],
+                    data: [{% for b in max_temp %} {{ b }}, {% endfor %}],
     yAxisID: 'A'
         }, {
         label: 'Rainfall',
             backgroundColor: '#c4c7d7',
                 borderColor: '#c4c7d7',
-                    data: [{% for c in rainfall %} { { c } }, {% endfor %}],
+                    data: [{% for c in rainfall %} {{ c }}, {% endfor %}],
     yAxisID: 'B'
         }
         ]

@@ -16,7 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app.weather import views as wf_views
+from app.earthquake import views as eq_views
 from app.disaster_ana import views as da_views
+from app.api import views as api_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,9 +30,16 @@ urlpatterns = [
     path('observation', wf_views.observation, name='observation'),
     path('hazard_analytics', da_views.hazard_ana, name='hazard_ana'),
     path('disaster_analytics', da_views.disaster_ana, name='disaster_ana'),
-    path('earthquake', wf_views.earthquake, name='earthquake'),
+    path('earthquake', eq_views.earthquake, name='earthquake'),
+    path('earthquake/setting', eq_views.setting, name='earthquake-setting'),
+    path('earthquake/send_advisory', eq_views.send_advisory, name='earthquake-send-advisory'),
+    path('earthquake/view-bulletin/<str:event_id>/<int:bulletin_no>/', eq_views.view_bulletin, name='earthquake-view-bulletin'),
+    path('earthquake/import', api_views.import_earthquake, name='import-earthquake'),
+    path('earthquake/import/bulletin', api_views.import_bulletin, name='import-earthquake'),
     path('share_data', wf_views.share_data, name='share_data'),
     path('sdc_project', wf_views.sdc_project, name='sdc_project'),
     path('reports', wf_views.reports, name='reports'),
+  
+
 ]
      

@@ -1,0 +1,161 @@
+{% extends "structure/header_n_footer.html" %}
+{% block content %}
+{% load static %}
+{% include "structure/sidebar.html" %}
+{% include "structure/topnavbar.html" %}
+<link rel="stylesheet" href="{% static 'styles/earthquake.css' %}" />
+<div class="main-content-container container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
+  <!-- Page Header -->
+  <div class="page-header row no-gutters py-4">
+     <div class="col-12 text-center text-sm-left">
+        <h1 class="page-title">Earthquake Threats</h1>
+        <div class="row pt-2">
+           <div class="col-md-6">
+              <div class="card card-small w-100 ml-0">
+                 <div class="card-header border-bottom">
+                    <h6 class="m-0">Earthquake Settings</h6>
+                 </div>
+               
+              
+                 <form action="" method="POST">
+                  {% csrf_token %}
+                     <input type="hidden" name="section" value="earthquake">
+                     <div class="card-body d-flex flex-column">
+                        <div class=" btn-group input-group">
+                           <label class="control-label col-lg-6 col-md-6" for="simulation">Enable Simulation</label>                            
+                           <label class="eq-switch mt-1">
+                              <input type="checkbox" class="l-switch" switch="simulation"  name="simulation" {% if settings.simulation %} checked="checked" {% endif %}> 
+                              <span class="eq-slider round"></span>
+                           </label>
+                        </div>
+                        <div class="btn-group input-group">
+                           <label class="control-label col-lg-6 col-md-6 mt-2" for="number_events">Number of Event to show</label>                            
+                           <input type="number" class="form-control form-control-sm col-lg-2 col-md-2" id="number_events" name="number_events" value="{{ settings.number_events }}">
+                        </div>
+                        <div class="btn-group input-group  mt-1">
+                           <label class="control-label col-lg-6 col-md-6" for="auto_send">Auto send advisory?</label>                            
+                           <label class="eq-switch mt-1">
+                              <input type="checkbox" class="l-switch" switch="auto_send"  name="auto_send"  {% if settings.auto_send %} checked="checked" {% endif %} > 
+                              <span class="eq-slider round"></span>
+                           </label>
+                        </div>
+                        <div class="btn-group input-group">
+                           <label class="control-label col-lg-6 col-md-6 mt-2" for="number_events">Emails</label>                            
+                           <input type="email" class="form-control form-control-sm"  name="emails" id="emails" placeholder="Enter emails" aria-label="Emails" multiple value="{{ settings.auto_send_email }}">
+                        </div>
+                        <div class="btn-group input-group  mt-1">
+                           <div class=" col-lg-10 col-md-10">
+                              <input type="submit" name="update" class="btn btn-flat btn-primary" value="Save">
+                           </div>
+                        </div>
+                     </div>
+                  </form>
+                 <!-- End card body -->
+              </div>
+              <!-- End card -->
+           </div>
+           <div class="col-md-6">
+              <div class="card card-small w-100 ml-0">
+                 <div class="card-header border-bottom">
+                    <h6 class="m-0">Boundaries Settings</h6>
+                 </div>
+                 <form action="" method="POST">
+                  {% csrf_token %}
+                     <input type="hidden" name="section" value="boundaries">
+                     <div class="card-body d-flex flex-column">
+                        <div class=" btn-group input-group">
+                           <label class="control-label col-lg-7 col-md-7" for="show_aor">Show Area of Responsibility</label>                            
+                           <label class="eq-switch mt-1">
+                           <input type="checkbox" class="l-switch" switch="show_aor"  name="show_aor"  {% if settings.show_aor %} checked="checked" {% endif %} > 
+                           <span class="eq-slider round"></span>
+                           </label>
+                        </div>
+                        <div class=" btn-group input-group">
+                           <label class="control-label col-lg-7 col-md-7" for="show_aoi">Show area of interest</label>                            
+                           <label class="eq-switch mt-1">
+                           <input type="checkbox" class="l-switch" switch="show_aoi"  name="show_aoi"  {% if settings.show_aoi %} checked="checked" {% endif %} > 
+                           <span class="eq-slider round"></span>
+                           </label>
+                        </div>
+                        <div class="btn-group input-group  mt-1">
+                           <div class="col-md-12">
+                              <input type="submit" name="update" class="btn btn-flat btn-primary" value="Save">
+                           </div>
+                        </div>
+                    </form>
+                 </div>
+                 <!-- End card body -->
+              </div>
+              <!-- End card -->
+           </div>
+        </div>
+        <div class="row pt-2">
+          <div class="col-md-6">
+            <div class="card card-small w-100 ml-0">
+              <div class="card-header border-bottom">
+                 <h6 class="m-0">Filter</h6>
+              </div>
+              <form action="" method="POST">
+               {% csrf_token %}
+                  <input type="hidden" name="section" value="filter">
+                  <div class="card-body d-flex flex-column">
+                     <div class=" btn-group input-group">
+                        <label class="control-label col-lg-6 col-md-6" for="filter_1">Show only magnitude < 5.0</label>                            
+                           <label class="eq-switch mt-1">
+                           <input type="checkbox" class="l-switch" switch="filter_1"  name="filter_1"  {% if settings.filter_1 %} checked="checked" {% endif %} > 
+                           <span class="eq-slider round"></span>
+                        </label>
+                     </div>
+                     <div class=" btn-group input-group">
+                        <label class="control-label col-lg-6 col-md-6" for="filter_2">Show only magnitude 5.0 - 5.9</label>                            
+                           <label class="eq-switch mt-1">
+                           <input type="checkbox" class="l-switch" switch="filter_2"  name="filter_2"  {% if settings.filter_2 %} checked="checked" {% endif %} > 
+                           <span class="eq-slider round"></span>
+                        </label>
+                     </div>
+                     <div class=" btn-group input-group">
+                        <label class="control-label col-lg-6 col-md-6" for="filter_3">Show only magnitude 6.0 - 6.4</label>                            
+                           <label class="eq-switch mt-1">
+                           <input type="checkbox" class="l-switch" switch="filter_3"  name="filter_3"  {% if settings.filter_3 %} checked="checked" {% endif %} > 
+                           <span class="eq-slider round"></span>
+                        </label>
+                     </div>
+                     <div class=" btn-group input-group">
+                        <label class="control-label col-lg-6 col-md-6" for="filter_4">Show only magnitude >= 6.5</label>                            
+                           <label class="eq-switch mt-1">
+                           <input type="checkbox" class="l-switch" switch="filter_4"  name="filter_4"  {% if settings.filter_4 %} checked="checked" {% endif %} > 
+                           <span class="eq-slider round"></span>
+                        </label>
+                     </div>
+                     <div class=" btn-group input-group">
+                        <label class="control-label col-lg-6 col-md-6" for="inside_aoi">Show only inside AOI</label>                            
+                           <label class="eq-switch mt-1">
+                           <input type="checkbox" class="l-switch" switch="inside_aoi"  name="inside_aoi"  {% if settings.inside_aoi %} checked="checked" {% endif %} > 
+                           <span class="eq-slider round"></span>
+                        </label>
+                     </div>
+                     <div class="btn-group input-group  mt-1">
+                        <div class="col-md-4">
+                           <input type="submit" name="update" class="btn btn-flat btn-primary" value="Save">
+                        </div>
+                     </div>
+                 </form>
+              </div>
+              <!-- End card body -->
+           </div>
+             <!-- End card -->
+          </div>
+       
+       </div>
+     </div>
+     <!-- End Page Header -->
+  </div>
+</div>
+<!-- End of Page content -->
+
+{% include "structure/footer.html" %}
+<script src="https://momentjs.com/downloads/moment.js"></script>
+<script src="https://momentjs.com/downloads/moment-timezone.js"></script>
+
+
+{% endblock content %}

@@ -26,12 +26,13 @@ SECRET_KEY = 'django-insecure-1-59q&b26(l2oxru5h_6+-8hq@5%%gom29^owawyq)4*q$s^aj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['203.159.16.180','203.159.16.134','sdc.rimes.int','localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app.weather', # If you create app in folder dont forget to change the name in apps.py in your app folder too.
-    'app.disaster_ana',
+	'app.disaster_ana',
+    'app.earthquake', 
+    'app.api', 
 ]
 
 MIDDLEWARE = [
@@ -79,14 +82,15 @@ WSGI_APPLICATION = 'SDC.wsgi.application'
 # Connect to postgreSQL database
 DATABASES = {
     'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'SDC_project', 
-        'USER': 'postgres', 
-        'PASSWORD': '87654321',
-        'HOST': '127.0.0.1', 
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'SDC_project.sqlite3',
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': 'SDC_project', 
+#        'USER': 'postgres', 
+#        'PASSWORD': '87654321',
+#        'HOST': '127.0.0.1', 
+#        'PORT': '5432',
+
     }
 }
 
@@ -135,3 +139,28 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email
+
+EMAIL = {
+    'PORT': '465',
+    'USER': 'satark@rimes.int', 
+    'FROM': 'no-reply@rimes.int', 
+    'PASSWORD': 'zaurzlrqmjoikiuk', 
+    'HOST': 'smtp.gmail.com',
+    'NAME': 'Eartquake Advisory',
+}
+
+BULLETIN = {
+    'directory' : os.path.join(BASE_DIR, 'bulletins/'),
+    'ORGANIZATION' : 'System for Assessing Tracking and Alerting Disaster Risk Information based on Dynamic Risk Knowledge (SATARK)',
+    'ORG_SHORT' : 'SATARK',
+}
+
+# PUSHER API KEY
+PUSHER = {
+    'KEY': 'e302dd7a74caf028800a',
+    'CLUSTER': 'ap1',
+    'CHANNEL': 'satark',
+    'EVENT': 'earthquake',
+}

@@ -1,274 +1,350 @@
-{% extends "structure/header_n_footer.html" %}
 {% block content %}
 {% load static %}
 {% include "structure/sidebar.html" %}
 {% include "structure/topnavbar.html" %}
 
 <div class="main-content-container container-fluid card" style="margin: 10px; width: auto; background-color: #dee1ea">
-    <!-- Page Header -->
-    <div class="page-header row no-gutters py-4">
-        <div class="col-12 text-center text-sm-left">
-            <h1 class="page-title">Disaster Analytics</h1>
-        </div>
-        <!-- Country Tab -->
-        <!-- Tab Bar -->
-        <div class="btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto py-3 justify-content-md-center"
-            role="group" aria-label="Page actions">
-            <ul class="nav" id="myTab">
-                <li class="nav-item">
-                    <a href="#cambodia" class="nav-link btn btn-white active">Cambodia</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#laos" class="nav-link btn btn-white">Laos</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#myanmar" class="nav-link btn btn-white">Myanmar</a>
-                </li>
-            </ul>
-        </div>
-        <!-- End Tab Bar -->
-        <!-- End Page Header -->
-
-        <!-- Tab Content -->
-        <div class="tab-content col-lg-12">
-            <!-- Cambodia Tab content -->
-            <div class="tab-pane fade show active" id="cambodia">
-                <div class="row">
-                    <div class="card w-100">
-                        <div class="card card-small m-0">
-                            <div class="card-header border-bottom">
-                                <h6 class="m-0">Disaster Impact Profile of Cambodia</h6>
-                            </div>
-                            <!-- Cambodia Body -->
-                            <div class="card-body pt-0">
-                                <!-- Disaster select tab -->
-                                <div class="row border-bottom py-2 bg-light">
-                                    <div class="col-12 col-sm-6 d-flex mb-2 mb-sm-0 w-100">
-                                        <div class="btn-group btn-group-toggle d-flex my-auto mx-auto mx-sm-0"
-                                            role="group" aria-label="Page actions">
-                                            <ul class="nav" id="myTab">
-                                                <li class="nav-item">
-                                                    <a href="#drought"
-                                                        class="nav-link btn btn-white m-1 btn-pill active">Drought</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="#flood"
-                                                        class="nav-link btn btn-white m-1 btn-pill">Flood</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="#lightening"
-                                                        class="nav-link btn btn-white m-1 btn-pill">Lighthening</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="#riverbank"
-                                                        class="nav-link btn btn-white m-1 btn-pill">River bank</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="#storm"
-                                                        class="nav-link btn btn-white m-1 btn-pill">Storm</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Close disaster select section -->
-                                <!-- Graph -->
-                                <!-- Drought Cambodia Data-->
-                                <div class="tab-content col-lg-12">
-                                    <div class="tab-pane fade show active" id="drought">
-                                        <div class="row">
-                                            <!-- Disaster Impact selection form -->
-                                            <form method="post" class="w-100 py-2">
-                                                {% csrf_token %}
-                                                <div class="btn-group input-group">
-                                                    <div class="col-lg-5 col-md-12 col-sm-12">
-                                                        <span>Select Event / Impact :</span>
-                                                        <select class="form-control my-2" name="impact_selected">
-                                                            <option href="#" selected>
-                                                                Select an option
-                                                            </option>
-                                                            <option value="deaths">Deaths</option>
-                                                            <option value="injured">Injured</option>
-                                                            <option value="missing">Missing</option>
-                                                            <option value="houses_des">
-                                                                Houses Destroyed
-                                                            </option>
-                                                            <option value="houses_dam">Houses Damaged</option>
-                                                        </select>
-                                                    </div>
-                                                    <!-- location selection form -->
-                                                    <div class="col-lg-5 col-md-12 col-sm-12">
-                                                        <span>Select Level :</span>
-                                                        <select class="form-control my-2" name="level_selected">
-                                                            <option href="#" selected>
-                                                                Select an option
-                                                            </option>
-                                                            <option value="province">Province</option>
-                                                            <option value="district">District</option>
-                                                            <option value="commune">Commune</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-lg-2 col-md-12 col-sm-12">
-                                                        <span><br>&nbsp;</span>
-                                                        <button type="submit" class="btn btn-primary btn-squared my-2"
-                                                            style=" border-color: #0b2d5a; background-color: #0b2d5a;border-radius: 0.2rem;">
-                                                            Load
-                                                        </button>
-                                                    </div>
-                                                </div> <!-- Close button group -->
-                                            </form>
-                                        </div>
-                                        <!-- Map Chart -->
-                                        <div class="row">
-                                            <div id="hc_container"></div>
-                                        </div> <!-- Close map chart -->
-                                    </div>
-                                    <!-- Close Drought Cambodia Data-->
-
-                                    <!-- Flood Cambodia Data-->
-                                    <div class="tab-pane fade" id="flood">
-                                        <h4>Flood</h4>
-                                    </div>
-                                    <!-- Close Flood Cambodia Data-->
-
-                                    <!-- Lightening Cambodia Data-->
-                                    <div class="tab-pane fade" id="lightening">
-                                        <h4>Lightening</h4>
-                                    </div>
-                                    <!-- Close lightening Cambodia Data-->
-
-                                    <!-- Riverbank Cambodia Data-->
-                                    <div class="tab-pane fade" id="riverbank">
-                                        <h4>Riverbank</h4>
-                                    </div>
-                                    <!-- Close riverbank Cambodia Data-->
-
-                                    <!-- Storm Cambodia Data-->
-                                    <div class="tab-pane fade" id="storm">
-                                        <h4>Storm</h4>
-                                    </div>
-                                    <!-- Close Storm Cambodia Data-->
-                                </div>
-                                <!-- Close tab -->
-                            </div>
-                        </div>
-                        <!-- Close inner card -->
-                    </div>
-                    <!-- Close card-->
-                </div>
-                <!-- Close row -->
-            </div>
-            <!-- Close Cambodia Tab -->
-
-            <!-- Laos Tab content -->
-            <div class="tab-pane fade" id="laos">
-                <h4 class="mt-2">Disaster Impact Profile of Laos</h4>
-
-                <!-- Laos Map Box-->
-
-                <!-- End Map Box-->
-            </div>
-            <!-- End Laos tab -->
-
-            <!-- Myanmar Tab content -->
-            <div class="tab-pane fade" id="myanmar">
-                <h4 class="mt-2">Disaster Impact Profile of Myanmar</h4>
-
-                <!-- Myanmar Map Box-->
-
-                <!-- End Map Box-->
-            </div>
-            <!-- End Myanmar tab -->
-        </div>
-        <!-- End tab content -->
+  <!-- Page Header -->
+  <div class="page-header row no-gutters py-4">
+    <div class="col-12 text-center text-sm-left">
+      <h1 class="page-title">Disaster Analytics</h1>
     </div>
-    <!-- Page header end tag -->
+    <!-- Country Tab -->
+    <!-- Tab Bar -->
+    <div class="btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto py-3 justify-content-md-center"
+        role="group" aria-label="Page actions">
+        <ul class="nav" id="myTab">
+            <li class="nav-item ">
+                <a href="#cambodia" class="nav-link btn btn-white active">Cambodia</a>
+            </li>
+            <li class="nav-item">
+                <a href="#laos" class="nav-link btn btn-white">Laos</a>
+            </li>
+            <li class="nav-item">
+                <a href="#myanmar" class="nav-link btn btn-white">Myanmar</a>
+            </li>
+        </ul>
+    </div>
+    <!-- End Tab Bar -->
+    <!-- End Page Header -->
+    <!-- Tab Content -->
+    <div class="tab-content col-lg-12">
+      
+      <!-- Cambodia Tab content -->
+      <div class="tab-pane fade show active" id="cambodia">
+        <div class="row">
+          <div class="card w-100">
+            <div class="card card-small m-0">
+              <div class="card-header border-bottom">
+                <h6 class="m-0">Disaster Impact Profile of Cambodia</h6>
+              </div>
+              <!-- Cambodia Body -->
+              <div class="card-body pt-0">
+                <!-- Disaster select tab -->
+                <div class="row border-bottom py-2 bg-light">
+                  <div class="col-12 col-sm-6 d-flex mb-2 mb-sm-0 w-100">
+
+                    <form method="post" class="w-100 py-2">
+                      {% csrf_token %}
+                      <!-- Disaster type-->
+                      <div class="row">
+                        <div class="col-lg-5 col-md-12 col-sm-12">
+                          <span>Select Event :</span>
+                          <div class="btn-group btn-group-toggle d-flex my-auto mx-auto mx-sm-0 py-2"
+                            data-toggle="buttons">
+                            {% for a in dis_event %}
+                            <label class="btn btn-white btn-pill {% if a.event == disaster_param %}active{% endif %}"
+                              for="event">
+                              <input type="radio" name="dis_selected" id="{{a.event}}" autocomplete="off"
+                                value="{{a.event}}" {% if a.event == disaster_param %}checked{% endif %}> {{a.event}}
+                            </label>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <!-- Disaster Impact selection form -->
+                        <div class="btn-group input-group">
+                          <div class="col-lg-5 col-md-12 col-sm-12">
+                            <span>Select Impact :</span>
+                            <select class="form-control my-2" name="impact_selected">
+                              <option value="deaths" {% if impact_param == 'deaths' %}selected{% endif %}>Deaths</option>
+                              <option value="injured" {% if impact_param == 'injured' %}selected{% endif %}>Injured
+                              </option>
+                              <option value="missing" {% if impact_param == 'missing' %}selected{% endif %}>Missing
+                              </option>
+                              <option value="house_destroy" {% if impact_param == 'house_destroy' %}selected{% endif %}>
+                                Houses Destroyed</option>
+                              <option value="house_damage" {% if impact_param == 'house_damage' %}selected{% endif %}>
+                                Houses Damaged</option>
+                            </select>
+                          </div>
+                          <!-- location selection form -->
+                          <div class="col-lg-5 col-md-12 col-sm-12">
+                            <span>Select Level :</span>
+                            <select class="form-control my-2" name="level_selected">
+                              <option value="province_name" {% if level_param == 'province_name' %}selected{% endif %}>
+                                Province</option>
+                              <option value="district_name" {% if level_param == 'district_name' %}selected{% endif %}>
+                                District</option>
+                              <option value="commune_name" {% if level_param == 'commune_name' %}selected{% endif %}>
+                                Commune</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-2 col-md-12 col-sm-12">
+                            <span><br>&nbsp;</span>
+                            <button type="submit" class="btn btn-primary btn-squared my-2"
+                              style=" border-color: #0b2d5a; background-color: #0b2d5a;border-radius: 0.2rem;">
+                              Load
+                            </button>
+                          </div>
+                        </div> <!-- Close button group -->
+                    </form>
+                  </div>
+
+                </div>
+              </div>
+              <!-- Close disaster select section -->
+
+              <!-- Map Chart -->
+              <div class="row">
+                <h4 class="p-lg-4 p-md-2 p-sm-2">Province death cumulative since 2000 (Map chart)</h4>
+                <div id="hc_container"></div>
+                <h4 class="p-lg-4 p-md-2 p-sm-2">Death cumulative since 2000 (sort by province)</h4>
+                <canvas id="local_Chart" style="height: calc(40vh - 7.5rem);width: 100%;"></canvas>
+                <h4 class="p-lg-4 p-md-2 p-sm-2">Death cumulative since 2000 (sort by year)</h4>
+                <canvas id="year_Chart" style="height: calc(40vh - 7.5rem);width: 100%;"></canvas>
+              </div> <!-- Close map chart -->
+
+            </div>
+            <!-- Close Drought Cambodia Data-->
+
+          
+        
+        <!-- Close inner card -->
+      </div>
+      <!-- Close card-->
+    </div>
+    <!-- Close row -->
+  </div>
+  <!-- Close Cambodia Tab -->
+
+  <!-- Laos Tab content -->
+  <div class="tab-pane fade" id="laos">
+    <h4 class="mt-2">Disaster Impact Profile of Laos</h4>
+
+    <!-- Laos Map Box-->
+
+    <!-- End Map Box-->
+  </div>
+  <!-- End Laos tab -->
+
+  <!-- Myanmar Tab content -->
+  <div class="tab-pane fade" id="myanmar">
+    <h4 class="mt-2">Disaster Impact Profile of Myanmar</h4>
+
+    <!-- Myanmar Map Box-->
+
+    <!-- End Map Box-->
+  </div>
+  <!-- End Myanmar tab -->
+</div>
+<!-- End tab content -->
+</div>
+<!-- Page header end tag -->
 </div>
 
 {% include "structure/footer.html" %}
 
 <script type="text/javascript">
-    // HighChart Map
-    (async () => {
-        const topology = await fetch(
-            "{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}").then(response => response.json());
 
-        Highcharts.getJSON('', function (data) {
-            // Make codes uppercase to match the map data
-            data.forEach(function (p) {
-                p.code = p.code.toUpperCase();
-            });
-
-            // Instantiate the map
-            Highcharts.mapChart('hc_container', {
-                chart: {
-                    map: topology,
-                    borderWidth: 1
-                },
-
-                title: {
-                    text: 'US population density (/km²)'
-                },
-
-                exporting: {
-                    sourceWidth: 600,
-                    sourceHeight: 500
-                },
-
-                legend: {
-                    layout: 'horizontal',
-                    borderWidth: 0,
-                    backgroundColor: 'rgba(255,255,255,0.85)',
-                    floating: true,
-                    verticalAlign: 'top',
-                    y: 25
-                },
-
-                mapNavigation: {
-                    enabled: true
-                },
-
-                colorAxis: {
-                    min: 1,
-                    type: 'logarithmic',
-                    minColor: '#EEEEFF',
-                    maxColor: '#000022',
-                    stops: [
-                        [0, '#EFEFFF'],
-                        [0.67, '#4444FF'],
-                        [1, '#000022']
-                    ]
-                },
-
-                series: [{
-                    animation: {
-                        duration: 1000
-                    },
-                    data: data,
-                    joinBy: ['postal-code', 'code'],
-                    dataLabels: {
-                        enabled: true,
-                        color: '#FFFFFF',
-                        format: '{point.code}'
-                    },
-                    name: 'Population density',
-                    tooltip: {
-                        pointFormat: '{point.code}: {point.value}/km²'
-                    }
-                }]
-            });
-        });
-
-    })();
-    //-------------------------------------------------------------------//
     // Tab
     $(document).ready(function () {
-        $("#myTab a").click(function (e) {
-            e.preventDefault();
-            $(this).tab("show");
-        });
+    $("#myTab a").click(function (z) {
+      z.preventDefault();
+      $(this).tab("show");
     });
+  });
+
     //-------------------------------------------------------------------//
+
+// HighChart Map
+//var MapData = [['Battambang', 0], ['Kampong Cham', 0], ['Kampong Thom', 0], ['Kandal', 3], ['Kratie', 0], ['Phnom Penh', 0], ['Prey Veng', 0]];
+const MapData = {{ map_data|safe }};
+// load all 3 level map
+const camMap_p = "{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}";
+const camMap_d = "{% static 'JSON/Cambodia/Cambodia_District.geojson' %}";
+const camMap_c = "{% static 'JSON/Cambodia/Cambodia_Commune.geojson' %}";
+
+    // choose which map level will show on site by dropdown selection.
+    function level(lev) {
+      if (lev == 'district_name') {
+        return camMap_d;
+      }
+      if (lev == 'commune_name') {
+        return camMap_c;
+      }
+      else {
+        return camMap_p;
+      }
+    }
+
+    function Datalevel(dlev) {
+      if (dlev == 'district_name') {
+        return 'District';
+      }
+      if (dlev == 'commune_name') {
+        return 'Commune';
+      }
+      else {
+        return 'Province';
+      }
+    }
+
+
+Highcharts.getJSON(level('{{level_param}}'), function (geojson) {
+
+    // Initialize the chart
+    Highcharts.mapChart('hc_container', {
+        chart: {
+            map: geojson,
+            //borderWidth: 2,
+            backgroundColor: false
+        },
+
+        title: {
+            text: 'GeoJSON in Highmaps'
+        },
+
+        accessibility: {
+            typeDescription: 'Map of Cambodia.'
+        },
+
+        mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+                verticalAlign: 'bottom'
+            }
+        },
+
+        colorAxis: {
+        //min: 1,
+        //max: 100,
+        //type: 'logarithmic', //because you can't take log with 0 value
+        minColor: '#EEEEFF',
+        maxColor: '#000022',
+        stops: [
+          [0, '#C6DBEF'],
+          [0.67, '#4292C6'],
+          [1, '#062655']
+        ]
+        },
+
+        series: [{
+            data: MapData,
+            keys: ['code', 'value'],
+            joinBy: [Datalevel('{{level_param}}'), 'code'],
+            name: 'Random data',
+            tooltip: {
+                    pointFormat: '{point.code}: {point.value}'
+                },
+            states: {
+                hover: {
+                    color: '#a4edba'
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                format: '{point.code}'
+            }
+        }]
+    });
+});
+
+  //-------------------------------------------------------------------//
+  // Local Bar chart
+  // Set up
+  const l_labels = {{ level_code|safe }};
+  const l_data = {
+    labels: l_labels,
+    datasets: [{
+      label: 'Death cumulative from 2000',
+      data: {{ level_value|safe }},
+      backgroundColor: [
+        'rgba(11, 45, 90, 0.6)'
+      ],
+      borderColor: [
+        'rgb(11, 45, 90)'
+      ],
+      borderWidth: 1
+    }]
+  };
+  // Config
+  const l_config = {
+    type: 'bar',
+    data: l_data,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    },
+  };
+  // Render chart
+  const local_Chart = new Chart(
+    document.getElementById('local_Chart'),
+    l_config
+  );
+
+  //-------------------------------------------------------------------//
+  // Year Bar chart
+  // Set up
+  const y_labels = {{list_year|safe}};
+  const y_data = {
+    labels: y_labels,
+    datasets: [{
+      label: 'Death cumulative',
+      data: {{ list_impact|safe}},
+      backgroundColor: [
+        'rgba(11, 45, 90, 0.6)'
+      ],
+      borderColor: [
+        'rgb(11, 45, 90)'
+      ],
+      borderWidth: 1
+    }]
+  };
+  // Config
+  const y_config = {
+    type: 'bar',
+    data: y_data,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    },
+  };
+  // Render chart
+  const year_Chart = new Chart(
+    document.getElementById('year_Chart'),
+    y_config
+  );
+  
+  //--------------------------------------------------------------------//
 
 </script>
 

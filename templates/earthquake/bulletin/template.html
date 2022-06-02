@@ -1,0 +1,67 @@
+<style>
+	html *
+	{
+	   font-size: 10pt !important;
+	   font-family: 'Courier' !important;
+	}
+	p {
+		margin-top: 0;
+		margin-bottom: 4px;
+		padding-top: 0;
+		width:720px;
+		word-wrap: break-word;
+		text-align: justify;
+	}
+	</style>
+	<div>
+		<table border="0">
+			<tr>
+				<td width="15%"><img src="" style="width: 75px; height: 75px;"></td>
+				<td width="70%" style="text-align:center">
+					<h3>{{ org }}</h3>
+				</td>
+				<td width="15%"><img src="" style="width: 75px; height: 75px;"></td>
+			</tr>
+		</table>
+	</div>
+	<br/>
+	{{ header1 }} <br/>
+	{{ test }}
+	{{ line_break }}
+	{{ header2 }} <br/>
+	{{ org }} <br/>
+	{{ header3 }} <br/>
+	{{ line_break }}
+	. . . {{  title  }} . . . 
+	{% if simulation %}
+		<br/>
+	{% endif %}
+	<div style="width:720px;">
+		{{ eqinfo_title_print }} <br/>
+		{{ eqinfo|linebreaksbr }} <br/><br/>
+		{{ eval_title_print }} <br/>
+		{{ eval|linebreaksbr }} <br/>
+		<br/>
+		
+	
+		{% if w_threat %}
+			{{ threat_title_print }} <br />
+			{{ threat|linebreaksbr }} <br /><br />
+		{% endif %}
+
+		{% if w_advice %}
+			{{ advice_title_print }} <br />
+			{{ advice|linebreaksbr }} <br /><br />
+		{% endif %}
+		
+		{% if w_update %}
+			{{ update_title_print }} <br />
+			{{ update|linebreaksbr }} <br /><br />
+		{% endif %}
+		
+		{{ contact_title_print }}<br/> <br/>
+		{{ contact|linebreaksbr }}<br/>
+		<br/>
+		</div>
+	END OF {% if simulation %} TEST{% endif %} BULLETIN<br/>
+	{{ line_break }}

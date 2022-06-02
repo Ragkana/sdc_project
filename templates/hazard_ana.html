@@ -1,22 +1,146 @@
 {% load static %}
-{% include "structure/header_n_footer.html" %}
 {% include "structure/sidebar.html" %}
 {% include "structure/topnavbar.html" %}
 {% block content %}
 
 <div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
-<!-- Page Header -->
-<div class="page-header row no-gutters py-4">
-    <div class="col-12 col-sm-4 text-center text-sm-left mb-4 mb-sm-0">
-        <h3 class="page-title">Hazard Analytics</h3>
-    </div>
+    <!-- Page Header -->
+    <div class="page-header row no-gutters py-4">
+        <div class="col-12 col-sm-4 text-center text-sm-left mb-4 mb-sm-0">
+            <h3 class="page-title">Hazard Analytics</h3>
+        </div>
     </div>
 
+    <!-- Country Tab -->
+    <!-- Tab Bar -->
+    <div class="btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto py-3 justify-content-md-center"
+        role="group" aria-label="Page actions">
+        <ul class="nav" id="myTab">
+            <li class="nav-item ">
+                <a href="#cambodia" class="nav-link btn btn-white active">Cambodia</a>
+            </li>
+            <li class="nav-item">
+                <a href="#laos" class="nav-link btn btn-white">Laos</a>
+            </li>
+            <li class="nav-item">
+                <a href="#myanmar" class="nav-link btn btn-white">Myanmar</a>
+            </li>
+        </ul>
+    </div>
+    <!-- End Tab Bar -->
+
+    <div class="tab-content col-lg-12">
+        <!-- Cambodia Tab-->
+        <div class="tab-pane fade show active" id="cambodia">
+            <div class="row">
+                <div class="card w-100">
+                    <!-- Card Header -->
+                    <div class="card-header border-bottom">
+                        <h6 class="m-0">Cambodia Hazard</h6>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pt-0">
+                        <div class="row border-bottom py-2">
+                            <div class="col-12 col-sm-6 d-flex mb-2 mb-sm-0">
+
+                                <form method="post" class="py-2">
+                                    {% csrf_token %}
+                                    <!-- Hazard Selection -->
+                                    
+                                        <div class="row col-lg-5 col-md-12 col-sm-12">
+                                            <span>Select Event :</span>
+                                            <div class="btn-group btn-group-toggle d-flex my-auto mx-auto mx-sm-0 py-2"
+                                                data-toggle="buttons">
+                                                {% for a in haz_event %}
+                                                <label
+                                                    class="btn btn-white btn-pill {% if a.event == hazard_param %}active{% endif %}"
+                                                    for="event">
+                                                    <input type="radio" name="haz_selected" id="{{a.event}}" autocomplete="off" value="{{a.event}}" {% if a.event == hazard_param %}checked{% endif %}> {{a.event}}
+                                                </label>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    
+                                    <!-- Level Selection -->
+                                    <div class="row col-lg-5 col-md-12 col-sm-12">
+                                        <span>Select Level :</span>
+                                        <select class="form-control my-2" name="level_selected">
+                                          <option value="province_name" {% if level_param == 'province_name' %}selected{% endif %}>
+                                            Province</option>
+                                          <option value="district_name" {% if level_param == 'district_name' %}selected{% endif %}>
+                                            District</option>
+                                          <option value="commune_name" {% if level_param == 'commune_name' %}selected{% endif %}>
+                                            Commune</option>
+                                        </select>
+                                      </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- End Card body -->
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Laos Tab-->
+        <div class="tab-pane fade" id="laos">
+            <h3>Laos</h3>
+
+        </div>
+
+        <!-- Myanmar Tab-->
+        <div class="tab-pane fade" id="myanmar">
+            <h3>Myanmar</h3>
+
+        </div>
+
+    </div> <!-- End Tab content -->
+
+
+
 </div>
-<!-- End Page Header -->
-</div>
+
+<script type="text/javascript">
+    // Tab
+    $(document).ready(function () {
+        $("#myTab a").click(function (e) {
+            e.preventDefault();
+            $(this).tab("show");
+        });
+    });
+
+    // Make the map avaliable in each tab
+    var camTab = document.getElementById('cambodia');
+    var observer1 = new MutationObserver(function () {
+        if (camTab.style.display != 'none') {
+            cam_map.invalidateSize();
+        }
+    });
+    observer1.observe(camTab, { attributes: true });
+
+    var laoTab = document.getElementById('laos');
+    var observer2 = new MutationObserver(function () {
+        if (laoTab.style.display != 'none') {
+            lao_map.invalidateSize();
+        }
+    });
+    observer2.observe(laoTab, { attributes: true });
+
+    var myaTab = document.getElementById('myanmar');
+    var observer3 = new MutationObserver(function () {
+        if (myaTab.style.display != 'none') {
+            mya_map.invalidateSize();
+        }
+    });
+    observer3.observe(myaTab, { attributes: true });
+
+  //-------------------------------------------------------------------//
+</script>
 
 
 {% include "structure/footer.html" %}
 {% endblock content %}
-
