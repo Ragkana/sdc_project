@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 #from .models import country, observation_metdata, province, district, commune, weather_forecast
 from app.weather.models import observation_metdata,weather_forecast
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Min, Max
 
 import pandas as pd
 import numpy as np
@@ -61,21 +61,32 @@ def observation(request):
     obs = observation_metdata.objects.values('station_name').annotate(count=Count('station_name'))
     # Retrieve station name from dropdown
     selected_value = request.POST.get('station_selected')
-    # Average data in selected station and each month, choose only weather data orderby month.
+    ## Set Default Value ##
+    if selected_value == None:
+        selected_value = 'Battambang'
+    else:
+        selected_value = selected_value
+    ## Average data ##
+    # Average data(all year) in selected station and each month, choose only weather data orderby month.
     avg_obs = observation_metdata.objects.values('station_name','month').annotate(rainfall__avg=Avg('rainfall'), max__temp__avg=Avg('max_t'), min__temp__avg=Avg('min_t')).filter(station_name=selected_value).order_by('month')
-    rainfall = avg_obs.values_list('rainfall__avg', flat=True)
-    max_temp = avg_obs.values_list('max__temp__avg', flat=True)
-    min_temp = avg_obs.values_list('min__temp__avg', flat=True)
+    rainfall_all = avg_obs.values_list('rainfall__avg', flat=True)
+    max_temp_all = avg_obs.values_list('max__temp__avg', flat=True)
+    min_temp_all = avg_obs.values_list('min__temp__avg', flat=True)
     ## For Time serie Graph ##
-    year_start = observation_metdata.objects.values('year', 'station_name').annotate(count=Count('year')).filter(station_name=selected_value).order_by('year')
-    year_end = observation_metdata.objects.values('year', 'station_name').annotate(count=Count('year')).filter(station_name=selected_value).order_by('year')
+    # Retrieve start and end year
+    year_data = observation_metdata.objects.values('station_name').annotate(year__start=Min('year'), year__end=Max('year')).filter(station_name=selected_value)
+    year_start, year_end = year_data[0]['year__start'], year_data[0]['year__end']
+    #year_start = observation_metdata.objects.values('year', 'station_name').annotate(count=Count('year')).filter(station_name=selected_value).order_by('year')
+    #year_end = observation_metdata.objects.values('year', 'station_name').annotate(count=Count('year')).filter(station_name=selected_value).order_by('year')
     # Retrieve year data from template
     start_y_selected = request.POST.get('start_year_selected')
     end_y_selected = request.POST.get('end_year_selected')
     return render(request, "observation.html", {'url_name': 'observation', 'station':obs, 
-    'rainfall':rainfall, 'max_temp':max_temp, 'min_temp':min_temp, 'station_n':selected_value, 
-    'khm_json':khm_obj, 'year_start':year_start, 'year':start_y_selected})
+    'rainfall':rainfall_all, 'max_temp':max_temp_all, 'min_temp':min_temp_all, 'station_n':selected_value, 
+    'khm_json':khm_obj, 'year_start':year_start, 'year_end':year_end})
 
+def earthquake(request):
+    return render(request, "earthquake.html", {'url_name': 'earthquake'})
 
 def share_data(request):
     return render(request, "share_data.html", {'url_name': 'share_data'})

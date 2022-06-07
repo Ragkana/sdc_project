@@ -1,3 +1,9 @@
+SDC_project.sqlite3
+
+SDC/__pycache__
+SDC/__pycache__/*
+SDC/settings.py
+
 app/api/__pycache__
 app/api/__pycache__/*
 app/api/migrations
@@ -17,3 +23,4 @@ app/disaster_ana/__pycache__
 app/disaster_ana/__pycache__/*
 app/disaster_ana/migrations
 app/disaster_ana/migrations/*
+

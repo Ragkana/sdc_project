@@ -1,5 +1,4 @@
 {% load static %}
-{% include "structure/header_n_footer.html" %}
 {% block content %}
 
 {% include "structure/sidebar.html" %}
@@ -34,36 +33,49 @@
     <div class="tab-content">
         <!-- Cambodia Tab -->
         <div class="tab-pane fade show active" id="cambodia">
-            <h4 class="mt-2">Cambodia tab content</h4>
-
+            <h4 class="mt-2"></h4>
+            {{data}}
             <!-- Map box -->
             <div class="row">
                 <div class="col-lg-6 col-md-12 col-sm-12 mb-4 mx-0">
                     <div class="card card-small m-0">
                         <div class="card-header border-bottom">
-                            <h6 class="m-0">Please choose location</h6>
+                            <h6 class="m-0">Cambodia Station's Map</h6>
                         </div>
                         <div class="card-body pt-0">
                             <!-- Place Choose station dropdown bar -->
                             <div class="row border-bottom py-2 bg-light">
-                                <div class="col-12 col-sm-6 d-flex mb-2 mb-sm-0 w-100">
-                                    <form method="post" class="w-100 py-2">
-                                        {% csrf_token %}
-                                        <div class="input-group">
-                                            <select class="form-control" name="station_selected">
-                                                <option href="#">Choose a station</option>
+                                <form method="post" name="station_form" id="station_form" class="w-100">
+                                    {% csrf_token %}
+                                    <!--<div class="input-group">-->
+                                    <div class="row col-12 w-100">
+                                        <div class="col-lg-4 col-md-4 col-sm-12 my-1">
+                                            <span class="row mx-0 pb-1">Select station :</span>
+                                            <select class="row col-12 d-flex mx-0 form-control" name="station_selected">
                                                 {% for i in station %}
                                                 <option value='{{ i.station_name }}' {% if i.station_name == station_n %} selected {% endif %}>{{ i.station_name }}</option>
                                                 {% endfor %}
                                             </select>
-                                            <div class="input-group-append">
-                                                <button type="button submit" class="btn btn-primary btn-squared"
-                                                    style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Load</button>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-12 my-1 w-100">
+                                            <span class="row col-lg-12 col-sm-12 pb-1">Select year :</span>
+                                            <!-- Select Start year -->
+                                            <div class="row col-12">
+                                                
+                                                <!-- Submit Button -->
+                                                <div class="col-lg-2 col-md-2 col-sm-4">
+                                                    <button type="button submit" class="btn btn-primary btn-squared"
+                                                        name="station_submit" id="station_submit"
+                                                        style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Load</button>
+                                                </div>
+
                                             </div>
                                         </div>
-                                    </form>
-                                </div>
 
+
+
+                                    </div>
+                                </form>
                             </div>
                             <!-- End Choose station dropdown bar -->
                             <!-- Place something... -->
@@ -75,53 +87,28 @@
                     </div>
                 </div>
                 <!-- End Map box -->
-                
+
                 <!-- Describe box -->
                 <div class="col-lg-6 col-md-6 col-sm-6 mb-4 mx-0">
                     <div class="card ubd-stats card-small m-0">
                         <div class="card-header border-bottom">
-                            <h6 class="m-0">Last 30 Years Climatology of {{station_n}} station</h6>
+                            <h6 class="m-0">Climatology of {{station_n}} station</h6>
                         </div>
-                        
+
                         <div class="card-body pt-0">
                             <!-- Select year -->
                             <div class="row border-bottom py-2 bg-light">
                                 <div class="col-12 w-100">
                                     <span>Select year</span>
-                                <form method="post">
-                                    {% csrf_token %}
-                                    <div class="input-group">
-                                        <!-- Select Start year -->
-                                        <div class="col-lg-5 col-md-5 col-sm-12">
-                                            <select class="form-control my-2" name="start_year_selected" value="{{m.year}}">
-                                                <option href="#">Start year</option>
-                                                {% for m in year_start %}
-                                                <option value="{{m.year}}">{{m.year}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        <span class="my-2"> - </span>
-                                        <!-- Select End year -->
-                                        <div class="col-lg-5 col-md-5 col-sm-12">
-                                            <select class="form-control my-2" name="end_year_selected">
-                                                <option href="#">End year</option>
-                                            </select>
-                                        </div>
-                                        <!-- Submit button -->
-                                        <div class="col-lg-1 col-md-1 col-sm-12">
-                                            <button type="button submit" class="btn btn-primary btn-squared my-2"
-                                                style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Load</button>
-                                        </div>
-                                        
-                                    </div>
-                                </form>
 
+                                    <div class="col-12" id="year_slider"></div>
+
+                                </div>
                             </div>
-                        </div>
 
                             <!-- End Select year -->
 
-                            
+
                             <canvas id="myChart"></canvas>
 
                         </div> <!-- End card body -->
@@ -183,7 +170,6 @@
         });
     });
     //-----------------------------------------------------------------------------------------------//
-
     // Cambodia map
     var cam_map = L.map('cam_map', {
         zoomControl: false,
@@ -283,19 +269,19 @@
             label: 'Min Temp',
             backgroundColor: '#2f96b2',
             borderColor: '#2f96b2',
-            data: [{% for a in min_temp %} {{ a }}, {% endfor %}],
+            data: [{% for a in min_temp %} {{a}}, {% endfor %}],
     yAxisID: 'A'
         }, {
         label: 'Max Temp',
             backgroundColor: '#0b2d5a',
                 borderColor: '#0b2d5a',
-                    data: [{% for b in max_temp %} {{ b }}, {% endfor %}],
+                    data: [{% for b in max_temp %} {{b}}, {% endfor %}],
     yAxisID: 'A'
         }, {
         label: 'Rainfall',
             backgroundColor: '#c4c7d7',
                 borderColor: '#c4c7d7',
-                    data: [{% for c in rainfall %} {{ c }}, {% endfor %}],
+                    data: [{% for c in rainfall %} {{c}}, {% endfor %}],
     yAxisID: 'B'
         }
         ]
@@ -332,6 +318,26 @@
         config
     );
 
+    //--------------------------------------------------------------------------------------//  
+    // year range select //
+    var YearSlider = document.getElementById('year_slider');
+
+    noUiSlider.create(YearSlider, {
+        start: [1999, 2022],
+        tooltips: [true, true],
+        connect: true,
+        step: 10,
+        range: {
+            'min': 1999,
+            'max': 2022
+        },
+        pips: {
+            mode: 'steps',
+            density: 3
+        }
+    });
+
+    //--------------------------------------------------------------------------------------//  
 </script>
 {% include "structure/footer.html" %}
 {% endblock content %}

@@ -32,4 +32,3 @@ class disaster(models.Model):
     class Meta:
         db_table = "disaster"
 
-

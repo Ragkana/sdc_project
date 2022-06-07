@@ -17,10 +17,33 @@ def hazard_ana(request):
     # Sending disaster type value
     haz_event = disaster.objects.values('event').annotate(count=Count('event'))
     # Retrieve data from template
-    hazard_selected = request.POST.get('haz_selected')
-    level_selected = request.POST.get('level_selected')
+    khm_hazard_selected = request.POST.get('khm_haz_selected')
+    khm_level_selected = request.POST.get('khm_level_selected')
 
-    return render(request, "hazard_ana.html", {'url_name': 'hazard_ana', 'haz_event':haz_event, 'hazard_param':hazard_selected, 'level_param':level_selected})
+    ## Set default value ##
+    if khm_hazard_selected == None and khm_level_selected == None :
+        khm_hazard_selected = 'DROUGHT'
+        khm_level_selected = 'province_name'
+    else:
+        khm_hazard_selected = khm_hazard_selected
+        khm_level_selected = khm_level_selected
+
+    ## Create Hazard DataFrame for each country ##
+    khm_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name',
+    'commune_id','commune_name','date_data','event').filter(province_id__startswith='KHM'))
+    # Add year 
+    khm_hazard_df['year'] = pd.DatetimeIndex(khm_hazard_df['date_data']).year
+    # Filter by hazard selection
+    khm_hazard_df = khm_hazard_df[khm_hazard_df['event']==khm_hazard_selected]
+    # Get max-Min Year
+    year_start = khm_hazard_df['year'].min()
+    year_end = khm_hazard_df['year'].max()
+    # Group by and sum hazard in each area
+    khm_df = khm_hazard_df.groupby(khm_level_selected).count()
+
+    ## Load GeoJson map ##
+    return render(request, "hazard_ana.html", {'url_name': 'hazard_ana', 'haz_event':haz_event, 'hazard_param':khm_hazard_selected, 'level_param':khm_level_selected,
+    'year_start':year_start, 'year_end':year_end, 'test':khm_df})
 
 def disaster_ana(request):
     # Retrieve data from template
@@ -78,4 +101,5 @@ def disaster_ana(request):
     'impact_param': impact_selected, 'level_param': level_selected, 'dis_event':dis_event, '4year':df_year_data, 
     'map_data':map_sum, 'level_code':code, 'level_value':value, 'list_year':list_year, 'list_impact':list_impact})
     """
+
     

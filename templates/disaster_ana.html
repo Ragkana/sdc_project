@@ -100,12 +100,12 @@
                             </button>
                           </div>
                         </div> <!-- Close button group -->
+                        </div>
                     </form>
+
                   </div>
 
                 </div>
-              </div>
-              <!-- Close disaster select section -->
 
               <!-- Map Chart -->
               <div class="row">
@@ -118,10 +118,10 @@
               </div> <!-- Close map chart -->
 
             </div>
-            <!-- Close Drought Cambodia Data-->
+            <!-- Close Cambodia Data-->
 
           
-        
+        </div>
         <!-- Close inner card -->
       </div>
       <!-- Close card-->
@@ -176,6 +176,7 @@ const MapData = {{ map_data|safe }};
 const camMap_p = "{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}";
 const camMap_d = "{% static 'JSON/Cambodia/Cambodia_District.geojson' %}";
 const camMap_c = "{% static 'JSON/Cambodia/Cambodia_Commune.geojson' %}";
+const DisName = '{{disaster_param}}';
 
     // choose which map level will show on site by dropdown selection.
     function level(lev) {
@@ -245,7 +246,7 @@ Highcharts.getJSON(level('{{level_param}}'), function (geojson) {
             data: MapData,
             keys: ['code', 'value'],
             joinBy: [Datalevel('{{level_param}}'), 'code'],
-            name: 'Random data',
+            name: DisName,
             tooltip: {
                     pointFormat: '{point.code}: {point.value}'
                 },
@@ -347,5 +348,6 @@ Highcharts.getJSON(level('{{level_param}}'), function (geojson) {
   //--------------------------------------------------------------------//
 
 </script>
+
 
 {% endblock content %}
