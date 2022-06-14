@@ -481,12 +481,12 @@ $(document).ready(function() {
         $('.div-bulletin').append(opt_bulletin);
     
         // Populate Email
-        let msg = "SATARK - OSDMA Earthquake information :\n\n" +
+        let msg = "SDC Earthquake information :\n\n" +
         `Origin Time = ${event.fields.event_datetime} IST\n` +
         `Magnitude = ${event.fields.magnitude} Depth = ${event.fields.depth} Km\n` +
         `Longitude = ${event.fields.longitude} Latitude = ${event.fields.latitude}\n` +
         `Region = ${event.fields.region}\n\n` +
-        `Massage sent by SATARK automatic Alerting System`;
+        `Message sent by SDC automatic Alerting System`;
         
         $('#message').val(msg);
     });

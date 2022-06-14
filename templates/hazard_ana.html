@@ -31,6 +31,7 @@
     <div class="tab-content col-lg-12">
         <!-- Cambodia Tab-->
         <div class="tab-pane fade show active" id="cambodia">
+
             <div class="row">
                 <div class="card w-100 card-small">
                     <!-- Card Header -->
@@ -47,17 +48,17 @@
                                     <!-- Hazard Selection -->
                                     <div class="row w-100">
 
-                                    <div class="col-lg-3 col-md-3 col-sm-12">
-                                        <span>Select Event :</span>
-                                        <select class="form-control my-2" name="khm_haz_selected">
-                                            {% for a in haz_event %}
-                                            <option value="{{a.event}}" {% if a.event == hazard_param %} selected {% endif %}>{{a.event}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12">
+                                            <span>Select Event :</span>
+                                            <select class="form-control my-2" name="khm_haz_selected">
+                                                {% for a in haz_event %}
+                                                <option value="{{a.event}}" {% if a.event == hazard_param %} selected {% endif %}>{{a.event}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
 
-                                    <!-- Level Selection -->
-                                    
+                                        <!-- Level Selection -->
+
                                         <div class="col-lg-3 col-md-3 col-sm-12">
                                             <span>Select Level :</span>
                                             <select class="form-control my-2" name="khm_level_selected">
@@ -66,30 +67,30 @@
                                                 <option value="commune_name" {% if level_param == 'commune_name' %}selected{% endif %}>Commune</option>
                                             </select>
                                         </div>
-                                    
 
-                                    <!-- Submit Button -->
-                                    <div class="col-lg-2 col-md-2 col-sm-12">
-                                        <span><br></span>
-                                            <button type="submit" id="khm_submit"
-                                                class="btn btn-primary btn-squared my-2"
-                                                style=" border-color: #0b2d5a; background-color: #0b2d5a;border-radius: 0.2rem;">Load</button>
+
+                                        <!-- Submit Button -->
+                                        <div class="col-lg-2 col-md-2 col-sm-12">
+                                            <span><br></span>
+                                            <button type="submit" id="khm_submit" class="btn btn-primary btn-squared my-2" style=" border-color: #0b2d5a; background-color: #0b2d5a;border-radius: 0.2rem;">Load</button>
                                         </div>
-                                    
 
-                                </div>
 
-                                    
-
+                                    </div>
                                 </form>
+
                             </div>
                         </div>
 
                         <!-- Map body -->
                         <div id="hc_container"></div>
-
+                        
+                        <!-- Color map detail -->
+                        <div class="row justify-content-md-center">
+                            <img class="col-lg-6 col-sm-12" src="{% static 'images/color_chart_hazard.png' %}">
+                        </div>
                         <!-- Year Selection -->
-                        <div class="row border-top bg-light">
+                        <div class="row border-top">
                             <div class="col-lg-12 col-md-12 col-sm-12 py-2">
                                 <span>Select year</span>
                                 <div class="col-12 w-100" id="khm_year_slider"></div>
@@ -119,7 +120,7 @@
                         <div class="row border-bottom py-2">
                             <div class="col-12 col-sm-12 d-flex mb-2 mb-sm-0">
 
-                                <form method="post" class="py-2">
+                                <form method="post" class="py-2" id="lao_form">
                                     {% csrf_token %}
                                     <!-- Hazard Selection -->
 
@@ -127,12 +128,11 @@
                                         <span>Select Event :</span>
                                         <div class="btn-group-toggle my-auto mx-auto mx-sm-0 py-2"
                                             data-toggle="buttons">
-                                            {% for a in haz_event %}
+                                            {% for b in haz_event %}
                                             <label
                                                 class="btn btn-white btn-pill {% if a.event == lao_hazard_param %}active{% endif %}"
                                                 for="event">
-                                                <input type="radio" name="lao_haz_selected" id="{{a.event}}"
-                                                    autocomplete="off" value="{{a.event}}" {% if a.event == lao_hazard_param %}checked{% endif %}> {{a.event}}
+                                                <input type="radio" name="lao_haz_selected" id="{{b.event}}" autocomplete="off" value="{{b.event}}" {% if b.event == lao_hazard_param %}checked{% endif %}> {{b.event}}
                                             </label>
                                             {% endfor %}
                                         </div>
@@ -195,56 +195,126 @@
 
 
 <script type="text/javascript">
-    //-------------------------------------------------------------------//
-    // Tab
+    //-----------------------------------------------------------------------------------//
+    //--------------------------------------Tab-----------------------------------------//
+    //----------------------------------------------------------------------------------//  
     $(document).ready(function () {
         $("#myTab a").click(function (z) {
             z.preventDefault();
             $(this).tab("show");
         });
+        // call AJAX for Default cambodia hazard map 
+        map_ajax_text('DROUGHT', 'province_name');
     });
-    //-------------------------------------------------------------------//
-    // year range select //
-    // Cambodia
-    var KHM_YearSlider = document.getElementById('khm_year_slider');
-    var pipsPositions = document.getElementById('pips-positions');
 
-    noUiSlider.create(KHM_YearSlider, {
-        start: [{{ year_start }}, {{ year_end }}],
-        tooltips: [true, true],
-        connect: true,
-        //step: 10,
-        range: {
-        'min': {{ year_start }},
-        'max': {{ year_end }}
-    },
-        format: wNumb({
-            decimals: 0
-        }),
-        pips: {
-            mode: 'positions',
-            values: [0, 25, 50, 75, 100],
-            density: 4
+    //---------------------------------------------------------------------------------------//
+    //--------------------------------------AJAX CODE---------------------------------------//
+    //--------------------------------------------------------------------------------------//  
+    // Cambodia Submission
+    // Main Canbodia submit Function 
+    function map_ajax_text(hazard, level){
+        $.ajax({
+            type: "POST",
+            url: "hazard_analytics/hazard_cambodia",
+            data: {
+                khm_haz: hazard,
+                khm_lev: level,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            dataType: 'json',
+            cache: false,
+            success: function (khm_data) {
+                KHM_MapChart(khm_data);
+                CreateKHM_Slider(khm_data);
+                //alert(khm_data.haz + ' & ' + khm_data.lev + ' Year: ' + khm_data.year_start + ' - ' + khm_data.year_end);
+            },
+            error: function () {
+                alert('error')
+            }
+        }); // end ajax
     }
-});
-/*
-    $( "[name=khm_haz_selected]" ).change(function() {
-        var test_name = $('[name=khm_haz_selected]').val();
-        var test_name2 = $('[name=khm_level_selected]').val();
-        var year_range = $('#khm_year_slider').val();
-        alert(year_range+' '+test_name+' '+test_name2);
+
+    // Cambodia submission on choose (Load button)
+    $(document).on('submit', '#khm_form', function (p) {
+        p.preventDefault();
+        // First AJAX for Load button (to send level and hazard data to views.py)
+
+        var khm_haz = $('[name=khm_haz_selected]').val();
+        var khm_lev = $('[name=khm_level_selected]').val();
+        map_ajax_text(khm_haz, khm_lev);
     });
+     //----------------------------------------------------------------------------------------------//
+    //------------------------------------Year Range Selection---------------------------------------//
+    //-----------------------------------------------------------------------------------------------//  
+    // -------*Cambodia*-------//
+    var KHM_YearSlider;
+    var khm_y_start;
+    var khm_y_end;
 
-    $(KHM_YearSlider)[0].noUiSlider.on('change',function(v,handle){
-        var test_name = $('[name=khm_haz_selected]').val();
-        var test_name2 = $('[name=khm_level_selected]').val();
-        alert(v+' '+test_name+' '+test_name2);
+    // Destroy the old slider and create the new one.
+    function destroyExistingSlider(slider) {
+        if (slider && slider.noUiSlider) {
+            slider.noUiSlider.destroy();
+        }
+    }
 
-    });
-*/
-    // Laos
-    var LAO_YearSlider = document.getElementById('lao_year_slider');
+    // Create new slider for Cambodia
+    function CreateKHM_Slider(khm_data) {
+        destroyExistingSlider(KHM_YearSlider);
 
+        KHM_YearSlider = document.getElementById('khm_year_slider');
+
+        noUiSlider.create(KHM_YearSlider, {
+            start: [khm_data.year_start, khm_data.year_end],
+            tooltips: [true, true],
+            connect: true,
+            behaviour: 'tap',
+            //step: 10,
+            range: {
+                'min': khm_data.year_start,
+                'max': khm_data.year_end
+            },
+            format: wNumb({
+                decimals: 0
+            }),
+            pips: {
+                mode: 'positions',
+                values: [0, 25, 50, 75, 100],
+                density: 4
+            }
+        });
+        // retrieve start to end year value from slider
+        $(KHM_YearSlider)[0].noUiSlider.on('change', function (v, handle) {
+            khm_y_start = v[0];
+            khm_y_end = v[1];
+            //alert(khm_y_start + ' + ' + khm_y_end);
+            // Use secound AJAX to send start and end year back to views.py
+            $.ajax({
+            type: "POST",
+            url: 'hazard_analytics/hazard_cambodia_yearselected',
+            cache: false,
+            data: { 
+                khm_haz_y: khm_data.haz,
+                khm_lev_y: khm_data.lev,
+                khm_year_start: khm_y_start,
+                khm_year_end: khm_y_end,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+             },
+            dataType: 'json',
+            success: function (khm_year) {
+                KHM_MapChart(khm_year);
+                //alert(khm_year.haz+' + '+khm_year.lev+' : '+khm_year.start+ ' - '+khm_year.end);
+            },
+            error: function () {
+                alert('error')
+            }
+        });
+        });
+    }
+
+    //-------*Laos*-------//
+    /*var LAO_YearSlider = document.getElementById('lao_year_slider');
+    
     noUiSlider.create(LAO_YearSlider, {
         start: [{{ year_start }}, {{ year_end }}],
         tooltips: [true, true],
@@ -253,113 +323,142 @@
         range: {
         'min': {{ year_start }},
         'max': {{ year_end }}
-},
+    },
         format: wNumb({
             decimals: 0
         }),
         pips: {
-            mode: 'positions',
-            values: [0, 25, 50, 75, 100],
-            density: 4
+        mode: 'positions',
+        values: [0, 25, 50, 75, 100],
+        density: 4
     }
-});
-//--------------------------------------------------------------------------------------//
+    });*/
 
 
-//--------------------------------------------------------------------------------------// 
-// HighChart Map
-var MapData = [['Battambang', 10], ['Kampong Cham', 20], ['Kampong Thom', 40], ['Kandal', 30], ['Kratie', 70], ['Phnom Penh', 10], ['Prey Veng', 40]];
-//const MapData = {{ map_data|safe }};
-// load all 3 level map
-const camMap_p = "{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}";
-const camMap_d = "{% static 'JSON/Cambodia/Cambodia_District.geojson' %}";
-const camMap_c = "{% static 'JSON/Cambodia/Cambodia_Commune.geojson' %}";
+    //--------------------------------------------------------------------------------------//
+    // Laos
+    $(document).on('submit', '#lao_form', function (q) {
+        q.preventDefault();
+        alert('Laos Sumitted')
+    });
+
+    /* Example AJAX code
+        $( "[name=khm_haz_selected]" ).change(function() {
+            var test_name = $('[name=khm_haz_selected]').val();
+            var test_name2 = $('[name=khm_level_selected]').val();
+            var year_range = $('#khm_year_slider').val();
+            alert(year_range+' '+test_name+' '+test_name2);
+        });
+     
+        $(KHM_YearSlider)[0].noUiSlider.on('change',function(v,handle){
+            var test_name = $('[name=khm_haz_selected]').val();
+            var test_name2 = $('[name=khm_level_selected]').val();
+            alert(v+' '+test_name+' '+test_name2);
+     
+        });
+    */
+
+    //--------------------------------------------------------------------------------------// 
+    //----------------------------------HighChart Map---------------------------------------//
+    //--------------------------------------------------------------------------------------//
+    // -------*Cambodia*-------//
+    // load all 3 level map
+    var camMap_p = "{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}";
+    var camMap_d = "{% static 'JSON/Cambodia/Cambodia_District.geojson' %}";
+    var camMap_c = "{% static 'JSON/Cambodia/Cambodia_Commune.geojson' %}";
 
     // choose which map level will show on site by dropdown selection.
     function level(lev) {
-      if (lev == 'district_name') {
-        return camMap_d;
-      }
-      if (lev == 'commune_name') {
-        return camMap_c;
-      }
-      else {
-        return camMap_p;
-      }
+        if (lev == 'district_name') {
+            return camMap_d;
+        }
+        if (lev == 'commune_name') {
+            return camMap_c;
+        }
+        else {
+            return camMap_p;
+        }
     }
 
     function Datalevel(dlev) {
-      if (dlev == 'district_name') {
-        return 'District';
-      }
-      if (dlev == 'commune_name') {
-        return 'Commune';
-      }
-      else {
-        return 'Province';
-      }
+        if (dlev == 'district_name') {
+            return 'District';
+        }
+        if (dlev == 'commune_name') {
+            return 'Commune';
+        }
+        else {
+            return 'Province';
+        }
     }
 
-    Highcharts.getJSON(level('{{level_param}}'), function (geojson) {
 
-// Initialize the chart
-Highcharts.mapChart('hc_container', {
-    chart: {
-        map: geojson,
-        //borderWidth: 2,
-        backgroundColor: false
-    },
+    function KHM_MapChart(mdata) {
+        var MapData = mdata.map_data;
+        Highcharts.getJSON(level(mdata.lev), function (geojson) {
+            
+        var KHM_MapContainer = document.getElementById('hc_container');
 
-    title: {
-        text: ''
-    },
+            // Initialize the chart
+            Highcharts.mapChart(KHM_MapContainer, {
+                chart: {
+                    map: geojson,
+                    //borderWidth: 2,
+                    backgroundColor: false
+                },
 
-    accessibility: {
-        typeDescription: 'Map of Cambodia.'
-    },
+                title: {
+                    text: ''
+                },
 
-    mapNavigation: {
-        enabled: true,
-        buttonOptions: {
-            verticalAlign: 'bottom'
-        }
-    },
+                accessibility: {
+                    typeDescription: 'Map of Cambodia.'
+                },
 
-    colorAxis: {
-    //min: 1,
-    //max: 100,
-    //type: 'logarithmic', //because you can't take log with 0 value
-    minColor: '#EEEEFF',
-    maxColor: '#000022',
-    stops: [
-      [0, '#C6DBEF'],
-      [0.67, '#4292C6'],
-      [1, '#062655']
-    ]
-    },
+                mapNavigation: {
+                    enabled: true,
+                    buttonOptions: {
+                        verticalAlign: 'bottom'
+                    }
+                },
+                colorAxis: {
+                    minColor: '#FFEABB',
+                    maxColor: '#061C43',
+                    stops: [
+                        [0, '#FFEABB'],
+                        [0.05, '#FFB200'],
+                        [0.15, '#F78900'],
+                        [0.4, '#9B0103'],
+                        [0.7, '#061C43']
+                    ]
+                },
+                // Hide the legend of the map
+                legend:{
+                    enabled:false
+                },
+                series: [{
+                    data: MapData,
+                    keys: ['code', 'value'],
+                    joinBy: [Datalevel(mdata.lev), 'code'],
+                    name: mdata.haz,
+                    tooltip: {
+                        pointFormat: '{point.code}: {point.value}'
+                    },
+                    states: {
+                        hover: {
+                            color: '#a4edba'
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.code}'
+                    }
+                }]
+            });
+        });
+    }
 
-    series: [{
-        data: MapData,
-        keys: ['code', 'value'],
-        joinBy: [Datalevel('{{level_param}}'), 'code'],
-        name: 'Random data',
-        tooltip: {
-                pointFormat: '{point.code}: {point.value}'
-            },
-        states: {
-            hover: {
-                color: '#a4edba'
-            }
-        },
-        dataLabels: {
-            enabled: true,
-            format: '{point.code}'
-        }
-    }]
-});
-});
-
-//--------------------------------------------------------------------------------------// 
+    //--------------------------------------------------------------------------------------// 
 </script>
 
 
