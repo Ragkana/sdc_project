@@ -83,6 +83,7 @@ def wf_laos_submit(request):
     return JsonResponse({'date_sel':lao_date_selected, 'wf_param':lao_wf_param, 'lao_map_data':laos_obj}, status=200)
 
 #########################################################################################################################################################
+################################################################# Observation Module ####################################################################
 #########################################################################################################################################################
 
 def observation(request):
@@ -115,11 +116,27 @@ def observation(request):
     'rainfall':rainfall_all, 'max_temp':max_temp_all, 'min_temp':min_temp_all, 'station_n':selected_value, 
     'khm_json':khm_obj, 'year_start':year_start, 'year_end':year_end})
 
+def obs_khm_station(request):
+    khm_station = request.POST['khm_station']
+    ## Average data ##
+    # Average data(all year) in selected station and each month, choose only weather data orderby month.
+    avg_obs = observation_metdata.objects.values('station_name','month').annotate(rainfall__avg=Avg('rainfall'), max__temp__avg=Avg('max_t'), min__temp__avg=Avg('min_t')).filter(station_name=khm_station).order_by('month').filter(country_id='KHM')
+    rainfall_all = avg_obs.values_list('rainfall__avg', flat=True)
+    max_temp_all = avg_obs.values_list('max__temp__avg', flat=True)
+    min_temp_all = avg_obs.values_list('min__temp__avg', flat=True)
+    
+    return JsonResponse({'station':khm_station}, status=200)
+    ## For Time serie Graph ##
+    # Retrieve start and end year
+    #year_data = observation_metdata.objects.values('station_name').annotate(year__start=Min('year'), year__end=Max('year')).filter(station_name=khm_station)
+    #year_start, year_end = year_data[0]['year__start'], year_data[0]['year__end']
+
+
 def earthquake(request):
     return render(request, "earthquake.html", {'url_name': 'earthquake'})
 
-def share_data(request):
-    return render(request, "share_data.html", {'url_name': 'share_data'})
+def upload_data(request):
+    return render(request, "upload_data.html", {'url_name': 'upload_data'})
 
 def sdc_project(request):
     return render(request, "sdc_project.html", {'url_name': 'sdc_project'})

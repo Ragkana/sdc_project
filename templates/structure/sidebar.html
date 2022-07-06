@@ -51,7 +51,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" {% if url_name == 'valnerability' %}active{% endif %} href="{% url 'valnerability' %}">
                 <i class="fa-solid fa-circle-exclamation" style="font-size: 1.25rem;"></i>
                 <span>Vulnerability</span>
             </a>
@@ -97,9 +97,9 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if url_name == 'share_data' %}active{% endif %}" href="{% url 'share_data' %}">
+            <a class="nav-link {% if url_name == 'upload_data' %}active{% endif %}" href="{% url 'upload_data' %}">
                 <i class="fa-solid fa-arrow-up-from-bracket" style="font-size: 1.25rem;"></i>
-                <span>Share Data</span>
+                <span>Upload Data</span>
             </a>
         </li>
         <li class="nav-item">

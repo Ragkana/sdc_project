@@ -1,19 +1,240 @@
 {% load static %}
-{% include "structure/header_n_footer.html" %}
 {% include "structure/sidebar.html" %}
 {% include "structure/topnavbar.html" %}
 {% block content %}
 
 <div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
-<!-- Page Header -->
-<div class="page-header row no-gutters py-4">
-    <div class="col-12 col-sm-4 text-center text-sm-left mb-4 mb-sm-0">
-        <h3 class="page-title">SDC Projects</h3>
+    <!-- Page Header -->
+    <div class="page-header row no-gutters py-4">
+        <div class="col-12 col-sm-12 text-center text-sm-left mb-4 mb-sm-0">
+            <h3 class="page-title">SDC Projects</h3>
+        </div>
     </div>
+    <!-- End Page Header -->
+    <!-- Country Tab -->
+    <!-- Tab Bar -->
+    <div class="btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto py-2" role="group"
+        aria-label="Page actions">
+        <ul class="nav" id="myTab">
+            <li class="nav-item ">
+                <a href="#cambodia" class="nav-link btn btn-white active">Cambodia</a>
+            </li>
+            <li class="nav-item">
+                <a href="#laos" class="nav-link btn btn-white">Laos</a>
+            </li>
+            <li class="nav-item">
+                <a href="#myanmar" class="nav-link btn btn-white">Myanmar</a>
+            </li>
+        </ul>
     </div>
 
-</div>
-<!-- End Page Header -->
+    <!-- Tab content -->
+    <div class="tab-content">
+        <!-----------------------------------** Cambodia Tab Content **----------------------------------------->
+        <div class="tab-pane fade show active" id="cambodia">
+            <!-- Cambodia Data Table -->
+            <div class="row">
+                <div class="col">
+                    <div class="card card-small mb-4">
+                        <div class="card-header border-bottom">
+                            <h6 class="m-0">SDC Projects in Cambodia</h6>
+                        </div>
+                        <div class="card-body p-0 pb-3 text-center">
+                            <table class="table mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th scope="col" class="border-0" style="width: 5%">No.</th>
+                                        <th scope="col" class="border-0" style="width: 15%">Project Name</th>
+                                        <th scope="col" class="border-0" style="width: 15%">Duration</th>
+                                        <th scope="col" class="border-0" style="width: 55%">Details</th>
+                                        <th scope="col" class="border-0" style="width: 10%">PDF Download</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>The Implementation of the Social Accountability Framework (ISAF)</td>
+                                        <td>Phase 2: May 2019-Dec 2021</td>
+                                        <td>The Swiss Agency for Development and
+                                            Cooperation (SDC) supports the third
+                                            phase of the National Programme for
+                                            Sub-National Democratic Development
+                                            (NP-SNDD 2019-2021) with a specific
+                                            focus on the Implementation of the Social
+                                            Accountability Framework (ISAF) through
+                                            the World Bank Trust Fund.</td>
+                                        <td><a href="{% static 'sdc_project_pdf/Cambodia/7F-08726.03_Factsheet_SNDD-ISAF_20190709.pdf' %}"
+                                                download><i class="fa-solid fa-file-pdf"
+                                                    style="font-size: 1.75rem; color: #9B0103;"></i></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Cambodian Horticulture Advancing Income and Nutrition (CHAIN)</td>
+                                        <td>Phase 1: Dec 2014-Nov 2017<br>
+                                            Phase 2: Dec 2017-Dec 2020</td>
+                                        <td>CHAIN programme in close cooperation with the
+                                            Ministry of Agriculture, Forestry and Fisheries
+                                            through the General Department of Agriculture
+                                            (GDA) and the provincial departments of
+                                            Agriculture, Forestry and Fisheries (PDAFF).</td>
+                                        <td><a href="{% static 'sdc_project_pdf/Cambodia/7f-08731.02_CHAIN2_Factsheet_EN.pdf' %}"
+                                                download><i class="fa-solid fa-file-pdf"
+                                                    style="font-size: 1.75rem; color: #9B0103;"></i></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>HALO Trust (HALO)</td>
+                                        <td>Jan 2020-Dec 2022</td>
+                                        <td>In the past 30 years, Cambodia has cleared
+                                            over 1,900 km2 of minefields, benefiting
+                                            approx. 5.6 million people. However, an
+                                            area of approx. 860 km2 is still heavily
+                                            contaminated. Cambodia aims to be a
+                                            mine - free country by 2025. Switzerland’s
+                                            contribution will clear 12.2 km2 of mine
+                                            affected areas in northwestern Cambodia
+                                            that will provide safe access to land and
+                                            livelihood development for 25,000 rural
+                                            households.</td>
+                                        <td><a href="{% static 'sdc_project_pdf/Cambodia/Factsheet_MineAction_HALO.pdf' %}"
+                                                download><i class="fa-solid fa-file-pdf"
+                                                    style="font-size: 1.75rem; color: #9B0103;"></i></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Partnership for Forestrt and Fishery Community in Cambodia Project (PAFF)
+                                        </td>
+                                        <td>2014-2023</td>
+                                        <td>The PaFF programme aligns with the National
+                                            Programmes for NRM which aim at a “balance
+                                            between development and conservation” also
+                                            mentioned as a target in the National Strategic
+                                            Development Plan 2019-2023</td>
+                                        <td><a href="{% static 'sdc_project_pdf/Cambodia/Paff III-Factsheet_EN_Final.pdf' %}"
+                                                download><i class="fa-solid fa-file-pdf"
+                                                    style="font-size: 1.75rem; color: #9B0103;"></i></a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Cambodia Data Table -->
+
+        </div>
+
+        <!-----------------------------------** Laos Tab Content **----------------------------------------->
+        <div class="tab-pane fade" id="laos">
+            <!-- Laos data Table -->
+            <div class="row">
+                <div class="col">
+                    <div class="card card-small mb-4">
+                        <div class="card-header border-bottom">
+                            <h6 class="m-0">SDC Projects in Laos</h6>
+                        </div>
+                        <div class="card-body p-0 pb-3 text-center">
+                            <table class="table mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th scope="col" class="border-0" style="width: 5%">No.</th>
+                                        <th scope="col" class="border-0" style="width: 15%">Project Name</th>
+                                        <th scope="col" class="border-0" style="width: 15%">Project Area</th>
+                                        <th scope="col" class="border-0" style="width: 55%">Details</th>
+                                        <th scope="col" class="border-0" style="width: 10%">PDF Download</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Enhancing Nutrition of Upland Farming Families (ENUFF)</td>
+                                        <td>60 villages in 4 districts of 2 provinces - Houaphanh and Oudomxay</td>
+                                        <td>Family and child nutrition in remote and ethnically diverse upland 
+                                            farming communities in two of the seven priority provinces has 
+                                            improved through nutrition-sensitive agriculture production, 
+                                            sustainable management of natural resources and enhancement of good 
+                                            practices in health and hygiene, including a more conducive and 
+                                            efficient policy and institutional framework.</td>
+                                        <td>NA</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Lao Upland Rural Advisory Services (LURAS)</td>
+                                        <td>121 villages in 15 districts of 4 provinces - Xaysomboune, Xiengkhouang, Oudomxay, Houaphanh</td>
+                                        <td>The Swiss Cooperation in the Mekong Region supports the Lao Upland 
+                                            Rural Advisory (LURAS) project to facilitate an effective demand-driven 
+                                            pluralistic extension service delivery system in Lao PDR.</td>
+                                        <td>NA</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Vocational Training and Employment Support Services (VTESS)</td>
+                                        <td>6 villages in 5 districts of 5 provinces - Salavanh, Khammouane, 
+                                            Xayabouly, Xiengkhouang, Oudomxay</td>
+                                        <td>The Vocational Training and Employment Support Services (VTESS) Project 
+                                            supports the government of Laos in institutionalizing a national inclusive 
+                                            system for the integration of early school leavers into technical training 
+                                            courses and further education.</td>
+                                        <td>NA</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Skills for Tourism (SFT)</td>
+                                        <td>28 villages in 18 districts of 13 provinces - Attapeu, Bokeo, Houaphanh, 
+                                            Khammouane, Louangnamtha, Louangphabang, Oudomxay, Phongsaly, Salavanh, 
+                                            Savannakhet, Sekong, Vientiane Capital, Vientiane, Xayabouly, Xiengkhouang</td>
+                                        <td>The Skills for Tourism project will provide ongoing support 
+                                            for vocational education and skills development for the tourism sector.</td>
+                                        <td>NA</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Local Development Programme for Bokeo, Bolikhamxay, Khammouane, and 
+                                            Vientiane Province (LAO/030)</td>
+                                        <td>227 villages in 15 districts of 4 provinces - Bokeo, Bolikhamxay, 
+                                            Khammouane, and Vientiane Province</td>
+                                        <td>The Project supports the government’s poverty reduction strategy for 
+                                            upland rural development. It focuses on the 14 poorest districts in 
+                                            four provinces, particularly 230 target villages with a population 
+                                            of 150,000 with 76% of whom are ethnic minorities.</td>
+                                        <td>NA</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Laos Data Table -->
+        </div>
+        <!-----------------------------------** Myanmar Tab Content **----------------------------------------->
+        <div class="tab-pane fade" id="myanmar">
+            <!-- Myanmay Data Table -->
+            <div class="row">
+                <div class="col">
+                    <div class="card card-small mb-4">
+                        <div class="card-header border-bottom">
+                            <h6 class="m-0">SDC Projects in Myanmar</h6>
+                        </div>
+                        <div class="card-body p-0 pb-3 text-center">
+                            <p class="py-3">Not Avaliable</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Default Light Table -->
+        </div>
+
+
+
+
+    </div> <!-- End  Tab content -->
 </div>
 
+<script src="{% static 'scripts/sdc_project.js' %}"></script>
+<script type="text/javascript">
+
+</script>
+
+{% include "structure/footer.html" %}
 {% endblock content %}

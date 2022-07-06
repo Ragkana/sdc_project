@@ -114,6 +114,12 @@ a:hover {
     margin: 0 auto;
 }
 
+#lao_map_container {
+    height: calc(100vh - 27.5rem);
+    width: 100%;
+    margin: 0 auto;
+}
+
 .loading {
     margin-top: 10em;
     text-align: center;

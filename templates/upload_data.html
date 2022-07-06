@@ -1,0 +1,229 @@
+{% load static %}
+{% include "structure/sidebar.html" %}
+{% include "structure/topnavbar.html" %}
+{% block content %}
+
+<div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
+    <!-- Page Header -->
+    <div class="page-header row no-gutters py-4">
+        <div class="col-12 col-sm-12 text-center text-sm-left mb-4 mb-sm-0">
+            <h3 class="page-title">Upload Data</h3>
+        </div>
+    </div>
+    <!-- End Page Header -->
+
+
+
+            <div class="row">
+                <!---------------------- Manual Upload ------------------------>
+                <div class="col-lg-6 col-md-12 col-sm-12 mb-2 mx-0 my-3">
+                    <div class="card card-small m-0">
+                        <div class="card-header border-bottom">
+                            <h6 class="m-0">Manual Upload data</h6>
+                        </div>
+                        <!-- Body content -->
+                        <div class="card-body p-0 pb-3">
+                            <div class="row">
+                                <div class="col-12">
+                                    <form method="post" class="py-2">
+                                        {% csrf_token %}
+                                        <div class="row col py-3">
+                                            <!-- Date picker code -->
+                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                                <span>Select date: </span>
+                                                <div class="btn-group input-group">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text my-2">
+                                                            <i class='far fa-calendar-alt fa-sm'
+                                                                style='color:#0a1935'></i>
+                                                        </span>
+                                                    </div>
+                                                    <input type="text" class="form-control my-2 w-75" id="datepicker"
+                                                        name="selected_date">
+                                                </div>
+                                            </div>
+                                            <!-- End Date picker code -->
+
+                                            <!-- Select Hazard Code -->
+                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                                <span>Select Hazard: </span>
+                                                <select class="form-control my-2" name="khm_haz_selected" required>
+                                                    <option value="">DROUGHT</option>
+                                                    <option value="">FLOOD</option>
+                                                    <option value="">LIGHTNING</option>
+                                                    <option value="">RIVER BANK COLLAPSE</option>
+                                                    <option value="">STORM</option>
+                                                </select>
+                                            </div>
+                                            <!-- End Select Hazard code -->
+                                        </div>
+
+                                        <div class="col-12 border-bottom justify-content-md-center"></div>
+
+                                        <!-- Location select code-->
+                                        <div class="row col py-3">
+                                            <div class="col-lg-3 col-md-12 col-sm-12">
+                                                <span>Country</span>
+                                                <select class="form-control my-2" required>
+                                                    <option value="">Cambodia</option>
+                                                    <option value="">Laos</option>
+                                                    <option value="">Myanmar</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-3 col-md-12 col-sm-12">
+                                                <span>Province</span>
+                                                <select class="form-control my-2" required>
+                                                    <option value="">Province</option>
+                                                    <option value="">...</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-3 col-md-12 col-sm-12">
+                                                <span>District</span>
+                                                <select class="form-control my-2">
+                                                    <option value="">District</option>
+                                                    <option value="">...</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-3 col-md-12 col-sm-12">
+                                                <span>Commune</span>
+                                                <select class="form-control my-2">
+                                                    <option value="">Commune</option>
+                                                    <option value="">...</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- End Location select code -->
+
+                                        <div class="col-12 border-bottom justify-content-md-center"></div>
+
+                                        <!-- Impact -->
+                                        <div class="row col py-3">
+                                            <div class="col-lg-3 col-md-12 col-sm-12">
+                                                <span>Deaths</span>
+                                                <input type="text" class="form-control my-2" value="">
+                                            </div>
+                                            <div class="col-lg-3 col-md-12 col-sm-12">
+                                                <span>Injured</span>
+                                                <input type="text" class="form-control my-2" value="">
+                                            </div>
+                                            <div class="col-lg-3 col-md-12 col-sm-12">
+                                                <span>Missing</span>
+                                                <input type="text" class="form-control my-2" value="">
+                                            </div>
+                                            <div class="col-lg-3 col-md-12 col-sm-12">
+                                                <span>House Destroyed</span>
+                                                <input type="text" class="form-control my-2" value="">
+                                            </div>
+                                            <div class="col-lg-3 col-md-12 col-sm-12">
+                                                <span>House Damaged</span>
+                                                <input type="text" class="form-control my-2" value="">
+                                            </div>
+                                        </div>
+                                        <!-- / End Impact code -->
+
+                                        <div class="col-12 border-bottom justify-content-md-center"></div>
+
+                                        <!-- Comment -->
+                                        <div class="col-12 py-3">
+                                            <label for="comment">Comment</label>
+                                            <textarea class="form-control" id="comment" rows="3"></textarea>
+                                        </div>
+                                        <!-- / End Comment code -->
+
+                                        <!-- Submit Button -->
+                                        <div class="col-lg-5 col-md-12 col-sm-12 pt-3">
+                                            <button type="button submit" class="btn btn-primary btn-squared"
+                                                style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Submit
+                                                Data</button>
+                                        </div>
+                                        <!-- End Submit Button code -->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Body content -->
+                    </div>
+                </div>
+                <!---------------------- End Manual Upload ------------------------>
+
+                <div class="col-lg-6 col-md-12 col-sm-12 mb-2 mx-0">
+                    <!---------------------- File Upload ------------------------>
+                    <div class="row my-3">
+                        <div class="col-12">
+                            <div class="card card-small m-0">
+                                <div class="card-header border-bottom">
+                                    <h6 class="m-0">File Upload data</h6>
+                                </div>
+                                <!-- Body content -->
+                                <div class="card-body p-0 pb-3">
+                                    <div class="row">
+                                        <div class="col-12 py-2">
+                                            <!-- Custom File Upload -->
+                                            <div class="col-lg-7 col-md-12 col-sm-12">
+                                                <span>Please choose your file for upload</span>
+                                                <div class="input-group my-2">
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="customFile2"
+                                                            required="">
+                                                        <label class="custom-file-label" for="customFile2">Choose
+                                                            file...</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- / Custom File Upload -->
+
+                                            <!-- Submit Button -->
+                                            <div class="col-lg-5 col-md-12 col-sm-12 pt-2">
+                                                <button type="button submit" class="btn btn-primary btn-squared"
+                                                    style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Upload
+                                                    File</button>
+                                            </div>
+                                            <!-- / End Submit button code -->
+                                            <div class="col-lg-12 col-md-12 col-sm-12 pt-2">
+                                            <a><u>Note:</u> Download a form for csv file 
+                                                <a href="{% static 'sdc_project_pdf/csv_example.xlsx' %}"
+                                                download><i class="fa-solid fa-file-csv"
+                                                    style="font-size: 1.75rem; color: #9B0103;"></i></a></a>
+</div>
+
+                                        </div>
+                                    </div>
+                                    <!-- End Body content -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!---------------------- End File up load container ------------------------>
+
+                    <!---------------------- Notaion ------------------------>
+                    <div class="row my-3">
+                        <div class="col-12">
+                            <div class="card card-small m-0">
+                                <div class="card-header border-bottom">
+                                    <h6 class="m-0">Notaion</h6>
+                                </div>
+                                <!-- Body content -->
+                                <div class="row">
+                                    <div class="col-12 py-2 px-5">
+                                        <a>1. The data after submission cannot undo or delete. Therefore, please check
+                                            the rightness of data before submit.<br></a>
+                                        <a>2. The file for upload must be csv file and specified form.<br></a>
+                                        <a>3. The name of province district and commune must correct and match with the database (you can check in the example file).<br></a>
+                                    </div>
+                                </div>
+                                <!-- / Body content -->
+                            </div>
+                        </div>
+                    </div>
+                    <!---------------------- End Notation ------------------------>
+                </div>
+
+            </div>
+
+
+
+</div>
+
+<script src="{% static 'scripts/upload_data.js' %}"></script> 
+{% include "structure/footer.html" %} 
+{% endblock content %}
