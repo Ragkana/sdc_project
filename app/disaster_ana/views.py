@@ -54,6 +54,9 @@ def disaster_ana(request):
     return render(request, "disaster_ana.html", {'url_name': 'disaster_ana', 'event':df  ,'disaster_param':disaster_selected, 
     'impact_param': impact_selected, 'level_param': level_selected, 'dis_event':dis_event,  
     'map_data':map_sum, 'level_code':code, 'level_value':value, 'list_year':list_year, 'list_impact':list_impact})
+
+#########################################################################################################################################################
+#########################################################################################################################################################
     
 # Main hazard Module view page
 def hazard_ana(request):

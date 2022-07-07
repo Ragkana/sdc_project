@@ -70,10 +70,10 @@
 
 
                                         <!-- Submit Button -->
-                                        <div class="col-lg-2 col-md-2 col-sm-12">
+                                        <!--<div class="col-lg-2 col-md-2 col-sm-12">
                                             <span><br></span>
                                             <button type="submit" id="khm_submit" class="btn btn-primary btn-squared my-2" style=" border-color: #0b2d5a; background-color: #0b2d5a;border-radius: 0.2rem;">Load</button>
-                                        </div>
+                                        </div>-->
 
 
                                     </div>
@@ -235,7 +235,7 @@
     }
 
     // Cambodia submission on choose (Load button)
-    $(document).on('submit', '#khm_form', function (p) {
+    $(document).on('change', '#khm_form', function (p) {
         p.preventDefault();
         // First AJAX for Load button (to send level and hazard data to views.py)
 

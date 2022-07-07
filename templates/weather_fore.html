@@ -12,7 +12,7 @@
       <h1 class="page-title">Weather Forecast</h1>
     </div>
 
-    <!-- Country Tab -->
+    <!----------------- Country Tab ------------------->
     <!-- Tab Bar -->
     <div class="btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto py-3 justify-content-md-center"
       role="group" aria-label="Page actions">
@@ -32,117 +32,162 @@
 
     <!-- Tab Content -->
     <div class="tab-content col-lg-12">
-      <!-- Cambodia Tab Content -->
+      <!------------------------------* Cambodia Tab Content *------------------------------>
       <div class="tab-pane fade show active" id="cambodia">
 
         <div class="row">
           <div class="card w-100">
             <div class="card-header border-bottom">
-              <h6 class="m-0">Cambodia overal weather forecast</h6>
+              <h6 class="m-0">Cambodia weather forecast</h6>
             </div>
-            <div class="card-body d-flex flex-column">
-              <!-- Input Data content -->
+            <div class="card-body pt-0">
+              <!-- Day slider -->
+              <div class="col-12">
+              <div class="row border-bottom py-2">
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                  <div id="khm_date_slider" name="khm_selected_date"></div>
+                </div>
+              </div>
+              </div>
+              
+              <!-- Myanmar Map Box-->
               <div class="row">
-                <div class="col-lg-3 col-md-12 col-sm-12">
-
-                  <!-- First row : Date picker-->
-                  <div class="row">
-                    <span>Select a weather forecast date</span>
-                    <form method="post" class="w-100 py-2">
-                      {% csrf_token %}
-                      <div class="btn-group input-group">
-                        <div class="input-group-append">
-                          <span class="input-group-text my-2">
-                            <i class='far fa-calendar-alt fa-sm' style='color:#0a1935'></i>
-                          </span>
-                        </div>
-                        <input type="text" class="form-control my-2 w-75" id="datepicker" placeholder="{{date_pick}}"
-                          name="selected_date" value="{{date_pick}}">
-                        <span>Select a weather parameter</span>
-                        <select class="form-control w-100 my-2" name="wf_param">
-                          <option href="#">Select parameter</option>
-                          <option value='rainfall' {% if wfparam == 'rainfall' %}selected{% endif %}>Rainfall (mm)</option>
-                          <option value='humidity' {% if wfparam == 'humidity' %}selected{% endif %}>Relative Humidity (%)</option>
-                          <option value='max_temp' {% if wfparam == 'max_temp' %}selected{% endif %}>Max Temperature (°C)</option>
-                          <option value='min_temp' {% if wfparam == 'min_temp' %}selected{% endif %}>Min Temperature (°C)</option>
-                          <option value='windspeed' {% if wfparam == 'windspeed' %}selected{% endif %}>wind Speed (km/h)</option>
-                        </select>
-                        <button type="button submit" class="btn btn-primary btn-squared my-2"
-                          style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Load</button>
-                      </div>
-                    </form>
-                    <!-- End First row-->
-
-                  </div>
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                
+                <div class="map w-100" style="height: calc(70vh - 7.5rem);" id="cam_map"></div>
+                <!-- Cambodia Weather parameter button-->
+                <form method="post" class="py-2" id="khm_form">
+                  {% csrf_token %}
+                <div class="btn btn-group-vertical btn-group-toggle" data-toggle="buttons" style="position: absolute;top: 0px;right: 10px;padding: 10px;z-index: 400;">
+                  <label class="btn btn-white active" data-toggle="tooltip" data-placement="left" title="Rainfall (mm)">
+                    <input type="radio" name="khm_wf_param" id="rainfall" value='rainfall' autocomplete="off"> <i class="fa-solid fa-cloud-rain" style="font-size: 1.25rem;"></i>
+                  </label>
+                  <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Relative Humidity (%)">
+                    <input type="radio" name="khm_wf_param" id="humidity" value='humidity' autocomplete="off"> <i class="fa-solid fa-droplet" style="font-size: 1.25rem;"></i>
+                  </label>
+                  <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Max Temperature (°C)">
+                    <input type="radio" name="khm_wf_param" id="max_temp" value='max_temp' autocomplete="off"> <i class="fa-solid fa-temperature-high" style="font-size: 1.25rem;"></i>
+                    </label>
+                    <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Min Temperature (°C)">
+                      <input type="radio" name="khm_wf_param" id="min_temp" value='min_temp' autocomplete="off"> <i class="fa-solid fa-temperature-low" style="font-size: 1.25rem;"></i>
+                    </label>
+                    <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Wind Speed (km/h)">
+                      <input type="radio" name="khm_wf_param" id="windspeed" value='windspeed' autocomplete="off"> <i class="fa-solid fa-wind" style="font-size: 1.25rem;"></i>
+                    </label>
                 </div>
-                <!-- End Input data content-->
+              </form>
 
-                <!-- Cambodia Map Box-->
-                <div class="col-lg-9 col-md-12 col-sm-12">
-                  <div class="map w-100" style="height: calc(70vh - 7.5rem);" id="cam_map"></div>
-                </div>
-                <!-- End Map Box-->
-              </div> <!-- End card-body row-->
+              </div>
+            </div>
             </div> <!-- End card body -->
           </div><!-- End card -->
         </div> <!-- End row-->
 
-        <!-- Start row for Cambodia province time series -->
+
+      </div>
+      <!-------------------------------* End Canbodia Tab Content *--------------------------------->
+
+      <!------------------------------* Laos Tab Content *------------------------------>
+      <div class="tab-pane fade" id="laos">
+
         <div class="row">
           <div class="card w-100">
-            <!-- Header -->
             <div class="card-header border-bottom">
-              <h6 class="m-0">Cambodia .... time series forecasting for 10 days in ..... </h6>
+              <h6 class="m-0">Laos weather forecast</h6>
             </div>
-            <!-- Content -->
-            <div class="card-body d-flex flex-column">
+            <div class="card-body pt-0">
+              <!-- Day slider -->
+              <div class="col-12">
+              <div class="row border-bottom py-2">
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                  <div id="lao_date_slider" name="lao_selected_date"></div>
+                </div>
+              </div>
+              </div>
+              
+              <!-- Laos Map Box-->
+              <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                
+                <div class="map w-100" style="height: calc(70vh - 7.5rem);" id="lao_map"></div>
+                <!-- Cambodia Weather parameter button-->
+                <form method="post" class="py-2" id="lao_form">
+                  {% csrf_token %}
+                <div class="btn btn-group-vertical btn-group-toggle" data-toggle="buttons" style="position: absolute;top: 0px;right: 10px;padding: 10px;z-index: 400;">
+                  <label class="btn btn-white active" data-toggle="tooltip" data-placement="left" title="Rainfall (mm)">
+                    <input type="radio" name="lao_wf_param" id="rainfall" value='rainfall' autocomplete="off"> <i class="fa-solid fa-cloud-rain" style="font-size: 1.25rem;"></i>
+                  </label>
+                  <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Relative Humidity (%)">
+                    <input type="radio" name="lao_wf_param" id="humidity" value='humidity' autocomplete="off"> <i class="fa-solid fa-droplet" style="font-size: 1.25rem;"></i>
+                  </label>
+                  <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Max Temperature (°C)">
+                    <input type="radio" name="lao_wf_param" id="max_temp" value='max_temp' autocomplete="off"> <i class="fa-solid fa-temperature-high" style="font-size: 1.25rem;"></i>
+                    </label>
+                    <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Min Temperature (°C)">
+                      <input type="radio" name="lao_wf_param" id="min_temp" value='min_temp' autocomplete="off"> <i class="fa-solid fa-temperature-low" style="font-size: 1.25rem;"></i>
+                    </label>
+                    <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Wind Speed (km/h)">
+                      <input type="radio" name="lao_wf_param" id="windspeed" value='windspeed' autocomplete="off"> <i class="fa-solid fa-wind" style="font-size: 1.25rem;"></i>
+                    </label>
+                </div>
+              </form>
+
+              </div>
             </div>
-          </div>
-        </div>
-        <!-- End Cambodia Province Time series -->
+            </div> <!-- End card body -->
+          </div><!-- End card -->
+        </div> <!-- End row-->
+
 
       </div>
-      <!-- End Canbodia Tab Content -->
+      <!-------------------------------* End Laos Tab Content *--------------------------------->
 
-      <!-- Laos Tab content -->
-      <div class="tab-pane fade" id="laos">
-        <h4 class="mt-2">Laos Forecast</h4>
-        <div class="row justify-content-md-center">
-          <div class="btn-group py-3 col-lg-4 col-md-12 col-sm-12" data-toggle="buttons">
-            <input type="text" class="form-control" id="datepicker" placeholder="Choose forecast date">
-            <button type="button" class="btn btn-primary btn-squared"
-              style="border-color: #0b2d5a; background-color: #0b2d5a;">Load</button>
-          </div>
-          <!-- Date slider-->
-          <div class="col-lg-6 col-md-12 col-sm-12" id="shards-custom-slider">
-            <input type="hidden" class='custom-slider-input' name="custom-slider-value-1">
-          </div>
-        </div> <!-- End Date row-->
-        <!-- Laos Map Box-->
+      <!------------------------------* Myanmar Tab Content *------------------------------>
 
-        <div class="map" id="lao_map"></div>
-
-        <!-- End Map Box-->
-      </div>
       <div class="tab-pane fade" id="myanmar">
-        <h4 class="mt-2">Myanmar Forecast</h4>
-        <div class="row justify-content-md-center">
-          <div class="btn-group py-3 col-lg-4 col-md-12 col-sm-12" data-toggle="buttons">
-            <input type="text" class="form-control" id="datepicker" placeholder="Choose forecast date">
-            <button type="button" class="btn btn-primary btn-squared"
-              style="border-color: #0b2d5a; background-color: #0b2d5a;">Load</button>
-          </div>
-          <!-- Date slider-->
-          <div class="col-lg-6 col-md-12 col-sm-12" id="shards-custom-slider">
-            <input type="hidden" class='custom-slider-input' name="custom-slider-value-1">
-          </div>
-        </div> <!-- End Date row-->
-        <!-- Myanmar Map Box-->
+        <div class="row">
+          <div class="card w-100">
+            <div class="card-header border-bottom">
+              <h6 class="m-0">Myanmar weather forecast</h6>
+            </div>
+            <div class="card-body pt-0">
+              <!-- Day slider -->
+              <div class="col-12">
+              <div class="row border-bottom py-2">
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                  <div id="mya_date_slider"></div>
+                </div>
+              </div>
+              </div>
+              
+              <!-- Myanmar Map Box-->
+              <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                
+                <div class="map w-100" style="height: calc(70vh - 7.5rem);" id="mya_map"></div>
+                <!-- Myanmar Weather parameter button-->
+                <div class="btn btn-group-vertical" role="group" style="position: absolute;top: 10px;right: 10px;padding: 10px;z-index: 400;">
+                  <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Rainfall (mm)">
+                    <i class="fa-solid fa-cloud-rain" style="font-size: 1.25rem;"></i></button>
+                  <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Relative Humidity (%)">
+                    <i class="fa-solid fa-droplet" style="font-size: 1.25rem;"></i></button>
+                  <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Max Temperature (°C)">
+                    <i class="fa-solid fa-temperature-high" style="font-size: 1.25rem;"></i></i></button>
+                  <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Min Temperature (°C)">
+                    <i class="fa-solid fa-temperature-low" style="font-size: 1.25rem;"></i></button>
+                  <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Wind Speed (km/h)">
+                    <i class="fa-solid fa-wind" style="font-size: 1.25rem;"></i></button>
+                </div>
 
-        <div class="map" id="mya_map"></div>
-
-        <!-- End Map Box-->
+              </div>
+            </div>
+            </div> <!-- End card body -->
+          </div><!-- End card -->
+        </div> <!-- End row-->
       </div>
+
+      <!-------------------------------* End Myanmar Tab Content *--------------------------------->
+
     </div><!-- End Country tab -->
 
   </div><!-- End Page Header -->
@@ -153,185 +198,117 @@
 {% include "structure/footer.html" %}
 
 <script type="text/javascript">
+  //-----------------------------------------------------------------------------------------------//
+  //--------------------------------------Cambodia AJAX CODE---------------------------------------//
+  //----------------------------------------------------------------------------------------------//  
 
-  // Cambodia map
-  var cam_map = L.map('cam_map', {
-    zoomControl: false,
-    minZoom: 3,     // Max Zoom out
-    maxZoom: 9,    // Max Zoom in
-  }).setView([12.562108, 104.888535], 7);
-  //L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(cam_map);
-  L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(cam_map);
+  //----------------* Cambodia submit AJAX main Function *----------------//
+  function KHMSubmitAJAX(date, wfparam) {
+    $.ajax({
+      type: "POST",
+      url: "{% url 'wf_cambodia_submit' %}",
+      data: {
+        khm_date: date,
+        khm_wf_param: wfparam,
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+      },
+      dataType: 'json',
+      cache: false,
 
-  // load GeoJSON from an external file
-  //fetch("{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}").then(res => res.json()).then(data => {
-  // add GeoJSON layer to the map once the file is loaded
-  //  L.geoJson(data).addTo(cam_map);
-  //});
-
-  // Assigning color for selected parameter class
-  function getColor(param) {
-    return param > 90 ? '#062655' :
-    param > 80 ? '#08306B' :
-    param > 70 ? '#08519C' :
-    param > 60 ? '#2171B5' :
-    param > 40 ? '#4292C6' :
-    param > 30 ? '#6BAED6' :
-    param > 20 ? '#9ECAE1' :
-    param > 10 ? '#C6DBEF' :
-    param > 5 ? '#DEEBF7' :
-                '#F7FBFF';
+      success: function (khm_data) {
+        KHM_MapChart(khm_data);
+        //CreateKHM_Slider();
+        //alert(khm_data.date_sel + ' & ' + khm_data.wf_param);
+      },
+      error: function () {
+        alert('error')
+      }
+    });
   }
-
-  function style(feature) {
-    return {
-      fillColor: getColor(feature.properties.{{ wfparam }}),
-    weight: 2,
-      opacity: 1,
-        color: '#2F96B2',
-          dashArray: '3',
-            fillOpacity: 0.7
-  };
-}
-
-  // load json data recieve from views.py
-  var khm_mapData = {{ khm_json| safe }};
-  //L.geoJson(khm_mapData, { style: style }).addTo(cam_map);
   
-  // Add Zoom button
-  L.control.zoom({
-     position:'topleft'
-}).addTo(cam_map);
+  // Cambodia : AJAX default
+  // Set today date as default
+  var today = new Date();
+  today = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+  // Call AJAX
+  KHMSubmitAJAX(today, 'rainfall');
+  
 
-  // Add interaction
-  function highlightFeature(e) {
-    var layer = e.target;
+  // Cambodia : AJAX for parameter selection
+  // Set default value
+  var khm_wf_param;
+  if (khm_wf_param == undefined || khm_date_selected == undefined) {
+    khm_wf_param = 'rainfall';
+    khm_date_selected = today;
+  }
+  // Retrieve weather parameter data from button
+  $(document).on('click', '#khm_form', function () {
+        khm_wf_param = $("input[name=khm_wf_param]:checked").val();
+        console.log(khm_wf_param);
+        // Call AJAX to send data to views.py
+        KHMSubmitAJAX(khm_date_selected, khm_wf_param);
+  });
 
-    layer.setStyle({
-        weight: 5,
-        color: '#2F96B2',
-        dashArray: '',
-        fillOpacity: 0.7
+
+  //-----------------------------------------------------------------------------------------------//
+  //----------------------------------------Laos AJAX CODE-----------------------------------------//
+  //----------------------------------------------------------------------------------------------// 
+
+  //----------------* Laos submit AJAX main Function *----------------//
+  function LAOSubmitAJAX(date, wfparam) {
+    $.ajax({
+      type: "POST",
+      url: "{% url 'wf_laos_submit' %}",
+      data: {
+        lao_date: date,
+        lao_wf_param: wfparam,
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+      },
+      dataType: 'json',
+      cache: false,
+
+      success: function (lao_data) {
+        LAO_MapChart(lao_data);
+        //CreateKHM_Slider();
+        //alert(lao_data.date_sel + ' & ' + lao_data.wf_param);
+      },
+      error: function () {
+        alert('error')
+      }
     });
+  }
+  
+  // Laos : AJAX default
+  LAOSubmitAJAX(today, 'rainfall');
 
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        layer.bringToFront();
-    }
-    // Add Info popup when mouseover
-    layer.bindPopup('<b>'+ '{{wfparam}}' + '</b><br>' + layer.feature.properties.Province  + ' : ' + layer.feature.properties.{{wfparam}}).openPopup();
-}
-
-function resetHighlight(e) {
-    geojson.resetStyle(e.target);
-}
-
-// Zoom
-function zoomToFeature(e) {
-    cam_map.fitBounds(e.target.getBounds());
-}
-
-
-function onEachFeature(feature, layer) {
-    layer.on({
-        mouseover: highlightFeature,
-        mouseout: resetHighlight,
-        click: zoomToFeature
-    });
-}
-
-geojson = L.geoJson(khm_mapData, {
-    style: style,
-    onEachFeature: onEachFeature
-}).addTo(cam_map);
-
-
-  // Add legend to map
-  var legend = L.control({ position: 'bottomright' });
-  legend.onAdd = function (cam_map) {
-
-    var div = L.DomUtil.create('div', 'info legend'),
-      grades = [0, 5, 10, 20, 30, 40, 60, 70, 80, 90],
-      labels = [];
-
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-      div.innerHTML += '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-    }
-    return div;
-  };
-
-  legend.addTo(cam_map);
-            
-
-  //-------------------------------------------------------------------//
-  // Laos map
-  var lao_map = L.map('lao_map', {
-    zoomControl: false,
-    minZoom: 3,     // Max Zoom out
-    maxZoom: 9,    // Max Zoom in
-  }).setView([17.6384, 105.2195], 7);
-  L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(lao_map);
-
-  //-------------------------------------------------------------------//
-  // Myanmar map
-  var mya_map = L.map('mya_map', {
-    zoomControl: false,
-    minZoom: 3,     // Max Zoom out
-    maxZoom: 9,    // Max Zoom in
-  }).setView([20.00, 95.00], 6);
-  L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(mya_map);
-
-  //-------------------------------------------------------------------//
-  // Tab
-  $(document).ready(function () {
-    $("#myTab a").click(function (e) {
-      e.preventDefault();
-      $(this).tab("show");
-    });
+  // Laos : AJAX for parameter selection
+  // Set default value
+  var lao_wf_param;
+  if (lao_wf_param == undefined || lao_date_selected == undefined) {
+    lao_wf_param = 'rainfall';
+    lao_date_selected = today;
+  }
+  // Retrieve weather parameter data from button
+  $(document).on('click', '#lao_form', function () {
+        lao_wf_param = $("input[name=lao_wf_param]:checked").val();
+        console.log(lao_wf_param);
+        // Call AJAX to send data to views.py
+        LAOSubmitAJAX(lao_date_selected, lao_wf_param);
   });
 
-  // Make the map avaliable in each tab
-  var camTab = document.getElementById('cambodia');
-  var observer1 = new MutationObserver(function () {
-    if (camTab.style.display != 'none') {
-      cam_map.invalidateSize();
-    }
-  });
-  observer1.observe(camTab, { attributes: true });
 
-  var laoTab = document.getElementById('laos');
-  var observer2 = new MutationObserver(function () {
-    if (laoTab.style.display != 'none') {
-      lao_map.invalidateSize();
-    }
-  });
-  observer2.observe(laoTab, { attributes: true });
-
-  var myaTab = document.getElementById('myanmar');
-  var observer3 = new MutationObserver(function () {
-    if (myaTab.style.display != 'none') {
-      mya_map.invalidateSize();
-    }
-  });
-  observer3.observe(myaTab, { attributes: true });
-
-  //-------------------------------------------------------------------//
-  // Date picker
-  $('#datepicker').datepicker({
-    clearBtn: true,
-    todayHighlight: true,
-    autoclose: true, // When date has been selected
-    immediateUpdates: true,
-    orientation: 'auto bottom',
-    language: 'en',
-    endDate: new Date(), // cant select tomorrow on date-picker
-    format: 'yyyy-mm-dd'
-  });
-
-  $('#datepicker').datepicker('setDate', 'today').date();
-
-  //-------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------------------------//
+//---------------------------------- Tooltips Functions for button --------------------------------------//
+//------------------------------------------------------------------------------------------------------// 
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+});
 
 </script>
+
+
+<script src="{% static 'scripts/weather_forecast_module/wf_map.js' %}"></script>
+<script src="{% static 'scripts/weather_forecast_module/wf_dateslider.js' %}"></script>
+
 
 {% endblock content %}
