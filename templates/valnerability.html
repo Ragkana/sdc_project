@@ -1,0 +1,198 @@
+{% load static %}
+{% include "structure/sidebar.html" %}
+{% include "structure/topnavbar.html" %}
+{% block content %}
+
+<div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
+    <!-- Page Header -->
+    <div class="page-header row no-gutters py-4">
+        <div class="col-12 col-sm-12 text-center text-sm-left mb-4 mb-sm-0">
+            <h3 class="page-title">Valnerability Analytics</h3>
+        </div>
+    </div>
+    <!-- End Page Header -->
+    <!-- Country Tab -->
+    <!-- Tab Bar -->
+    <div class="btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto py-2" role="group"
+        aria-label="Page actions">
+        <ul class="nav" id="myTab">
+            <li class="nav-item ">
+                <a href="#cambodia" class="nav-link btn btn-white active">Cambodia</a>
+            </li>
+            <li class="nav-item">
+                <a href="#laos" class="nav-link btn btn-white">Laos</a>
+            </li>
+            <li class="nav-item">
+                <a href="#myanmar" class="nav-link btn btn-white">Myanmar</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Tab content -->
+    <div class="tab-content">
+        <!-----------------------------------** Cambodia Tab Content **----------------------------------------->
+        <div class="tab-pane fade show active" id="cambodia">
+            <div class="row">
+                <div class="card w-100 card-small">
+                    <!-- Card Header -->
+                    <div class="card-header border-bottom">
+                        <h6 class="m-0">Cambodia Valnerability</h6>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body pt-0">
+                        <div class="row border-bottom py-2 bg-light">
+                            <div class="col-12 col-sm-12 mb-2">
+
+                                <form method="post" class="py-2" id="khm_form">
+                                    {% csrf_token %}
+                                    <!-- Hazard Selection -->
+                                    <div class="row w-100">
+
+                                        <div class="col-lg-3 col-md-3 col-sm-12">
+                                            <span>Select :</span>
+                                            <select class="form-control my-2" name="meal" id="meal" onChange="changecat(this.value);" required>
+                                                <option value="" disabled selected>Select</option>
+                                                <option value="A">Population</option>
+                                                <option value="B">Living Standards</option>
+                                                <option value="C">Education</option>
+                                                <option value="D">Health</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Level Selection -->
+
+                                        <div class="col-lg-3 col-md-3 col-sm-12">
+                                            <span>&nbsp;</span>
+                                            <select class="form-control my-2" name="category" id="category">
+                                                <option value="" disabled selected>Select</option>
+                                            </select>
+                                        </div>
+
+
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+
+                        <!-- Map body -->
+                        <div id="hc_container"></div>
+
+
+
+                    </div> <!-- End Card body -->
+
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-----------------------------------** Laos Tab Content **----------------------------------------->
+        <div class="tab-pane fade" id="laos"></div>
+        <!-----------------------------------** Myanmar Tab Content **----------------------------------------->
+        <div class="tab-pane fade" id="myanmar"></div>
+
+
+    </div> <!-- End  Tab content -->
+</div>
+
+<script type="text/javascript">
+    //-------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------- Dependent Dropdown --------------------------------------------//
+    //-------------------------------------------------------------------------------------------------------------//
+    var mealsByCategory = {
+        A: ["Population share by region", "Population size by region", "Number of MPI poor by region"],
+        B: ["Cooking fuel", "Sanitation", "Drinking water", "Electricity", "Housing", "Assets"],
+        C: ["Years of schooling", "School attendance"],
+        D: ["Nutrition", "Child mortality"]
+    }
+
+    function changecat(value) {
+        if (value.length == 0) document.getElementById("category").innerHTML = "<option></option>";
+        else {
+            var catOptions = "";
+            for (categoryId in mealsByCategory[value]) {
+                catOptions += "<option>" + mealsByCategory[value][categoryId] + "</option>";
+            }
+            document.getElementById("category").innerHTML = catOptions;
+        }
+    }
+</script>
+
+<script src="{% static 'scripts/valnerability.js' %}"></script>
+
+<script type="text/javascript">
+    //----------------------------------------------------------------------------------------------//
+//--------------------------------------------- Map --------------------------------------------//
+//----------------------------------------------------------------------------------------------//
+
+// HighChart Map
+var MapData = [['Battambang', 10], ['Kampong Cham', 5.2], ['Kampong Thom', 7.4], ['Kandal', 11.2], ['Kratie', 3.5], ['Phnom Penh', 7.7], ['Prey Veng', 8.6], ['Kandal', 4.8], ['Koh Kong', 2.4],
+['Preah Sihanouk', 12.1], ['Stung Treng', 9.4], ['Pursat', 7.8], ['Siem Reap',5.6],['Mondul Kiri', 13.4], ['Ratanak Kiri', 10.7], ['Takeo', 14.1], ['Svay Rieng', 6.6]];
+// load all 3 level map
+const camMap_p = "{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}";
+const DisName = '{{disaster_param}}';
+
+
+Highcharts.getJSON(camMap_p, function (geojson) {
+
+    // Initialize the chart
+    Highcharts.mapChart('hc_container', {
+        chart: {
+            map: geojson,
+            //borderWidth: 2,
+            backgroundColor: false
+        },
+
+        title: {
+            text: ''
+        },
+
+        accessibility: {
+            typeDescription: 'Map of Cambodia.'
+        },
+
+        mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+                verticalAlign: 'bottom'
+            }
+        },
+
+        colorAxis: {
+        //min: 1,
+        //max: 100,
+        //type: 'logarithmic', //because you can't take log with 0 value
+        minColor: '#EEEEFF',
+        maxColor: '#000022',
+        stops: [
+          [0, '#C6DBEF'],
+          [0.67, '#4292C6'],
+          [1, '#062655']
+        ]
+        },
+
+        series: [{
+            data: MapData,
+            keys: ['code', 'value'],
+            joinBy: ['Province', 'code'],
+            tooltip: {
+                    pointFormat: '{point.code}: {point.value}'
+                },
+            states: {
+                hover: {
+                    color: '#a4edba'
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                format: '{point.code}'
+            }
+        }]
+    });
+});
+</script>
+
+{% include "structure/footer.html" %} 
+{% endblock content %}

@@ -1,19 +1,77 @@
 {% load static %}
-{% include "structure/header_n_footer.html" %}
 {% include "structure/sidebar.html" %}
 {% include "structure/topnavbar.html" %}
 {% block content %}
 
 <div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
-<!-- Page Header -->
-<div class="page-header row no-gutters py-4">
-    <div class="col-12 col-sm-4 text-center text-sm-left mb-4 mb-sm-0">
-        <h3 class="page-title">Reports</h3>
+    <!-- Page Header -->
+    <div class="page-header row no-gutters py-4">
+        <div class="col-12 col-sm-12 text-center text-sm-left mb-4 mb-sm-0">
+            <h3 class="page-title">Reports</h3>
+        </div>
     </div>
+    <!-- End Page Header -->
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 mb-2 mx-0 my-3">
+            <div class="card card-small m-0">
+                <div class="card-header border-bottom">
+                    <h6 class="m-0">Reports Data</h6>
+                </div>
+                <!-- Content Body -->
+                <div class="card-body p-0 pb-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <form method="post" class="py-2">
+                                {% csrf_token %}
+                                <div class="row col py-3">
+                                    <!-- Select Country -->
+                                    <div class="col-lg-3 col-md-12 col-sm-12">
+                                        <span>Select Country: </span>
+                                        <select class="form-control my-2" name="country_selected" required>
+                                            <option value="">Cambodia</option>
+                                            <option value="">Laos</option>
+                                            <option value="">Myanmar</option>
+                                        </select>
+                                    </div>
+                                    <!-- / Select Country -->
+
+                                    <!-- Select Event -->
+                                    <div class="col-lg-3 col-md-12 col-sm-12">
+                                        <span>Select Event: </span>
+                                        <select class="form-control my-2" name="event_selected" required>
+                                            <option value="">DROUGHT</option>
+                                            <option value="">FLOOD</option>
+                                            <option value="">LIGHTNING</option>
+                                            <option value="">RIVER BANK COLLAPSE</option>
+                                            <option value="">STORM</option>
+                                        </select>
+                                    </div>
+                                    <!-- / Select Event -->
+                                </div>
+                                    <!-- Submit Button -->
+                                    <div class="row col">
+                                    <div class="col-lg-3 col-md-12 col-sm-12">
+                                        <button type="button submit" class="btn btn-primary btn-squared" 
+                                        style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Generate</button>
+                                    </div>
+                                    </div>
+                                    <!-- End Submit Button code -->
+
+                                
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- / End body content -->
+            </div>
+        </div>
     </div>
 
-</div>
-<!-- End Page Header -->
+
 </div>
 
+
+{% include "structure/footer.html" %}
 {% endblock content %}

@@ -58,8 +58,8 @@ $(document).ready(function () {
         //format: { to: toFormat, from: Number },
         range: {
             min: timestamp(TodayDate),
-            // max 10 days forecast
-            max: timestamp(TodayDate) + (10 * 24 * 60 * 60 * 1000)
+            // max 9 days forecast
+            max: timestamp(TodayDate) + (9 * 24 * 60 * 60 * 1000)
         },
         // Step 1 day
         step: 1 * 24 * 60 * 60 * 1000,
@@ -102,7 +102,7 @@ $(document).ready(function () {
         range: {
             min: timestamp(TodayDate),
             // max 10 days forecast
-            max: timestamp(TodayDate) + (10 * 24 * 60 * 60 * 1000)
+            max: timestamp(TodayDate) + (9 * 24 * 60 * 60 * 1000)
         },
         // Step 1 day
         step: 1 * 24 * 60 * 60 * 1000,

@@ -32,12 +32,18 @@ urlpatterns = [
     path('weather_laos', wf_views.wf_laos_submit, name='wf_laos_submit'),
     ################################ Observation Module ##############################################
     path('observation', wf_views.observation, name='observation'),
+    path('observation/cambodia_station', wf_views.obs_khm_station, name='obs_cambodia_station'),
     ################################ Hazard Module ##############################################
     path('hazard_analytics', da_views.hazard_ana, name='hazard_ana'),
     path('hazard_analytics/hazard_cambodia', da_views.hazard_cambodia, name='hazard_ana_cambodia'), # AJAX in hazard_analytics page
     path('hazard_analytics/hazard_cambodia_yearselected', da_views.hazard_cambodia_yearselected, name='hazard_ana_cambodia_yearselected'),
+
+    path('hazard_analytics/hazard_laos', da_views.hazard_laos, name='hazard_ana_laos'), # AJAX in hazard_analytics page
+    path('hazard_analytics/hazard_laos_yearselected', da_views.hazard_laos_yearselected, name='hazard_ana_laos_yearselected'),
     ################################ Disaster Module ##############################################
     path('disaster_analytics', da_views.disaster_ana, name='disaster_ana'), 
+    ################################ Vulnerability Module ##############################################
+    path('valnerability', da_views.valnerability, name='valnerability'),
     ################################ Earthquake Module ##############################################
     path('earthquake', eq_views.earthquake, name='earthquake'),
     path('earthquake/setting', eq_views.setting, name='earthquake-setting'),
@@ -46,7 +52,7 @@ urlpatterns = [
     path('earthquake/import', api_views.import_earthquake, name='import-earthquake'),
     path('earthquake/import/bulletin', api_views.import_bulletin, name='import-earthquake'),
     ##############################################################################
-    path('share_data', wf_views.share_data, name='share_data'),
+    path('upload_data', wf_views.upload_data, name='upload_data'),
     path('sdc_project', wf_views.sdc_project, name='sdc_project'),
     path('reports', wf_views.reports, name='reports'),
   
