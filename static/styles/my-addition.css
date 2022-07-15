@@ -125,3 +125,43 @@ a:hover {
     text-align: center;
     color: gray;
 }
+
+
+/* Map Container id */
+#hc_map01_container {
+    height: calc(100vh - 27.5rem);
+    width: 100%;
+    margin: 0 auto;
+}
+
+#hc_map02_container {
+    height: calc(100vh - 27.5rem);
+    width: 100%;
+    margin: 0 auto;
+}
+
+#hc_map03_container {
+    height: calc(100vh - 27.5rem);
+    width: 100%;
+    margin: 0 auto;
+}
+
+#hc_map04_container {
+    height: calc(100vh - 27.5rem);
+    width: 100%;
+    margin: 0 auto;
+}
+
+#hc_map05_container {
+    height: calc(100vh - 27.5rem);
+    width: 100%;
+    margin: 0 auto;
+}
+
+#hc_map06_container {
+    height: calc(100vh - 27.5rem);
+    width: 100%;
+    margin: 0 auto;
+}
+
+

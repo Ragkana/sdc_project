@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Avg, Count, Sum
 from requests import Response
-from app.disaster_ana.models import disaster
+from app.disaster_ana.models import disaster, vulnerability_mpi
 from django.db.models import F
 
 import json
@@ -62,9 +62,50 @@ def disaster_ana(request):
 #########################################################################################################################################################
 ######################################################### Vulnerability Modul ###########################################################################
 #########################################################################################################################################################
-def valnerability(request):
-    return render(request, "valnerability.html", {'url_name': 'valnerability'})
+def vulnerability(request):
+    return render(request, "vulnerability.html", {'url_name': 'vulnerability'})
 
+#### Cambodia ####
+def vul_khm_population(request):
+    pop_select = request.POST['khm_pop_type']
+    pop_data = vulnerability_mpi.objects.values('country_id',pop_select, 'province_name').filter(country_id='KHM')
+    value = list(pop_data.values_list(pop_select, flat=True))
+    value = listConvertDataType(value)
+    area = list(pop_data.values_list('province_name', flat=True))
+
+    popmap_sum = [list(e) for e in zip(area,value)]
+    return JsonResponse({'pop_select':pop_select, 'pop_map_data':popmap_sum}, status=200)
+
+def vul_khm_mpi(request):
+    mpi_select = request.POST['khm_mpi_type']
+    mpi_data = vulnerability_mpi.objects.values('country_id', mpi_select, 'province_name').filter(country_id='KHM')
+    value = list(mpi_data.values_list(mpi_select, flat=True))
+    value = listConvertDataType(value)
+    area = list(mpi_data.values_list('province_name', flat=True))
+
+    mpimap_sum = [list(e) for e in zip(area,value)]
+    return JsonResponse({'mpi_select':mpi_select, 'mpi_map_data':mpimap_sum}, status=200)
+
+#### Laos ####
+def vul_lao_population(request):
+    pop_select = request.POST['lao_pop_type']
+    pop_data = vulnerability_mpi.objects.values('country_id',pop_select, 'province_name').filter(country_id='LAO')
+    value = list(pop_data.values_list(pop_select, flat=True))
+    value = listConvertDataType(value)
+    area = list(pop_data.values_list('province_name', flat=True))
+
+    popmap_sum = [list(e) for e in zip(area,value)]
+    return JsonResponse({'pop_select':pop_select, 'pop_map_data':popmap_sum}, status=200)
+
+def vul_lao_mpi(request):
+    mpi_select = request.POST['lao_mpi_type']
+    mpi_data = vulnerability_mpi.objects.values('country_id', mpi_select, 'province_name').filter(country_id='LAO')
+    value = list(mpi_data.values_list(mpi_select, flat=True))
+    value = listConvertDataType(value)
+    area = list(mpi_data.values_list('province_name', flat=True))
+
+    mpimap_sum = [list(e) for e in zip(area,value)]
+    return JsonResponse({'mpi_select':mpi_select, 'mpi_map_data':mpimap_sum}, status=200)
 #########################################################################################################################################################
 ######################################################### Hazard Modul ##################################################################################
 #########################################################################################################################################################
@@ -177,3 +218,10 @@ def level_select(level, data, year_start,year_end):
         code, value = df['province_name'].to_list(), df['province_id'].to_list()
         disdata = [list(z) for z in zip(code,value)]
     return disdata
+
+## Function for converting data in list from string to float
+# Using for Observation page to convert string list of weather parameter (rainfall, min temp and max temp) to float.
+def listConvertDataType(li):
+    for i in range(0, len(li)):
+        li[i] = float(li[i])
+    return li

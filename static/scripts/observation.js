@@ -147,8 +147,11 @@ function LAO_map(json) {
 //------------------------------------------------------------------------------------------------------------//
 //--------------------------------------------- Time series Chart --------------------------------------------//
 //-----------------------------------------------------------------------------------------------------------//
+
+var KHM_Chart;
+
 // Setup Block
-var labels = [
+var month_labels = [
     'January',
     'February',
     'March',
@@ -163,42 +166,41 @@ var labels = [
     'December'
 ];
 
-// Destroy the old chart and create the new one.
-function destroyExistingChart(chart) {
-    if (chart != undefined || chart != null) {
-        chart.destroy();
-    }
-}
+
 
 // ------------------------** Cambodia Chart **------------------------//
 
-function KHM_ts(khm_data) {
-    //destroyExistingChart(KHM_Chart);
-    var ctx = document.getElementById('khm_chart').getContext('2d');
+function KHM_tsChart(khm_data) {
+    var ctx = document.getElementById('khm_chart');
     // Rander Chart
-    var KHM_Chart = new Chart(ctx,khm_chart_config);
+    KHM_Chart = new Chart(ctx,khm_chart_config);
+    // destroy the old chart if exists.
+    //KHM_Chart.destroy();
 
     var wfdata = {
-        labels: labels,
+        labels: month_labels,
         datasets: [{
             label: 'Min Temp',
             backgroundColor: '#2f96b2',
             borderColor: '#2f96b2',
-            data: [khm_data.min_temp],
+            //data: khm_data.min_temp,
+            data: [7, 15, 4, 16, 12, 10, 13, 7, 9, 4, 11, 16],
             yAxisID: 'A'
         },
         {
             label: 'Max Temp',
             backgroundColor: '#0b2d5a',
             borderColor: '#0b2d5a',
-            data: [khm_data.max_temp],
+            //data: khm_data.max_temp,
+            data: [7, 6, 8, 12, 13, 10, 19, 8, 6, 4, 15, 9],
             yAxisID: 'A'
         }, {
             label: 'Rainfall',
             backgroundColor: '#c4c7d7',
             borderColor: '#c4c7d7',
-            data: [khm_data.rainfall],
-            yAxisID: 'B'
+            //data: khm_data.rainfall,
+            data: [7, 12, 10, 16, 5, 9, 13, 4, 8, 6, 10, 14],
+            yAxisID: 'B',
         }
         ]
     };
