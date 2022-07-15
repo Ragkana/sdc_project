@@ -32,3 +32,19 @@ class disaster(models.Model):
     class Meta:
         db_table = "disaster"
 
+class vulnerability_mpi(models.Model):
+    id = models.IntegerField(primary_key=True, null=False)
+    country_id = models.CharField(max_length=10, null=False)
+    province_id = models.CharField(max_length=10, null=False)
+    province_name = models.CharField(max_length=128)
+    mpi = models.DecimalField(max_digits=100, decimal_places=5)
+    population_in_mpi = models.DecimalField(max_digits=100, decimal_places=5)
+    intensity_of_deprivation = models.DecimalField(max_digits=100, decimal_places=5)
+    vulnerable_to_poverty = models.DecimalField(max_digits=100, decimal_places=5)
+    in_severe_poverty = models.DecimalField(max_digits=100, decimal_places=5)
+    population_share = models.DecimalField(max_digits=100, decimal_places=5)
+    population_size = models.DecimalField(max_digits=100, decimal_places=5)
+    number_of_mpi = models.DecimalField(max_digits=100, decimal_places=5)
+    class Meta:
+        db_table = "vulnerability_mpi"
+

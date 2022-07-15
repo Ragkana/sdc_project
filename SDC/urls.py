@@ -43,7 +43,13 @@ urlpatterns = [
     ################################ Disaster Module ##############################################
     path('disaster_analytics', da_views.disaster_ana, name='disaster_ana'), 
     ################################ Vulnerability Module ##############################################
-    path('valnerability', da_views.valnerability, name='valnerability'),
+    path('vulnerability', da_views.vulnerability, name='vulnerability'),
+
+    path('vulnerability/cambodia_population', da_views.vul_khm_population, name='vulnerability_cambodia_population'),
+    path('vulnerability/cambodia_mpi', da_views.vul_khm_mpi, name='vulnerability_cambodia_mpi'),
+
+    path('vulnerability/laos_population', da_views.vul_lao_population, name='vulnerability_laos_population'),
+    path('vulnerability/laos_mpi', da_views.vul_lao_mpi, name='vulnerability_laos_mpi'),
     ################################ Earthquake Module ##############################################
     path('earthquake', eq_views.earthquake, name='earthquake'),
     path('earthquake/setting', eq_views.setting, name='earthquake-setting'),
