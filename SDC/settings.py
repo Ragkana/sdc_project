@@ -153,9 +153,7 @@ EMAIL = {
 
 BULLETIN = {
     'directory' : os.path.join(BASE_DIR, 'bulletins/'),
-    #'ORGANIZATION' : 'System for Assessing Tracking and Alerting Disaster Risk Information based on Dynamic Risk Knowledge (SATARK)',
-    #'ORG_SHORT' : 'SATARK',
-    'ORGANIZATION' : 'Swiss Agancy for Development and Corporations (SDC)',
+    'ORGANIZATION' : 'Swiss Agency for Development and Corporations (SDC)',
     'ORG_SHORT' : 'SDC',
 }
 
