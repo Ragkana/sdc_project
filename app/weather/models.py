@@ -38,7 +38,7 @@ class observation_metdata(models.Model):
     month = models.IntegerField()
     day = models.IntegerField()
     rainfall = models.DecimalField(max_digits=10, decimal_places=2)
-    max_t = models.DecimalField(max_digits=10, decimal_places=2)
-    min_t = models.DecimalField(max_digits=10, decimal_places=2)
+    max_t = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    min_t = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     class Meta:
         db_table = "observation_metdata"

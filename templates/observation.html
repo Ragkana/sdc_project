@@ -29,12 +29,14 @@
             </li>
         </ul>
     </div>
+
     <!-- End Tab Bar -->
     <div class="tab-content">
-        <!-- Cambodia Tab -->
+        <!-------------------------------------------------------------------------------------------------------------------------------->
+        <!-------------------------------------------------------* Cambodia tab *--------------------------------------------------------->
+        <!-------------------------------------------------------------------------------------------------------------------------------->
         <div class="tab-pane fade show active" id="cambodia">
             <h4 class="mt-2"></h4>
-            {{data}}
             <!-- Map box -->
             <div class="row">
                 <div class="col-lg-6 col-md-12 col-sm-12 mb-4 mx-0">
@@ -42,42 +44,8 @@
                         <div class="card-header border-bottom">
                             <h6 class="m-0">Cambodia Station's Map</h6>
                         </div>
-                        <div class="card-body pt-0">
-                            <!-- Place Choose station dropdown bar -->
-                            <div class="row border-bottom py-2 bg-light">
-                                <form method="post" name="station_form" id="station_form" class="w-100">
-                                    {% csrf_token %}
-                                    <!--<div class="input-group">-->
-                                    <div class="row col-12 w-100">
-                                        <div class="col-lg-4 col-md-4 col-sm-12 my-1">
-                                            <span class="row mx-0 pb-1">Select station :</span>
-                                            <select class="row col-12 d-flex mx-0 form-control" name="station_selected">
-                                                {% for i in station %}
-                                                <option value='{{ i.station_name }}' {% if i.station_name == station_n %} selected {% endif %}>{{ i.station_name }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-12 my-1 w-100">
-                                            <span class="row col-lg-12 col-sm-12 pb-1">Select year :</span>
-                                            <!-- Select Start year -->
-                                            <div class="row col-12">
-                                                
-                                                <!-- Submit Button -->
-                                                <div class="col-lg-2 col-md-2 col-sm-4">
-                                                    <button type="button submit" class="btn btn-primary btn-squared"
-                                                        name="station_submit" id="station_submit"
-                                                        style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Load</button>
-                                                </div>
+                        <div class="card-body pt-0" style="background-color: #fff;border-radius: 0.625rem;">
 
-                                            </div>
-                                        </div>
-
-
-
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- End Choose station dropdown bar -->
                             <!-- Place something... -->
                             <div class="col-12 col-sm-6"></div>
                             <!-- Place Map-->
@@ -89,28 +57,27 @@
                 <!-- End Map box -->
 
                 <!-- Describe box -->
-                <div class="col-lg-6 col-md-6 col-sm-6 mb-4 mx-0">
+                <div class="col-lg-6 col-md-12 col-sm-12 mb-4 mx-0">
                     <div class="card ubd-stats card-small m-0">
                         <div class="card-header border-bottom">
-                            <h6 class="m-0">Climatology of {{station_n}} station</h6>
+                            <h6 class="m-0" id="khm_ts_title">Climatology of Battambang station</h6>
                         </div>
 
-                        <div class="card-body pt-0">
+                        <div class="card-body pt-0" style="background-color: #fff;border-radius: 0.625rem;">
                             <!-- Select year -->
                             <div class="row border-bottom py-2 bg-light">
                                 <div class="col-12 w-100">
                                     <span>Select year</span>
 
-                                    <div class="col-12" id="year_slider"></div>
+                                    <div class="col-12" id="khm_year_slider"></div>
 
                                 </div>
                             </div>
 
                             <!-- End Select year -->
-
-
-                            <canvas id="myChart"></canvas>
-
+<div>
+                            <canvas id="khm_chart"></canvas>
+</div>
                         </div> <!-- End card body -->
 
                     </div>
@@ -119,33 +86,66 @@
 
         </div>
         <!-- End Cambodia tab -->
-        <!-- Laos tab -->
+
+        <!---------------------------------------------------------------------------------------------------------------------------->
+        <!-------------------------------------------------------* Laos tab *--------------------------------------------------------->
+        <!---------------------------------------------------------------------------------------------------------------------------->
         <div class="tab-pane fade" id="laos">
-            <h4 class="mt-2">Laos tab content</h4>
-            <p>Vestibulum nec erat eu nulla rhoncus fringilla ut non neque. Vivamus nibh urna, ornare id gravida
-                ut,
-                mollis
-                a magna. Aliquam porttitor condimentum nisi, eu viverra ipsum porta ut. Nam hendrerit bibendum
-                turpis, sed
-                molestie mi fermentum id. Aenean volutpat velit sem. Sed consequat ante in rutrum convallis.
-                Nunc
-                facilisis
-                leo at faucibus adipiscing.</p>
+            <h4 class="mt-2"></h4>
+            <!-- Map box -->
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12 mb-4 mx-0">
+                    <div class="card card-small m-0">
+                        <div class="card-header border-bottom">
+                            <h6 class="m-0">Laos Station's Map</h6>
+                        </div>
+                        <div class="card-body pt-0" style="background-color: #fff;border-radius: 0.625rem;">
+
+                            <!-- Place something... -->
+                            <div class="col-12 col-sm-6"></div>
+                            <!-- Place Map-->
+                            <div class="map-sm" id="lao_map"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- End Map box -->
+
+                <!-- Describe box -->
+                <div class="col-lg-6 col-md-12 col-sm-12 mb-4 mx-0">
+                    <div class="card ubd-stats card-small m-0">
+                        <div class="card-header border-bottom">
+                            <h6 class="m-0" id="lao_ts_title">Climatology of Vientiane station</h6>
+                        </div>
+
+                        <div class="card-body pt-0" style="background-color: #fff;border-radius: 0.625rem;">
+                            <!-- Select year -->
+                            <div class="row border-bottom py-2 bg-light">
+                                <div class="col-12 w-100">
+                                    <span>Select year</span>
+
+                                    <div class="col-12" id="lao_year_slider"></div>
+
+                                </div>
+                            </div>
+
+                            <!-- End Select year -->
+<div>
+                            <canvas id="lao_chart"></canvas>
+</div>
+                        </div> <!-- End card body -->
+
+                    </div>
+                </div><!-- End Describe box -->
+            </div>
 
         </div>
         <!-- End Laos tab -->
-        <!-- Myanmar tab -->
+        <!------------------------------------------------------------------------------------------------------------------------------->
+        <!-------------------------------------------------------* Myanmar tab *--------------------------------------------------------->
+        <!------------------------------------------------------------------------------------------------------------------------------->
         <div class="tab-pane fade" id="myanmar">
-            <h4 class="mt-2">Myanmar tab content</h4>
-            <p>Donec vel placerat quam, ut euismod risus. Sed a mi suscipit, elementum sem a, hendrerit velit.
-                Donec
-                at erat
-                magna. Sed dignissim orci nec eleifend egestas. Donec eget mi consequat massa vestibulum
-                laoreet.
-                Mauris et
-                ultrices nulla, malesuada volutpat ante. Fusce ut orci lorem. Donec molestie libero in tempus
-                imperdiet. Cum
-                sociis natoque penatibus et magnis.</p>
+            
 
         </div>
         <!-- End Myanmar tab -->
@@ -156,188 +156,135 @@
 
 
 
-
-
 </div>
 <!-- End of Page content -->
 
+<script src="{% static 'scripts/observation.js' %}"></script>
 <script type="text/javascript">
-    // Tab
-    $(document).ready(function () {
-        $("#myTab a").click(function (e) {
-            e.preventDefault();
-            $(this).tab("show");
-        });
-    });
     //-----------------------------------------------------------------------------------------------//
-    // Cambodia map
-    var cam_map = L.map('cam_map', {
-        zoomControl: false,
-        minZoom: 3,     // Max Zoom out
-        maxZoom: 9,    // Max Zoom in
-    }).setView([12.562108, 104.888535], 7);
-    //L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(cam_map);
-    L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(cam_map);
+    //--------------------------------------------- AJAX --------------------------------------------//
+    //-----------------------------------------------------------------------------------------------//
 
-    function getColor(khm_param) {
-        //return khm_param.Province == '{{station_n}}' ? '#000' : khm_param.Province !== '{{station_n}}' ? '#C4C7D7';
-        if (khm_param.Province == '{{station_n}}') {
-            return '#2F96B2';
-        } else {
-            return '#C4C7D7';
-        }
+    // -------------------------** Cambodia AJAX **-------------------------//
+    // Cambodia : Default
+    KHM_ajaxStation('Battambang');
 
-    }
-
-    // GeoJSON style
-    function style(feature) {
-        return {
-            weight: 2,
-            opacity: 1,
-            color: '#2F96B2',
-            //fillColor: '#C4C7D7',
-            fillColor: getColor(feature.properties),
-            dashArray: '4',
-            fillOpacity: 0.7
-        };
-    }
-
-    // Add Zoom button
-    L.control.zoom({
-        position: 'topleft'
-    }).addTo(cam_map);
-
-    // Add interaction
-    function highlightFeature(e) {
-        var khm_layer = e.target;
-        khm_layer.setStyle({
-            weight: 5,
-            color: '#2F96B2',
-            //fillColor: '#2F96B2',
-            dashArray: '',
-            fillOpacity: 0.7
-        });
-
-        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-            khm_layer.bringToFront();
-        }
-        // Add Info popup when mouseover
-        khm_layer.bindPopup(khm_layer.feature.properties.Province).openPopup();
-    }
-
-    function resetHighlight(e) {
-        khm_geojson.resetStyle(e.target);
-    }
-
-    function onEachFeature(feature, layer) {
-        layer.on({
-            mouseover: highlightFeature,
-            mouseout: resetHighlight
-        });
-    }
-
-    //fetch("{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}").then(res => res.json()).then(khm_data => {
-    //    khm_geojson = L.geoJson(khm_data, {style:style, onEachFeature:onEachFeature}).addTo(cam_map);
-    //});
-    var khm_json = {{ khm_json| safe}};
-    khm_geojson = L.geoJson(khm_json, {
-        style: style,
-        onEachFeature: onEachFeature
-    }).addTo(cam_map);
-
-
-    //--------------------------------------------------------------------------------------//   
-    // Line Chart
-    // Setup Block
-    const labels = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-    ];
-    const data = {
-        labels: labels,
-        datasets: [{
-            label: 'Min Temp',
-            backgroundColor: '#2f96b2',
-            borderColor: '#2f96b2',
-            data: [{% for a in min_temp %} {{a}}, {% endfor %}],
-    yAxisID: 'A'
-        }, {
-        label: 'Max Temp',
-            backgroundColor: '#0b2d5a',
-                borderColor: '#0b2d5a',
-                    data: [{% for b in max_temp %} {{b}}, {% endfor %}],
-    yAxisID: 'A'
-        }, {
-        label: 'Rainfall',
-            backgroundColor: '#c4c7d7',
-                borderColor: '#c4c7d7',
-                    data: [{% for c in rainfall %} {{c}}, {% endfor %}],
-    yAxisID: 'B'
-        }
-        ]
-    };
-    // Config Block
-    const config = {
-        display: true,
-        type: 'line',
-        data: data,
-        options: {
-            scales: {
-                'A': {
-                    title: {
-                        display: true,
-                        text: 'Temperature (°C)'
-                    },
-                    labels: 'Temperature',
-                    position: 'left'
-                },
-                'B': {
-                    title: {
-                        display: true,
-                        text: 'Rainfall (mm)'
-                    },
-                    labels: 'Rainfall',
-                    position: 'right',
-                }
+    // Cambodia : AJAX Main Function
+    function KHM_ajaxStation(station) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'obs_cambodia_station' %}",
+            data: {
+                khm_station: station,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            dataType: 'json',
+            cache: false,
+            success: function (khm_data) {
+                KHM_tsChart(khm_data);
+                KHM_YearSelect(khm_data);
+                // Change station name at tim series box's title
+                $('#khm_ts_title').text("Climatology of "+ khm_data.station +" station");
+                //alert(khm_data.station);
+                //console.log(khm_data.year_start + ' : ' + khm_data.year_end);
+            },
+            error: function () {
+                alert('error')
             }
-        }
-    };
-    // Rander 
-    const myChart = new Chart(
-        document.getElementById('myChart'),
-        config
-    );
+        }); // end ajax
+    }
 
-    //--------------------------------------------------------------------------------------//  
-    // year range select //
-    var YearSlider = document.getElementById('year_slider');
+    // Cambodia : AJAX for year selection
+    function KHM_ajaxYearSel(start,end,station) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'obs_cambodia_station_yearsel' %}",
+            cache: false,
+            data: {
+                khm_station_y: station,
+                khm_year_start: start,
+                khm_year_end: end,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            dataType: 'json',
+            success: function (khm_year) {
+                KHM_tsChart(khm_year);
+                //console.log(khm_year.test);
+            },
+            error: function () {
+                alert('error')
+            }
+        });
+    }
 
-    noUiSlider.create(YearSlider, {
-        start: [1999, 2022],
-        tooltips: [true, true],
-        connect: true,
-        step: 10,
-        range: {
-            'min': 1999,
-            'max': 2022
-        },
-        pips: {
-            mode: 'steps',
-            density: 3
-        }
-    });
+    // -------------------------** Laos AJAX **-------------------------//
+    // Laos : Default
+    LAO_ajaxStation('Vientiane');
 
-    //--------------------------------------------------------------------------------------//  
+    // Cambodia : AJAX Main Function
+    function LAO_ajaxStation(station) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'obs_laos_station' %}",
+            data: {
+                lao_station: station,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            dataType: 'json',
+            cache: false,
+            success: function (lao_data) {
+                LAO_tsChart(lao_data);
+                LAO_YearSelect(lao_data);
+                // Change station name at tim series box's title
+                $('#lao_ts_title').text("Climatology of "+ lao_data.station +" station");
+                //alert(khm_data.station);
+                //console.log(khm_data.year_start + ' : ' + khm_data.year_end);
+            },
+            error: function () {
+                alert('error')
+            }
+        }); // end ajax
+    }
+
+    // Laos : AJAX for year selection
+    function LAO_ajaxYearSel(start,end,station) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'obs_laos_station_yearsel' %}",
+            cache: false,
+            data: {
+                lao_station_y: station,
+                lao_year_start: start,
+                lao_year_end: end,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            dataType: 'json',
+            success: function (lao_year) {
+                LAO_tsChart(lao_year);
+                //console.log(lao_year.test);
+            },
+            error: function () {
+                alert('error')
+            }
+        });
+    }
+
+
+    // ----------------------------------------- Map Calling ---------------------------------------//
+
+    // call geojson for map //
+    var lao_json = {{ lao_json|safe }};
+    var khm_json = {{ khm_json|safe }};
+    // call map create function
+    KHM_map(khm_json);
+    LAO_map(lao_json);
+
+
+
+
+
 </script>
+
+
 {% include "structure/footer.html" %}
 {% endblock content %}

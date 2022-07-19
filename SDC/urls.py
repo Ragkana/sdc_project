@@ -32,7 +32,12 @@ urlpatterns = [
     path('weather_laos', wf_views.wf_laos_submit, name='wf_laos_submit'),
     ################################ Observation Module ##############################################
     path('observation', wf_views.observation, name='observation'),
+
     path('observation/cambodia_station', wf_views.obs_khm_station, name='obs_cambodia_station'),
+    path('observation/cambodia_station_yearsel', wf_views.obs_khm_station_yearsel, name='obs_cambodia_station_yearsel'),
+
+    path('observation/laos_station', wf_views.obs_lao_station, name='obs_laos_station'),
+    path('observation/laos_station_yearsel', wf_views.obs_lao_station_yearsel, name='obs_laos_station_yearsel'),
     ################################ Hazard Module ##############################################
     path('hazard_analytics', da_views.hazard_ana, name='hazard_ana'),
     path('hazard_analytics/hazard_cambodia', da_views.hazard_cambodia, name='hazard_ana_cambodia'), # AJAX in hazard_analytics page
