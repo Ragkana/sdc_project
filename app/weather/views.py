@@ -3,7 +3,6 @@ import datetime as dt
 from itertools import count
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-#from .models import country, observation_metdata, province, district, commune, weather_forecast
 from app.weather.models import observation_metdata,weather_forecast_cambodia,weather_forecast_laos
 from django.db.models import Avg, Count, Min, Max
 
@@ -88,33 +87,12 @@ def wf_laos_submit(request):
 
 def observation(request):
     khm_obj = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
+    lao_obj = json.load(open('static/JSON/Laos/Laos_Province.geojson'))
     # obs : Group station in station name column **use in dropdown**
-    obs = observation_metdata.objects.values('station_name').annotate(count=Count('station_name'))
-    # Retrieve station name from dropdown
-    selected_value = request.POST.get('station_selected')
-    ## Set Default Value ##
-    if selected_value == None:
-        selected_value = 'Battambang'
-    else:
-        selected_value = selected_value
-    ## Average data ##
-    # Average data(all year) in selected station and each month, choose only weather data orderby month.
-    avg_obs = observation_metdata.objects.values('station_name','month').annotate(rainfall__avg=Avg('rainfall'), max__temp__avg=Avg('max_t'), min__temp__avg=Avg('min_t')).filter(station_name=selected_value).order_by('month')
-    rainfall_all = avg_obs.values_list('rainfall__avg', flat=True)
-    max_temp_all = avg_obs.values_list('max__temp__avg', flat=True)
-    min_temp_all = avg_obs.values_list('min__temp__avg', flat=True)
-    ## For Time serie Graph ##
-    # Retrieve start and end year
-    year_data = observation_metdata.objects.values('station_name').annotate(year__start=Min('year'), year__end=Max('year')).filter(station_name=selected_value)
-    year_start, year_end = year_data[0]['year__start'], year_data[0]['year__end']
-    #year_start = observation_metdata.objects.values('year', 'station_name').annotate(count=Count('year')).filter(station_name=selected_value).order_by('year')
-    #year_end = observation_metdata.objects.values('year', 'station_name').annotate(count=Count('year')).filter(station_name=selected_value).order_by('year')
-    # Retrieve year data from template
-    start_y_selected = request.POST.get('start_year_selected')
-    end_y_selected = request.POST.get('end_year_selected')
-    return render(request, "observation.html", {'url_name': 'observation', 'station':obs, 
-    'rainfall':rainfall_all, 'max_temp':max_temp_all, 'min_temp':min_temp_all, 'station_n':selected_value, 
-    'khm_json':khm_obj, 'year_start':year_start, 'year_end':year_end})
+    khm_obs = observation_metdata.objects.values('station_name').annotate(count=Count('station_name')).filter(country_id='KHM')
+    lao_obs = observation_metdata.objects.values('station_name').annotate(count=Count('station_name')).filter(country_id='LAO')
+
+    return render(request, "observation.html", {'url_name': 'observation', 'khm_station':khm_obs, 'khm_json':khm_obj, 'lao_station':lao_obs, 'lao_json':lao_obj})
 
 def obs_khm_station(request):
     khm_station = request.POST['khm_station']
@@ -122,14 +100,86 @@ def obs_khm_station(request):
     # Average data(all year) in selected station and each month, choose only weather data orderby month.
     avg_obs = observation_metdata.objects.values('station_name','month').annotate(rainfall__avg=Avg('rainfall'), max__temp__avg=Avg('max_t'), min__temp__avg=Avg('min_t')).filter(station_name=khm_station).order_by('month').filter(country_id='KHM')
     rainfall_all = avg_obs.values_list('rainfall__avg', flat=True)
+    rainfall_all = list(rainfall_all)
+    rainfall_all = listConvertDataType(rainfall_all)
     max_temp_all = avg_obs.values_list('max__temp__avg', flat=True)
+    max_temp_all = list(max_temp_all)
+    max_temp_all = listConvertDataType(max_temp_all)
     min_temp_all = avg_obs.values_list('min__temp__avg', flat=True)
+    min_temp_all = list(min_temp_all)
+    min_temp_all = listConvertDataType(min_temp_all)
+
+    ## Year Range ##
+    year_data = observation_metdata.objects.values('station_name').annotate(year__start=Min('year'), year__end=Max('year')).filter(station_name=khm_station)
+    year_start, year_end = year_data[0]['year__start'], year_data[0]['year__end']
     
-    return JsonResponse({'station':khm_station}, status=200)
-    ## For Time serie Graph ##
-    # Retrieve start and end year
-    #year_data = observation_metdata.objects.values('station_name').annotate(year__start=Min('year'), year__end=Max('year')).filter(station_name=khm_station)
-    #year_start, year_end = year_data[0]['year__start'], year_data[0]['year__end']
+    return JsonResponse({'station':khm_station, 'rainfall':rainfall_all, 'max_temp':max_temp_all, 'min_temp':min_temp_all, 'year_start':year_start, 'year_end':year_end}, status=200)
+
+def obs_khm_station_yearsel(request):
+    # Retrieve year
+    year_start = int(request.POST['khm_year_start'])
+    year_end = int(request.POST['khm_year_end'])
+    khm_station = request.POST['khm_station_y']
+
+    ## Observation Module : Data output for year selection
+    year_obs = observation_metdata.objects.all().values('station_name', 'month').filter(year__range=(year_start, year_end)).annotate(rainfall__avg=Avg('rainfall'), max__temp__avg=Avg('max_t'), min__temp__avg=Avg('min_t')).filter(station_name=khm_station)
+    rainfall = list(year_obs.values_list('rainfall__avg', flat=True))
+    rainfall = listConvertDataType(rainfall)
+    max_t = list(year_obs.values_list('max__temp__avg', flat=True))
+    max_t = listConvertDataType(max_t)
+    min_t = list(year_obs.values_list('min__temp__avg', flat=True))
+    min_t = listConvertDataType(min_t)
+
+    return JsonResponse({'year_start':year_start, 'year_end':year_end, 'rainfall':rainfall, 'max_temp':max_t, 'min_temp':min_t}, status=200)
+
+def obs_lao_station(request):
+    lao_station = request.POST['lao_station']
+    ## Average data ##
+    # Average data(all year) in selected station and each month, choose only weather data orderby month.
+    avg_obs = observation_metdata.objects.values('station_name','month').annotate(rainfall__avg=Avg('rainfall'), max__temp__avg=Avg('max_t'), min__temp__avg=Avg('min_t')).filter(station_name=lao_station).order_by('month').filter(country_id='LAO')
+    rainfall_all = avg_obs.values_list('rainfall__avg', flat=True)
+    rainfall_all = list(rainfall_all)
+    rainfall_all = listConvertDataType(rainfall_all)
+    max_temp_all = avg_obs.values_list('max__temp__avg', flat=True)
+    max_temp_all = list(max_temp_all)
+    max_temp_all = listConvertDataType(max_temp_all)
+    min_temp_all = avg_obs.values_list('min__temp__avg', flat=True)
+    min_temp_all = list(min_temp_all)
+    min_temp_all = listConvertDataType(min_temp_all)
+
+    ## Year Range ##
+    year_data = observation_metdata.objects.values('station_name').annotate(year__start=Min('year'), year__end=Max('year')).filter(station_name=lao_station)
+    year_start, year_end = year_data[0]['year__start'], year_data[0]['year__end']
+    
+    return JsonResponse({'station':lao_station, 'rainfall':rainfall_all, 'max_temp':max_temp_all, 'min_temp':min_temp_all, 'year_start':year_start, 'year_end':year_end}, status=200)
+
+def obs_lao_station_yearsel(request):
+    # Retrieve year
+    year_start = int(request.POST['lao_year_start'])
+    year_end = int(request.POST['lao_year_end'])
+    lao_station = request.POST['lao_station_y']
+
+    ## Observation Module : Data output for year selection
+    year_obs = observation_metdata.objects.all().values('station_name', 'month').filter(year__range=(year_start, year_end)).annotate(rainfall__avg=Avg('rainfall'), max__temp__avg=Avg('max_t'), min__temp__avg=Avg('min_t')).filter(station_name=lao_station)
+    rainfall = list(year_obs.values_list('rainfall__avg', flat=True))
+    rainfall = listConvertDataType(rainfall)
+    max_t = list(year_obs.values_list('max__temp__avg', flat=True))
+    max_t = listConvertDataType(max_t)
+    min_t = list(year_obs.values_list('min__temp__avg', flat=True))
+    min_t = listConvertDataType(min_t)
+
+    return JsonResponse({'year_start':year_start, 'year_end':year_end, 'rainfall':rainfall, 'max_temp':max_t, 'min_temp':min_t}, status=200)
+
+
+
+## Function for converting data in list from string to float
+# Using for Observation page to convert string list of weather parameter (rainfall, min temp and max temp) to float.
+def listConvertDataType(li):
+    for i in range(0, len(li)):
+        li[i] = float(li[i])
+    return li
+
+
 
 
 def earthquake(request):
