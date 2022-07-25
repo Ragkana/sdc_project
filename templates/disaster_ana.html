@@ -12,26 +12,27 @@
     <!-- Country Tab -->
     <!-- Tab Bar -->
     <div class="btn-group btn-group-toggle d-inline-flex mb-4 mb-sm-0 mx-auto py-3 justify-content-md-center"
-        role="group" aria-label="Page actions">
-        <ul class="nav" id="myTab">
-            <li class="nav-item ">
-                <a href="#cambodia" class="nav-link btn btn-white active">Cambodia</a>
-            </li>
-            <li class="nav-item">
-                <a href="#laos" class="nav-link btn btn-white">Laos</a>
-            </li>
-            <li class="nav-item">
-                <a href="#myanmar" class="nav-link btn btn-white">Myanmar</a>
-            </li>
-        </ul>
+      role="group" aria-label="Page actions">
+      <ul class="nav" id="myTab">
+        <li class="nav-item ">
+          <a href="#cambodia" class="nav-link btn btn-white active">Cambodia</a>
+        </li>
+        <li class="nav-item">
+          <a href="#laos" class="nav-link btn btn-white">Laos</a>
+        </li>
+        <li class="nav-item">
+          <a href="#myanmar" class="nav-link btn btn-white">Myanmar</a>
+        </li>
+      </ul>
     </div>
     <!-- End Tab Bar -->
     <!-- End Page Header -->
     <!-- Tab Content -->
     <div class="tab-content col-lg-12">
-      
-      <!-- Cambodia Tab content -->
+
+      <!----------------------------------------------------- Cambodia Tab content ----------------------------------------------------->
       <div class="tab-pane fade show active" id="cambodia">
+        <!---------------------- CamBodia : First Box -------------------------->
         <div class="row">
           <div class="card w-100">
             <div class="card card-small m-0">
@@ -42,310 +43,475 @@
               <div class="card-body pt-0">
                 <!-- Disaster select tab -->
                 <div class="row border-bottom py-2 bg-light">
-                  <div class="col-12 col-sm-6 d-flex mb-2 mb-sm-0 w-100">
+                  <div class="col-lg-12 col-sm-6 d-flex mb-2 mb-sm-0 w-100">
 
-                    <form method="post" class="w-100 py-2">
+                    <form method="post" class="w-100 py-2" id="khm_form">
                       {% csrf_token %}
-                      <!-- Disaster type-->
-                      <div class="row">
-                        <div class="col-lg-5 col-md-12 col-sm-12">
-                          <span>Select Event :</span>
-                          <div class="btn-group btn-group-toggle d-flex my-auto mx-auto mx-sm-0 py-2"
-                            data-toggle="buttons">
-                            {% for a in dis_event %}
-                            <label class="btn btn-white btn-pill {% if a.event == disaster_param %}active{% endif %}"
-                              for="event">
-                              <input type="radio" name="dis_selected" id="{{a.event}}" autocomplete="off"
-                                value="{{a.event}}" {% if a.event == disaster_param %}checked{% endif %}> {{a.event}}
-                            </label>
-                            {% endfor %}
-                          </div>
-                        </div>
-                      </div>
 
                       <div class="row">
-                        <!-- Disaster Impact selection form -->
+
                         <div class="btn-group input-group">
-                          <div class="col-lg-5 col-md-12 col-sm-12">
-                            <span>Select Impact :</span>
-                            <select class="form-control my-2" name="impact_selected">
-                              <option value="deaths" {% if impact_param == 'deaths' %}selected{% endif %}>Deaths</option>
-                              <option value="injured" {% if impact_param == 'injured' %}selected{% endif %}>Injured
-                              </option>
-                              <option value="missing" {% if impact_param == 'missing' %}selected{% endif %}>Missing
-                              </option>
-                              <option value="house_destroy" {% if impact_param == 'house_destroy' %}selected{% endif %}>
-                                Houses Destroyed</option>
-                              <option value="house_damage" {% if impact_param == 'house_damage' %}selected{% endif %}>
-                                Houses Damaged</option>
-                            </select>
-                          </div>
-                          <!-- location selection form -->
-                          <div class="col-lg-5 col-md-12 col-sm-12">
-                            <span>Select Level :</span>
-                            <select class="form-control my-2" name="level_selected">
-                              <option value="province_name" {% if level_param == 'province_name' %}selected{% endif %}>
-                                Province</option>
-                              <option value="district_name" {% if level_param == 'district_name' %}selected{% endif %}>
-                                District</option>
-                              <option value="commune_name" {% if level_param == 'commune_name' %}selected{% endif %}>
-                                Commune</option>
-                            </select>
-                          </div>
+                          <!-- Disaster Selection -->
                           <div class="col-lg-2 col-md-12 col-sm-12">
-                            <span><br>&nbsp;</span>
-                            <button type="submit" class="btn btn-primary btn-squared my-2"
-                              style=" border-color: #0b2d5a; background-color: #0b2d5a;border-radius: 0.2rem;">
-                              Load
-                            </button>
+                            <span>Select Event :</span>
+                            <select class="form-control my-2" name="khm_dis_selected">
+                              {% for f in dis_event %}
+                              <option value="{{f.event}}">{{f.event}}</option>
+                              {% endfor %}
+                            </select>
                           </div>
+                          <!-- Disaster Impact selection form -->
+                          <div class="col-lg-2 col-md-12 col-sm-12">
+                            <span>Select Impact :</span>
+                            <select class="form-control my-2" name="khm_impact_selected">
+                              <option value="deaths" selected>Deaths</option>
+                              <option value="injured">Injured</option>
+                              <option value="missing">Missing</option>
+                              <option value="house_destroy">Houses Destroyed</option>
+                              <option value="house_damage">Houses Damaged</option>
+                            </select>
+                          </div>
+                          <!-- level selection form -->
+                          <div class="col-lg-2 col-md-12 col-sm-12">
+                            <span>Select Level :</span>
+                            <select class="form-control my-2" name="khm_level_selected">
+                              <option value="province_name">Province</option>
+                              <option value="district_name">District</option>
+                              <option value="commune_name">Commune</option>
+                            </select>
+                          </div>
+                          <!-- Year selection form -->
+                          <div class="col-lg-6 col-md-12 col-sm-12">
+                            <div class="col-12 w-100" id="khm_year_slider"></div>
+                          </div>
+
                         </div> <!-- Close button group -->
-                        </div>
+                      </div>
                     </form>
 
                   </div>
 
                 </div>
 
-              <!-- Map Chart -->
-              <div class="row">
-                <h4 class="p-lg-4 p-md-2 p-sm-2">Province death cumulative since 2000 (Map chart)</h4>
-                <div id="hc_container"></div>
-                <h4 class="p-lg-4 p-md-2 p-sm-2">Death cumulative since 2000 (sort by province)</h4>
-                <canvas id="local_Chart" style="height: calc(40vh - 7.5rem);width: 100%;"></canvas>
-                <h4 class="p-lg-4 p-md-2 p-sm-2">Death cumulative since 2000 (sort by year)</h4>
-                <canvas id="year_Chart" style="height: calc(40vh - 7.5rem);width: 100%;"></canvas>
-              </div> <!-- Close map chart -->
+                <!-- Map Chart -->
+                <div class="row">
+
+                  <div class="col-12 border-bottom py-2">
+                    <h5 class="p-lg-4 p-md-2 p-sm-2 d-flex justify-content-center" id="khm_map_title">Cumulative Deaths
+                      from DROUGHT by Province (Map Chart)</h5>
+                    <div id="hc_map01_container"></div>
+                  </div>
+
+                  <div class="col-12 py-2">
+                    <h5 class="p-lg-4 p-md-2 p-sm-2 d-flex justify-content-center" id="khm_locchart_title">Cumulative
+                      Deaths from DROUGHT by Province (Bar Chart)</h5>
+                    <canvas id="KHM_local_Chart" height="100"></canvas>
+                  </div>
+
+                </div> <!-- Close map chart -->
+
+              </div>
+              <!-- Close Cambodia Data-->
+
 
             </div>
-            <!-- Close Cambodia Data-->
-
-          
+            <!-- Close inner card -->
+          </div>
+          <!-- Close card-->
         </div>
-        <!-- Close inner card -->
+        <!-- Close row -->
+
+        <!---------------------- CamBodia : Secound Box -------------------------->
+        <div class="row">
+          <div class="card w-100">
+            <div class="card card-small m-0">
+              <div class="card-header border-bottom">
+                <h6 class="m-0" id="khm_yearchart_title">Cumulative annual Deaths from DROUGHT by Country</h6>
+              </div>
+              <!-- Cambodia Body -->
+              <div class="card-body pt-0">
+                <canvas class="py-3" id="KHM_year_Chart" height="100"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <!-- Close card-->
+      <!-- Close Cambodia Tab -->
+
+      <!----------------------------------------------------- Laos Tab content ----------------------------------------------------->
+      <div class="tab-pane fade" id="laos">
+
+        <!---------------------- Laos : First Box -------------------------->
+        <div class="row">
+          <div class="card w-100">
+            <div class="card card-small m-0">
+              <div class="card-header border-bottom">
+                <h6 class="m-0">Disaster Impact Profile of Laos</h6>
+              </div>
+              <!-- Cambodia Body -->
+              <div class="card-body pt-0">
+                <!-- Disaster select tab -->
+                <div class="row border-bottom py-2 bg-light">
+                  <div class="col-lg-12 col-sm-6 d-flex mb-2 mb-sm-0 w-100">
+
+                    <form method="post" class="w-100 py-2" id="lao_form">
+                      {% csrf_token %}
+
+                      <div class="row">
+
+                        <div class="btn-group input-group">
+                          <!-- Disaster Selection -->
+                          <div class="col-lg-2 col-md-12 col-sm-12">
+                            <span>Select Event :</span>
+                            <select class="form-control my-2" name="lao_dis_selected">
+                              {% for g in lao_dis_event %}
+                              <option value="{{g.event}}">{{g.event}}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                          <!-- Disaster Impact selection form -->
+                          <div class="col-lg-2 col-md-12 col-sm-12">
+                            <span>Select Impact :</span>
+                            <select class="form-control my-2" name="lao_impact_selected">
+                              <option value="deaths" selected>Deaths</option>
+                              <option value="injured">Injured</option>
+                              <option value="missing">Missing</option>
+                              <option value="house_destroy">Houses Destroyed</option>
+                              <option value="house_damage">Houses Damaged</option>
+                            </select>
+                          </div>
+                          <!-- level selection form -->
+                          <div class="col-lg-2 col-md-12 col-sm-12">
+                            <span>Select Level :</span>
+                            <select class="form-control my-2" name="lao_level_selected">
+                              <option value="province_name">Province</option>
+                              <option value="district_name">District</option>
+                            </select>
+                          </div>
+                          <!-- Year selection form -->
+                          <div class="col-lg-6 col-md-12 col-sm-12">
+                            <div class="col-12 w-100" id="lao_year_slider"></div>
+                          </div>
+
+                        </div> <!-- Close button group -->
+                      </div>
+                    </form>
+
+                  </div>
+
+                </div>
+
+                <!-- Map Chart -->
+                <div class="row">
+
+                  <div class="col-12 border-bottom py-2">
+                    <h5 class="p-lg-4 p-md-2 p-sm-2 d-flex justify-content-center" id="lao_map_title">Cumulative Deaths
+                      from COLD WAVE by Province (Map Chart)</h5>
+                    <div id="hc_map02_container"></div>
+                  </div>
+
+                  <div class="col-12 py-2">
+                    <h5 class="p-lg-4 p-md-2 p-sm-2 d-flex justify-content-center" id="lao_locchart_title">Cumulative
+                      Deaths from COLD WAVE by Province (Bar Chart)</h5>
+                    <canvas id="LAO_local_Chart" height="100"></canvas>
+                  </div>
+
+                </div> <!-- Close map chart -->
+
+              </div>
+              <!-- Close Cambodia Data-->
+
+
+            </div>
+            <!-- Close inner card -->
+          </div>
+          <!-- Close card-->
+        </div>
+        <!-- Close row -->
+
+        <!---------------------- Laos : Secound Box -------------------------->
+        <div class="row">
+          <div class="card w-100">
+            <div class="card card-small m-0">
+              <div class="card-header border-bottom">
+                <h6 class="m-0" id="lao_yearchart_title">Cumulative annual Deaths from COLD WAVE by Country</h6>
+              </div>
+              <!-- Cambodia Body -->
+              <div class="card-body pt-0">
+                <canvas class="py-3" id="LAO_year_Chart" height="100"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- End Laos tab -->
+
+      <!----------------------------------------------------- Myanmar Tab content ----------------------------------------------------->
+      <div class="tab-pane fade" id="myanmar">
+        <h4 class="mt-2">Disaster Impact Profile of Myanmar</h4>
+
+        <!-- Myanmar Map Box-->
+
+        <!-- End Map Box-->
+      </div>
+      <!-- End Myanmar tab -->
     </div>
-    <!-- Close row -->
+    <!-- End tab content -->
   </div>
-  <!-- Close Cambodia Tab -->
-
-  <!-- Laos Tab content -->
-  <div class="tab-pane fade" id="laos">
-    <h4 class="mt-2">Disaster Impact Profile of Laos</h4>
-
-    <!-- Laos Map Box-->
-
-    <!-- End Map Box-->
-  </div>
-  <!-- End Laos tab -->
-
-  <!-- Myanmar Tab content -->
-  <div class="tab-pane fade" id="myanmar">
-    <h4 class="mt-2">Disaster Impact Profile of Myanmar</h4>
-
-    <!-- Myanmar Map Box-->
-
-    <!-- End Map Box-->
-  </div>
-  <!-- End Myanmar tab -->
-</div>
-<!-- End tab content -->
-</div>
-<!-- Page header end tag -->
+  <!-- Page header end tag -->
 </div>
 
 {% include "structure/footer.html" %}
 
+<script src="{% static 'scripts/disaster_ana.js' %}"></script>
 <script type="text/javascript">
+  //---------------------------------------------------------------------------------------//
+  //--------------------------------------AJAX CODE---------------------------------------//
+  //--------------------------------------------------------------------------------------//  
 
-    // Tab
-    $(document).ready(function () {
-    $("#myTab a").click(function (z) {
-      z.preventDefault();
-      $(this).tab("show");
-    });
+  // *********************************************** Cambodia AJAX *********************************************** //
+  // Cambodia Submission
+  // Main Canbodia submit Function 
+  function KHM_Ajax(event, impact, level) {
+    $.ajax({
+      type: "POST",
+      url: "disaster_analytics/cambodia",
+      data: {
+        khm_dis: event,
+        khm_impact: impact,
+        khm_level: level,
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+      },
+      dataType: 'json',
+      cache: false,
+      success: function (khm_data) {
+        $('#khm_map_title').text("Cumulative " + ImpactTitleName(khm_data.impact) + " from " + khm_data.dis + " by " + Datalevel(khm_data.level) + " (Map Chart)");
+        $('#khm_locchart_title').text("Cumulative " + ImpactTitleName(khm_data.impact) + " from " + khm_data.dis + " by " + Datalevel(khm_data.level) + " (Bar Chart)");
+        $('#khm_yearchart_title').text("Cumulative annual " + ImpactTitleName(khm_data.impact) + " from " + khm_data.dis + "  by Country");
+        KHM_MapChart(khm_data);
+        KMH_EventChart(khm_data);
+        KHM_YearChart(khm_data);
+        CreateKHM_Slider(khm_data);
+        //alert('Disaster: ' + khm_data.dis + ' Level: ' + khm_data.level + ' Impact: ' + khm_data.impact);
+        //console.log(khm_data.list_impact);
+      },
+      error: function () {
+        alert('error')
+      }
+    }); // end ajax
+  }
+
+  // Cambodia : AJAX Default
+  KHM_Ajax('DROUGHT', 'deaths', 'province_name');
+
+  // Cambodia submission on choose (Load button)
+  $(document).on('change', '#khm_form', function (p) {
+    p.preventDefault();
+
+    var khm_dis_sel = $('[name=khm_dis_selected]').val();
+    var khm_impact_sel = $('[name=khm_impact_selected]').val();
+    var khm_lev_sel = $('[name=khm_level_selected]').val();
+    KHM_Ajax(khm_dis_sel, khm_impact_sel, khm_lev_sel);
   });
 
-    //-------------------------------------------------------------------//
+    // *********************************************** Laos AJAX *********************************************** //
+  // Laos Submission
+  // Main Laos submit Function 
+  function LAO_Ajax(event, impact, level) {
+    $.ajax({
+      type: "POST",
+      url: "disaster_analytics/laos",
+      data: {
+        lao_dis: event,
+        lao_impact: impact,
+        lao_level: level,
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+      },
+      dataType: 'json',
+      cache: false,
+      success: function (lao_data) {
+        $('#lao_map_title').text("Cumulative " + ImpactTitleName(lao_data.impact) + " from " + lao_data.dis + " by " + Datalevel(lao_data.level) + " (Map Chart)");
+        $('#lao_locchart_title').text("Cumulative " + ImpactTitleName(lao_data.impact) + " from " + lao_data.dis + " by " + Datalevel(lao_data.level) + " (Bar Chart)");
+        $('#lao_yearchart_title').text("Cumulative annual " + ImpactTitleName(lao_data.impact) + " from " + lao_data.dis + "  by Country");
+        LAO_MapChart(lao_data);
+        LAO_EventChart(lao_data);
+        LAO_YearChart(lao_data);
+        CreateLAO_Slider(lao_data);
+        //alert('Disaster: ' + lao_data.dis + ' Level: ' + lao_data.level + ' Impact: ' + lao_data.impact);
+        //console.log(lao_data.list_impact);
+      },
+      error: function () {
+        alert('error')
+      }
+    }); // end ajax
+  }
 
-// HighChart Map
-//var MapData = [['Battambang', 0], ['Kampong Cham', 0], ['Kampong Thom', 0], ['Kandal', 3], ['Kratie', 0], ['Phnom Penh', 0], ['Prey Veng', 0]];
-const MapData = {{ map_data|safe }};
-// load all 3 level map
-const camMap_p = "{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}";
-const camMap_d = "{% static 'JSON/Cambodia/Cambodia_District.geojson' %}";
-const camMap_c = "{% static 'JSON/Cambodia/Cambodia_Commune.geojson' %}";
-const DisName = '{{disaster_param}}';
+  // Laos : AJAX Default
+  LAO_Ajax('COLD WAVE', 'deaths', 'province_name');
 
-    // choose which map level will show on site by dropdown selection.
-    function level(lev) {
-      if (lev == 'district_name') {
-        return camMap_d;
-      }
-      if (lev == 'commune_name') {
-        return camMap_c;
-      }
-      else {
-        return camMap_p;
-      }
+  // Laos submission on choose (Load button)
+  $(document).on('change', '#lao_form', function (qq) {
+    qq.preventDefault();
+
+    var lao_dis_sel = $('[name=lao_dis_selected]').val();
+    var lao_impact_sel = $('[name=lao_impact_selected]').val();
+    var lao_lev_sel = $('[name=lao_level_selected]').val();
+    LAO_Ajax(lao_dis_sel, lao_impact_sel, lao_lev_sel);
+  });
+
+
+  //--------------------------------------------------------------------------------------------//
+  //-------------------------------------- HighChart Map ---------------------------------------//
+  //-------------------------------------------------------------------------------------------//  
+
+  // load all 3 level map
+  const camMap_p = "{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}";
+  const camMap_d = "{% static 'JSON/Cambodia/Cambodia_District.geojson' %}";
+  const camMap_c = "{% static 'JSON/Cambodia/Cambodia_Commune.geojson' %}";
+
+  const laoMap_p = "{% static 'JSON/Laos/Laos_Province.geojson' %}";
+  const laoMap_d = "{% static 'JSON/Laos/Laos_District.geojson' %}";
+
+  //---------------------------------------------------------------------------------------------//
+  //-------------------------------------- Year Selection ---------------------------------------//
+  //---------------------------------------------------------------------------------------------// 
+  var KHM_YearSlider;
+  var khm_y_start;
+  var khm_y_end;
+
+  var LAO_YearSlider;
+  var lao_y_start;
+  var lao_y_end;
+
+  // Destroy the old slider and create the new one.
+  function destroyExistingSlider(slider) {
+    if (slider && slider.noUiSlider) {
+      slider.noUiSlider.destroy();
     }
+  }
 
-    function Datalevel(dlev) {
-      if (dlev == 'district_name') {
-        return 'District';
+  //------------* Cambodia *------------//
+  // Create new slider for Cambodia
+  function CreateKHM_Slider(khm_data) {
+    destroyExistingSlider(KHM_YearSlider);
+
+    KHM_YearSlider = document.getElementById('khm_year_slider');
+
+    noUiSlider.create(KHM_YearSlider, {
+      start: [khm_data.year_start, khm_data.year_end],
+      tooltips: [true, true],
+      connect: true,
+      behaviour: 'tap',
+      //step: 10,
+      range: {
+        'min': khm_data.year_start,
+        'max': khm_data.year_end
+      },
+      format: wNumb({
+        decimals: 0
+      }),
+      pips: {
+        mode: 'positions',
+        values: [0, 25, 50, 75, 100],
+        density: 4
       }
-      if (dlev == 'commune_name') {
-        return 'Commune';
-      }
-      else {
-        return 'Province';
-      }
-    }
-
-
-Highcharts.getJSON(level('{{level_param}}'), function (geojson) {
-
-    // Initialize the chart
-    Highcharts.mapChart('hc_container', {
-        chart: {
-            map: geojson,
-            //borderWidth: 2,
-            backgroundColor: false
-        },
-
-        title: {
-            text: ''
-        },
-
-        accessibility: {
-            typeDescription: 'Map of Cambodia.'
-        },
-
-        mapNavigation: {
-            enabled: true,
-            buttonOptions: {
-                verticalAlign: 'bottom'
-            }
-        },
-
-        colorAxis: {
-        //min: 1,
-        //max: 100,
-        //type: 'logarithmic', //because you can't take log with 0 value
-        minColor: '#EEEEFF',
-        maxColor: '#000022',
-        stops: [
-          [0, '#C6DBEF'],
-          [0.67, '#4292C6'],
-          [1, '#062655']
-        ]
-        },
-
-        series: [{
-            data: MapData,
-            keys: ['code', 'value'],
-            joinBy: [Datalevel('{{level_param}}'), 'code'],
-            name: DisName,
-            tooltip: {
-                    pointFormat: '{point.code}: {point.value}'
-                },
-            states: {
-                hover: {
-                    color: '#a4edba'
-                }
-            },
-            dataLabels: {
-                enabled: true,
-                format: '{point.code}'
-            }
-        }]
     });
-});
+    // retrieve start to end year value from slider
+    $(KHM_YearSlider)[0].noUiSlider.on('change', function (v, handle) {
+      khm_y_start = v[0];
+      khm_y_end = v[1];
+      //alert(khm_y_start + ' + ' + khm_y_end);
+      // Use secound AJAX to send start and end year back to views.py
+      $.ajax({
+        type: "POST",
+        url: 'disaster_analytics/cambodia_yearsel',
+        cache: false,
+        data: {
+          khm_dis: khm_data.dis,
+          khm_impact: khm_data.impact,
+          khm_level: khm_data.level,
+          khm_year_start: khm_y_start,
+          khm_year_end: khm_y_end,
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        dataType: 'json',
+        success: function (khm_year) {
+          KHM_MapChart(khm_year);
+          KMH_EventChart(khm_year);
+          //alert(khm_year.dis + ' + ' + khm_year.impact + ' + ' +  khm_year.level + ' : ' + khm_year.year_start + ' - ' + khm_year.year_end);
+          //console.log(khm_year.map_data)
+        },
+        error: function () {
+          alert('error')
+        }
+      });
+    });
 
-  //-------------------------------------------------------------------//
-  // Local Bar chart
-  // Set up
-  const l_labels = {{ level_code|safe }};
-  const l_data = {
-    labels: l_labels,
-    datasets: [{
-      label: 'Death cumulative from 2000',
-      data: {{ level_value|safe }},
-      backgroundColor: [
-        'rgba(11, 45, 90, 0.6)'
-      ],
-      borderColor: [
-        'rgb(11, 45, 90)'
-      ],
-      borderWidth: 1
-    }]
-  };
-  // Config
-  const l_config = {
-    type: 'bar',
-    data: l_data,
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      },
-      plugins: {
-        legend: {
-          display: false
-        }
-      }
-    },
-  };
-  // Render chart
-  const local_Chart = new Chart(
-    document.getElementById('local_Chart'),
-    l_config
-  );
+  }
+//------------* Laos *------------//
+// Create new slider for Laos
+function CreateLAO_Slider(lao_data) {
+    destroyExistingSlider(LAO_YearSlider);
 
-  //-------------------------------------------------------------------//
-  // Year Bar chart
-  // Set up
-  const y_labels = {{list_year|safe}};
-  const y_data = {
-    labels: y_labels,
-    datasets: [{
-      label: 'Death cumulative',
-      data: {{ list_impact|safe}},
-      backgroundColor: [
-        'rgba(11, 45, 90, 0.6)'
-      ],
-      borderColor: [
-        'rgb(11, 45, 90)'
-      ],
-      borderWidth: 1
-    }]
-  };
-  // Config
-  const y_config = {
-    type: 'bar',
-    data: y_data,
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
+    LAO_YearSlider = document.getElementById('lao_year_slider');
+
+    noUiSlider.create(LAO_YearSlider, {
+      start: [lao_data.year_start, lao_data.year_end],
+      tooltips: [true, true],
+      connect: true,
+      behaviour: 'tap',
+      //step: 10,
+      range: {
+        'min': lao_data.year_start,
+        'max': lao_data.year_end
       },
-      plugins: {
-        legend: {
-          display: false
-        }
+      format: wNumb({
+        decimals: 0
+      }),
+      pips: {
+        mode: 'positions',
+        values: [0, 25, 50, 75, 100],
+        density: 4
       }
-    },
-  };
-  // Render chart
-  const year_Chart = new Chart(
-    document.getElementById('year_Chart'),
-    y_config
-  );
-  
-  //--------------------------------------------------------------------//
+    });
+    // retrieve start to end year value from slider
+    $(LAO_YearSlider)[0].noUiSlider.on('change', function (v, handle) {
+      lao_y_start = v[0];
+      lao_y_end = v[1];
+      //alert(khm_y_start + ' + ' + khm_y_end);
+      // Use secound AJAX to send start and end year back to views.py
+      $.ajax({
+        type: "POST",
+        url: 'disaster_analytics/laos_yearsel',
+        cache: false,
+        data: {
+          lao_dis: lao_data.dis,
+          lao_impact: lao_data.impact,
+          lao_level: lao_data.level,
+          lao_year_start: lao_y_start,
+          lao_year_end: lao_y_end,
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        dataType: 'json',
+        success: function (lao_year) {
+          LAO_MapChart(lao_year);
+          LAO_EventChart(lao_year);
+          //alert(khm_year.dis + ' + ' + khm_year.impact + ' + ' +  khm_year.level + ' : ' + khm_year.year_start + ' - ' + khm_year.year_end);
+          //console.log(khm_year.map_data)
+        },
+        error: function () {
+          alert('error')
+        }
+      });
+    });
+
+  }
+//------------* Myanmar *------------//
+
+
+
 
 </script>
 

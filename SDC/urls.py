@@ -47,6 +47,12 @@ urlpatterns = [
     path('hazard_analytics/hazard_laos_yearselected', da_views.hazard_laos_yearselected, name='hazard_ana_laos_yearselected'),
     ################################ Disaster Module ##############################################
     path('disaster_analytics', da_views.disaster_ana, name='disaster_ana'), 
+
+    path('disaster_analytics/cambodia', da_views.disaster_ana_khm, name='disaster_ana_cambodia'), 
+    path('disaster_analytics/cambodia_yearsel', da_views.disaster_ana_khm_yearsel, name='disaster_ana_cambodia_yearsel'), 
+
+    path('disaster_analytics/laos', da_views.disaster_ana_lao, name='disaster_ana_laos'),
+    path('disaster_analytics/laos_yearsel', da_views.disaster_ana_lao_yearsel, name='disaster_ana_laos_yearsel'),
     ################################ Vulnerability Module ##############################################
     path('vulnerability', da_views.vulnerability, name='vulnerability'),
 

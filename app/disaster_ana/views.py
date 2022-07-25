@@ -11,31 +11,24 @@ import json
 import pandas as pd
 import numpy as np
 
-#########################################################################################################################################################
-######################################################### Disaster Modul ################################################################################
-#########################################################################################################################################################
+##########################################################################################################################################################
+######################################################### Disaster Module ################################################################################
+##########################################################################################################################################################
 
 # Main Disaster Module view page
 def disaster_ana(request):
-    # Retrieve data from template
-    disaster_selected = request.POST.get('dis_selected')
-    impact_selected = request.POST.get('impact_selected')
-    level_selected = request.POST.get('level_selected')
-
     dis_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='KHM')
+    lao_dis_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='LAO')
 
-    # Set default value
-    if impact_selected == None or disaster_selected == None or level_selected == None:
-        impact_selected = 'deaths'
-        disaster_selected = 'DROUGHT'
-        level_selected = 'province_name'
-    else:
-        impact_selected = impact_selected
-        disaster_selected = disaster_selected
-        level_selected = level_selected
-    
+    return render(request, "disaster_ana.html", {'url_name': 'disaster_ana', 'dis_event':dis_event, 'lao_dis_event':lao_dis_event})
+
+def disaster_ana_khm(request):
+    disaster_selected = request.POST['khm_dis']
+    impact_selected = request.POST['khm_impact']
+    level_selected = request.POST['khm_level']
+
     # Summation data for HighCharts Map
-    dis_sum = disaster.objects.values('event', level_selected).annotate(value=Sum(impact_selected)).filter(event=disaster_selected)
+    dis_sum = disaster.objects.values('event', level_selected).annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(province_id__startswith='KHM')
     ## Change column name
     dis_sum = dis_sum.values('value').annotate(code=F(level_selected))
     dis_sum = dis_sum.all().filter(code__isnull = False)
@@ -44,20 +37,119 @@ def disaster_ana(request):
     value = list(dis_sum.values_list('value', flat=True))
     ## combine 2 list for highchart map
     map_sum = [list(e) for e in zip(code,value)]
-    map_sum = json.dumps(map_sum)
+    #map_sum = json.dumps(map_sum)
 
     ## Extract year from date column ##
-    dis_year = disaster.objects.extra(select={'year': "strftime('%Y',date(date_data))"}).values('year', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage')
+    dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(province_id__startswith='KHM')
+    # set to dataframe
     df = pd.DataFrame(dis_year)
+    # change column type
+    df['date_data']= pd.to_datetime(df['date_data'])
+    # extract year from date as new column
+    df['year'] = pd.DatetimeIndex(df['date_data']).year
+
     df = df.groupby(['year','event']).sum().reset_index()
     df = df.loc[df['event']==disaster_selected]
-
+    
     list_year = df['year'].to_list()
     list_impact = df[impact_selected].tolist()
 
-    return render(request, "disaster_ana.html", {'url_name': 'disaster_ana', 'event':df  ,'disaster_param':disaster_selected, 
-    'impact_param': impact_selected, 'level_param': level_selected, 'dis_event':dis_event,  
-    'map_data':map_sum, 'level_code':code, 'level_value':value, 'list_year':list_year, 'list_impact':list_impact})
+    # start and end for Year
+    year_start, year_end = min(list_year), max(list_year)
+
+    return JsonResponse({'dis':disaster_selected, 'impact':impact_selected, 'level':level_selected, 'map_data':map_sum, 'level_code':code, 'level_value':value, 'list_year':list_year, 'list_impact':list_impact,
+    'year_start':year_start, 'year_end':year_end}, status=200)
+
+def disaster_ana_khm_yearsel(request):
+    disaster_selected = request.POST['khm_dis']
+    impact_selected = request.POST['khm_impact']
+    level_selected = request.POST['khm_level']
+
+    y_start = int(request.POST['khm_year_start'])
+    y_end = int(request.POST['khm_year_end'])
+
+    ## Extract year from date column ##
+    dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', level_selected).filter(province_id__startswith='KHM')
+    # set to dataframe
+    df = pd.DataFrame(dis_year)
+    # change column type
+    df['date_data']= pd.to_datetime(df['date_data'])
+    # extract year from date as new column
+    df['year'] = pd.DatetimeIndex(df['date_data']).year
+    df1 = df.loc[(df['year'] >=y_start) & (df['year'] <= y_end) & (df['event'] == disaster_selected)]
+    df1 = df1.groupby([level_selected]).sum().reset_index()
+    code = df1[level_selected].to_list()
+    value = df1[impact_selected].to_list()
+    ## combine 2 list for highchart map
+    map_sum = [list(e) for e in zip(code,value)]
+
+    return JsonResponse({'dis':disaster_selected, 'impact':impact_selected, 'level':level_selected, 'year_start':y_start, 'year_end':y_end,
+    'map_data':map_sum, 'level_code':code, 'level_value':value}, status=200)
+
+    ########## LAOS ##########
+def disaster_ana_lao(request):
+    disaster_selected = request.POST['lao_dis']
+    impact_selected = request.POST['lao_impact']
+    level_selected = request.POST['lao_level']
+
+    # Summation data for HighCharts Map
+    dis_sum = disaster.objects.values('event', level_selected).annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(province_id__startswith='LAO')
+    ## Change column name
+    dis_sum = dis_sum.values('value').annotate(code=F(level_selected))
+    dis_sum = dis_sum.all().filter(code__isnull = False)
+    ## Separate as list
+    code = list(dis_sum.values_list('code', flat=True))
+    value = list(dis_sum.values_list('value', flat=True))
+    ## combine 2 list for highchart map
+    map_sum = [list(e) for e in zip(code,value)]
+    #map_sum = json.dumps(map_sum)
+
+    ## Extract year from date column ##
+    dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(province_id__startswith='LAO')
+    # set to dataframe
+    df = pd.DataFrame(dis_year)
+    # change column type
+    df['date_data']= pd.to_datetime(df['date_data'])
+    # extract year from date as new column
+    df['year'] = pd.DatetimeIndex(df['date_data']).year
+
+    df = df.groupby(['year','event']).sum().reset_index()
+    df = df.loc[df['event']==disaster_selected]
+    
+    list_year = df['year'].to_list()
+    list_impact = df[impact_selected].tolist()
+
+    # start and end for Year
+    year_start, year_end = min(list_year), max(list_year)
+
+    return JsonResponse({'dis':disaster_selected, 'impact':impact_selected, 'level':level_selected, 'map_data':map_sum, 'list_year':list_year, 'list_impact':list_impact,
+    'year_start':year_start, 'year_end':year_end, 'level_code':code, 'level_value':value}, status=200)
+
+def disaster_ana_lao_yearsel(request):
+    disaster_selected = request.POST['lao_dis']
+    impact_selected = request.POST['lao_impact']
+    level_selected = request.POST['lao_level']
+
+    y_start = int(request.POST['lao_year_start'])
+    y_end = int(request.POST['lao_year_end'])
+
+    ## Extract year from date column ##
+    dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', level_selected).filter(province_id__startswith='LAO')
+    # set to dataframe
+    df = pd.DataFrame(dis_year)
+    # change column type
+    df['date_data']= pd.to_datetime(df['date_data'])
+    # extract year from date as new column
+    df['year'] = pd.DatetimeIndex(df['date_data']).year
+    df1 = df.loc[(df['year'] >=y_start) & (df['year'] <= y_end) & (df['event'] == disaster_selected)]
+    df1 = df1.groupby([level_selected]).sum().reset_index()
+    code = df1[level_selected].to_list()
+    value = df1[impact_selected].to_list()
+    ## combine 2 list for highchart map
+    map_sum = [list(e) for e in zip(code,value)]
+
+    return JsonResponse({'dis':disaster_selected, 'impact':impact_selected, 'level':level_selected, 'year_start':y_start, 'year_end':y_end,
+    'map_data':map_sum, 'level_code':code, 'level_value':value}, status=200)
 
 #########################################################################################################################################################
 ######################################################### Vulnerability Modul ###########################################################################
