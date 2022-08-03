@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'app.weather', # If you create app in folder dont forget to change the name in apps.py in your app folder too.
 	'app.disaster_ana',
     'app.earthquake', 
-    'app.api', 
+    'app.api',
+    'app.report_n_project',
 ]
 
 MIDDLEWARE = [
@@ -134,6 +135,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"), 
 ]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

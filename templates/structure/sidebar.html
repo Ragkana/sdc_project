@@ -90,11 +90,16 @@
       </ul>
       <h6 class="main-sidebar__nav-title">Reports & Project</h6>
       <ul class="nav nav--no-borders flex-column">
-        <li class="nav-item">
-            <a class="nav-link {% if url_name == 'sdc_project' %}active{% endif %}" href="{% url 'sdc_project' %}">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">
                 <i class="fa-solid fa-book" style="font-size: 1.25rem;"></i>
                 <span>SDC Projects</span>
             </a>
+                <div class="dropdown-menu dropdown-menu-small">
+                    <a class="dropdown-item" href="{% url 'sdc_project_cambodia' %}">Projects in Cambodia</a>
+                    <a class="dropdown-item" href="#">Projects in Laos</a>
+                    <a class="dropdown-item" href="#">Projects in Myanmar</a>
+                  </div>
         </li>
         <li class="nav-item">
             <a class="nav-link {% if url_name == 'upload_data' %}active{% endif %}" href="{% url 'upload_data' %}">

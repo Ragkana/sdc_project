@@ -184,12 +184,3 @@ def listConvertDataType(li):
 
 def earthquake(request):
     return render(request, "earthquake.html", {'url_name': 'earthquake'})
-
-def upload_data(request):
-    return render(request, "upload_data.html", {'url_name': 'upload_data'})
-
-def sdc_project(request):
-    return render(request, "sdc_project.html", {'url_name': 'sdc_project'})
-
-def reports(request):
-    return render(request, "reports.html", {'url_name': 'reports'})

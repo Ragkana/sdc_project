@@ -1,7 +1,8 @@
 {% load static %}
+{% include "structure/header_n_footer.html" %}
+{% block content %}
 {% include "structure/sidebar.html" %}
 {% include "structure/topnavbar.html" %}
-{% block content %}
 
 <div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
     <!-- Page Header -->
@@ -24,22 +25,58 @@
                         <div class="col-12">
                             <form method="post" class="py-2">
                                 {% csrf_token %}
+
+                                <!-- Select Country -->
                                 <div class="row col py-3">
-                                    <!-- Select Country -->
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <span>Select Country: </span>
-                                        <select class="form-control my-2" name="country_selected" required>
+                                        <select class="form-control my-2" name="country_selected">
                                             <option value="">Cambodia</option>
                                             <option value="">Laos</option>
                                             <option value="">Myanmar</option>
                                         </select>
                                     </div>
-                                    <!-- / Select Country -->
+                                </div>
+                                <!-- / Select Country -->
 
-                                    <!-- Select Event -->
+                                <!-- Profile Report Checkbox -->
+                                <div class="row col">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <span>Select report profile:</span>
+                                        <div class="form-check mx-3">
+                                            <input class="form-check-input" type="checkbox" value="" id="hazard_profile">
+                                            <label class="form-check-label" for="hazard_profile">
+                                                Hazard Profile
+                                            </label>
+                                        </div>
+                                        <div class="form-check mx-3">
+                                            <input class="form-check-input" type="checkbox" value="" id="disaster_profile">
+                                            <label class="form-check-label" for="disaster_profile">
+                                                Disaster Profile
+                                            </label>
+                                        </div>
+                                        <div class="form-check mx-3">
+                                            <input class="form-check-input" type="checkbox" value="" id="vulnerability_profile">
+                                            <label class="form-check-label" for="vulnerability_profile">
+                                                Vulnerability Profile
+                                            </label>
+                                        </div>
+                                        <div class="form-check mx-3">
+                                            <input class="form-check-input" type="checkbox" value="" id="climate_profile">
+                                            <label class="form-check-label" for="climate_profile">
+                                                Climate Profile
+                                            </label>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <!-- / Profile Report Checkbox -->
+
+                                <!-- Select Event -->
+                                <div class="row col py-3">
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <span>Select Event: </span>
-                                        <select class="form-control my-2" name="event_selected" required>
+                                        <select class="form-control my-2" name="event_selected">
                                             <option value="">DROUGHT</option>
                                             <option value="">FLOOD</option>
                                             <option value="">LIGHTNING</option>
@@ -47,18 +84,20 @@
                                             <option value="">STORM</option>
                                         </select>
                                     </div>
-                                    <!-- / Select Event -->
                                 </div>
-                                    <!-- Submit Button -->
-                                    <div class="row col">
-                                    <div class="col-lg-3 col-md-12 col-sm-12">
-                                        <button type="button submit" class="btn btn-primary btn-squared" 
-                                        style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Generate</button>
-                                    </div>
-                                    </div>
-                                    <!-- End Submit Button code -->
+                                <!-- / Select Event -->
 
-                                
+                                <!-- Submit Button -->
+                                <div class="row col">
+                                    <div class="col-lg-3 col-md-12 col-sm-12">
+                                        <a type="button submit" class="btn btn-primary btn-squared"
+                                            style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;"
+                                            href="{% url 'reports_pdf' %}" target="_blank">Generate</a>
+                                    </div>
+                                </div>
+                                <!-- End Submit Button code -->
+
+
                             </form>
                         </div>
                     </div>
