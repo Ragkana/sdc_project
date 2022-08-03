@@ -18,6 +18,7 @@ from django.urls import path
 from app.weather import views as wf_views
 from app.earthquake import views as eq_views
 from app.disaster_ana import views as da_views
+from app.report_n_project import views as rp_views
 from app.api import views as api_views
 
 urlpatterns = [
@@ -68,11 +69,15 @@ urlpatterns = [
     path('earthquake/view-bulletin/<str:event_id>/<int:bulletin_no>/', eq_views.view_bulletin, name='earthquake-view-bulletin'),
     path('earthquake/import', api_views.import_earthquake, name='import-earthquake'),
     path('earthquake/import/bulletin', api_views.import_bulletin, name='import-earthquake'),
-    ##############################################################################
-    path('upload_data', wf_views.upload_data, name='upload_data'),
-    path('sdc_project', wf_views.sdc_project, name='sdc_project'),
-    path('reports', wf_views.reports, name='reports'),
+    ################################# Upload Data #############################################
+    path('upload_data', rp_views.upload_data, name='upload_data'),
+    ################################# SDC Project #############################################
+    path('sdc_project', rp_views.sdc_project, name='sdc_project'),
+    path('sdc_project_cambodia', rp_views.sdc_project_khm, name='sdc_project_cambodia'),
+    path('sdc_project/add_cambodia', rp_views.khm_add_project, name='sdc_project_add_cambodia'),
+    ################################# Reports And Project #############################################
+    path('reports', rp_views.reports, name='reports'),
+    path('reports/reports_pdf', rp_views.report_pdf, name='reports_pdf'),
   
-
 ]
      

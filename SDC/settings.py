@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-1-59q&b26(l2oxru5h_6+-8hq@5%%gom29^owawyq)4*q$s^aj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['203.159.16.180','203.159.16.134','sdc.rimes.int','localhost']
-#ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['203.159.16.180','203.159.16.134','sdc.rimes.int','localhost']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'app.weather', # If you create app in folder dont forget to change the name in apps.py in your app folder too.
 	'app.disaster_ana',
     'app.earthquake', 
-    'app.api', 
+    'app.api',
+    'app.report_n_project',
 ]
 
 MIDDLEWARE = [
@@ -134,6 +135,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"), 
 ]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

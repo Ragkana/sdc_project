@@ -1,7 +1,8 @@
 {% load static %}
+{% include "structure/header_n_footer.html" %}
+{% block content %}
 {% include "structure/sidebar.html" %}
 {% include "structure/topnavbar.html" %}
-{% block content %}
 
 <div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
     <!-- Page Header -->
@@ -16,7 +17,7 @@
 
             <div class="row">
                 <!---------------------- Manual Upload ------------------------>
-                <div class="col-lg-6 col-md-12 col-sm-12 mb-2 mx-0 my-3">
+                <div class="col-lg-8 col-md-12 col-sm-12 mb-2 mx-0 my-3">
                     <div class="card card-small m-0">
                         <div class="card-header border-bottom">
                             <h6 class="m-0">Manual Upload data</h6>
@@ -146,7 +147,7 @@
                 </div>
                 <!---------------------- End Manual Upload ------------------------>
 
-                <div class="col-lg-6 col-md-12 col-sm-12 mb-2 mx-0">
+                <div class="col-lg-4 col-md-12 col-sm-12 mb-2 mx-0">
                     <!---------------------- File Upload ------------------------>
                     <div class="row my-3">
                         <div class="col-12">
@@ -207,8 +208,8 @@
                                     <div class="col-12 py-2 px-5">
                                         <a>1. The data after submission cannot undo or delete. Therefore, please check
                                             the rightness of data before submit.<br></a>
-                                        <a>2. The file for upload must be csv file and specified form.<br></a>
-                                        <a>3. The name of province district and commune must correct and match with the database (you can check in the example file).<br></a>
+                                        <a>2. The file for upload must be csv file with specified form.<br></a>
+                                        <a>3. The name of province, district and commune must correct and match with the database (you can check in the example file).<br></a>
                                     </div>
                                 </div>
                                 <!-- / Body content -->
