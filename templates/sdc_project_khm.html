@@ -12,8 +12,7 @@
         </div>
     </div>
     <!-- End Page Header -->
-    {{duration}}
-    {{khm_url}}
+
     <!-- Cambodia Data Table -->
     <div class="row">
         <div class="col-12">
@@ -177,9 +176,9 @@
                                                         <small class="form-text text-muted float-left">The file name
                                                             must not have any space (Please fill it with "-" or
                                                             "_").</small>
-                                                            <div class="invalid-feedback float-left">
-                                                                Please provide the PDF file
-                                                            </div>
+                                                        <div class="invalid-feedback float-left">
+                                                            Please provide the PDF file
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <!-- / PDF File Upload -->
@@ -228,9 +227,13 @@
                                 <td>{{ a.location }}</td>
                                 <td>{{ a.partners }}</td>
                                 <td>{{ a.outcome }}</td>
+                                {% if a.pdf_download == None %}
+                                <td>N/A</td>
+                                {% else %}
                                 <td><a href="{% static a.pdf_download %}" alt="{{a.pdf_download}}" target="_blank"><i
                                             class="fa-solid fa-file-pdf"
                                             style="font-size: 1.75rem; color: #9B0103;"></i></a></td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
 

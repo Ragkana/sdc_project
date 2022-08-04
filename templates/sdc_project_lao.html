@@ -1,0 +1,293 @@
+{% load static %}
+{% include "structure/header_n_footer.html" %}
+{% block content %}
+{% include "structure/sidebar.html" %}
+{% include "structure/topnavbar.html" %}
+
+<div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
+    <!-- Page Header -->
+    <div class="page-header row no-gutters py-4">
+        <div class="col-12 col-sm-12 text-center text-sm-left mb-4 mb-sm-0">
+            <h3 class="page-title">SDC Projects</h3>
+        </div>
+    </div>
+    <!-- End Page Header -->
+
+    <!-- Cambodia Data Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-small mb-4">
+                <div class="card-header border-bottom">
+                    <h6 class="m-0">SDC Projects in Laos</h6>
+                </div>
+                <div class="card-body p-0 pb-3 text-center">
+
+                    <!-- Search and Add Panel -->
+                    <div class="col-12 border-bottom" style="background-color: #fff;">
+                        <div class="row px-3">
+                            <!-- Search box -->
+                            <div class="col-lg-8 col-md-12 col-sm-12 py-2 px-0">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i
+                                                class="fa-solid fa-magnifying-glass"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Search..." id="lao_search"
+                                        onkeyup="LAO_SearchFunction()">
+                                </div>
+                            </div>
+                            <!-- / Search box -->
+
+                            <!-- Add Project button -->
+                            <div class="col-lg-4 col-md-12 col-sm-12 py-2 px-0">
+                                <button type="button" class="btn btn-white float-right" data-toggle="modal"
+                                    data-target="#LAO_addProject"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Add
+                                    New Project</button>
+                            </div>
+
+                            <!-- Modal for add new project -->
+                            <div class="modal fade" id="LAO_addProject" tabindex="-1" role="dialog"
+                                aria-labelledby="LAO_addProjectCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="LAO_addProjectLongTitle">Add new SDC's
+                                                project
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" class="py-2 needs-validation" id="lao_form"
+                                                enctype="multipart/form-data" novalidate>
+                                                {% csrf_token %}
+                                                <!-- Project name -->
+                                                <div class="form-group">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="LAO_ProjectName" class="float-left">Project
+                                                            name</label>
+                                                        <input type="text" class="form-control" id="LAO_ProjectName"
+                                                            name="LAO_ProjectName" placeholder="" required>
+                                                        <div class="invalid-feedback float-left">
+                                                            Please provide the name of project
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Objective -->
+                                                <div class="form-group">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="LAO_Objective" class="float-left">Objective</label>
+                                                        <textarea type="text" class="form-control" row="3"
+                                                            maxlength="350" id="LAO_Objective" name="LAO_Objective"
+                                                            placeholder=""></textarea>
+                                                        <div id="lao_obj_count" class="float-right">
+                                                            <span id="lao_obj_current"
+                                                                style="font-weight: 300; font-size: 0.725rem;">0</span>
+                                                            <span id="lao_obj_maximum"
+                                                                style="font-weight: 300; font-size: 0.725rem;">/
+                                                                350</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Duration -->
+                                                <div class="form-group">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="LAO_Duration" class="float-left">Duration</label>
+                                                        <input type="text" class="form-control" name="LAO_Duration"
+                                                            id="LAO_Duration" placeholder="" required>
+                                                        <div class="invalid-feedback float-left">
+                                                            Please provide duration of project
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Budget -->
+                                                <div class="form-group">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="LAO_Budget" class="float-left">Budget</label>
+                                                        <textarea type="text" class="form-control" row="3"
+                                                            maxlength="200" id="LAO_Budget" name="LAO_Budget"
+                                                            placeholder=""></textarea>
+                                                        <div id="lao_bud_count" class="float-right">
+                                                            <span id="lao_bud_current"
+                                                                style="font-weight: 300; font-size: 0.725rem;">0</span>
+                                                            <span id="lao_bud_maximum"
+                                                                style="font-weight: 300; font-size: 0.725rem;">/
+                                                                200</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Location -->
+                                                <div class="form-group">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="LAO_Location" class="float-left">Location</label>
+                                                        <input type="text" class="form-control" row="3" maxlength="150"
+                                                            id="LAO_Location" name="LAO_Location" placeholder="">
+                                                        <div id="lao_loc_count" class="float-right">
+                                                            <span id="lao_loc_current"
+                                                                style="font-weight: 300; font-size: 0.725rem;">0</span>
+                                                            <span id="lao_loc_maximum"
+                                                                style="font-weight: 300; font-size: 0.725rem;">/
+                                                                150</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Partners -->
+                                                <div class="form-group">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="LAO_Partners" class="float-left">Partners</label>
+                                                        <textarea type="text" class="form-control" row="3"
+                                                            id="LAO_Partners" name="LAO_Partners"
+                                                            placeholder=""></textarea>
+
+                                                    </div>
+                                                </div>
+
+                                                <!-- Outcome -->
+                                                <div class="form-group">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="LAO_Outcome" class="float-left">Outcome</label>
+                                                        <textarea type="text" class="form-control" row="3"
+                                                            maxlength="350" id="LAO_Outcome" name="LAO_Outcome"
+                                                            placeholder="" value=""></textarea>
+                                                        <div id="lao_out_count" class="float-right">
+                                                            <span id="lao_out_current"
+                                                                style="font-weight: 300; font-size: 0.725rem;">0</span>
+                                                            <span id="lao_out_maximum"
+                                                                style="font-weight: 300; font-size: 0.725rem;">/
+                                                                350</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- PDF File Upload -->
+                                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                                    <label for="LAO_pdf" class="float-left">PDF file
+                                                        upload</label>
+
+                                                    <div class="custom-file mb-3">
+                                                        <input type="file" class="custom-file-input" name="lao_pdf"
+                                                            id="LAO_pdf" accept=".pdf" required>
+                                                        <label class="custom-file-label text-left" for="LAO_pdf">Choose
+                                                            PDF file...</label>
+                                                        <small class="form-text text-muted float-left">The file name
+                                                            must not have any space (Please fill it with "-" or
+                                                            "_").</small>
+                                                        <div class="invalid-feedback float-left">
+                                                            Please provide the PDF file
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- / PDF File Upload -->
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-white"
+                                                data-dismiss="modal">Close</button>
+                                            <button type="button submit" class="btn btn-primary"
+                                                style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Add
+                                                New Project</button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- / Add Project Button -->
+                        </div>
+                    </div>
+                    <!-- / Search and Add Panel -->
+
+                    <!-- cambodia Data Table -->
+                    <table class="table" id="lao_table">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">No.</th>
+                                <th scope="col" class="border-0">Project Name</th>
+                                <th scope="col" class="border-0">Objective</th>
+                                <th scope="col" class="border-0">Duration</th>
+                                <th scope="col" class="border-0">Budget</th>
+                                <th scope="col" class="border-0">Location</th>
+                                <th scope="col" class="border-0">Partners</th>
+                                <th scope="col" class="border-0">Outcome</th>
+                                <th scope="col" class="border-0">PDF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for a in lao_project %}
+                            <tr>
+                                <td>{{ a.id }}</td>
+                                <td>{{ a.project_name }}</td>
+                                <td>{{ a.objective }}</td>
+                                <td>{{ a.duration }}</td>
+                                <td>{{ a.budget }}</td>
+                                <td>{{ a.location }}</td>
+                                <td>{{ a.partners }}</td>
+                                <td>{{ a.outcome }}</td>
+                                {% if a.pdf_download == None %}
+                                <td>N/A</td>
+                                {% else %}
+                                <td><a href="{% static a.pdf_download %}" alt="{{a.pdf_download}}" target="_blank"><i
+                                            class="fa-solid fa-file-pdf"
+                                            style="font-size: 1.75rem; color: #9B0103;"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                    <!-- / cambodia Data Table -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script src="{% static 'scripts/sdc_project_lao.js' %}"></script>
+<script type="text/javascript">
+    //-----------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------- Search function  --------------------------------------------//
+    //-----------------------------------------------------------------------------------------------------------//
+    function LAO_SearchFunction() {
+        var input, filter, table, tr, td, cell, i, j;
+        input = document.getElementById("lao_search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("lao_table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 1; i < tr.length; i++) {
+            // Hide the row initially.
+            tr[i].style.display = "none";
+
+            td = tr[i].getElementsByTagName("td");
+            for (var j = 0; j < td.length; j++) {
+                cell = tr[i].getElementsByTagName("td")[j];
+                if (cell) {
+                    if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    //---------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------- File input function  --------------------------------------------//
+    //---------------------------------------------------------------------------------------------------------------//
+    $(document).ready(function () {
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    });
+</script>
+
+
+{% include "structure/footer.html" %}
+{% endblock content %}
