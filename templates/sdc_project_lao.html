@@ -18,7 +18,7 @@
         <div class="col-12">
             <div class="card card-small mb-4">
                 <div class="card-header border-bottom">
-                    <h6 class="m-0">SDC Projects in Cambodia</h6>
+                    <h6 class="m-0">SDC Projects in Laos</h6>
                 </div>
                 <div class="card-body p-0 pb-3 text-center">
 
@@ -32,8 +32,8 @@
                                         <span class="input-group-text"><i
                                                 class="fa-solid fa-magnifying-glass"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="Search..." id="khm_search"
-                                        onkeyup="KHM_SearchFunction()">
+                                    <input type="text" class="form-control" placeholder="Search..." id="lao_search"
+                                        onkeyup="LAO_SearchFunction()">
                                 </div>
                             </div>
                             <!-- / Search box -->
@@ -41,17 +41,17 @@
                             <!-- Add Project button -->
                             <div class="col-lg-4 col-md-12 col-sm-12 py-2 px-0">
                                 <button type="button" class="btn btn-white float-right" data-toggle="modal"
-                                    data-target="#KHM_addProject"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Add
+                                    data-target="#LAO_addProject"><i class="fa-solid fa-circle-plus"></i>&nbsp;&nbsp;Add
                                     New Project</button>
                             </div>
 
                             <!-- Modal for add new project -->
-                            <div class="modal fade" id="KHM_addProject" tabindex="-1" role="dialog"
-                                aria-labelledby="KHM_addProjectCenterTitle" aria-hidden="true">
+                            <div class="modal fade" id="LAO_addProject" tabindex="-1" role="dialog"
+                                aria-labelledby="LAO_addProjectCenterTitle" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="KHM_addProjectLongTitle">Add new SDC's
+                                            <h5 class="modal-title" id="LAO_addProjectLongTitle">Add new SDC's
                                                 project
                                             </h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -59,16 +59,16 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form method="post" class="py-2 needs-validation" id="khm_form"
+                                            <form method="post" class="py-2 needs-validation" id="lao_form"
                                                 enctype="multipart/form-data" novalidate>
                                                 {% csrf_token %}
                                                 <!-- Project name -->
                                                 <div class="form-group">
                                                     <div class="col-md-12 mb-3">
-                                                        <label for="KHM_ProjectName" class="float-left">Project
+                                                        <label for="LAO_ProjectName" class="float-left">Project
                                                             name</label>
-                                                        <input type="text" class="form-control" id="KHM_ProjectName"
-                                                            name="KHM_ProjectName" placeholder="" required>
+                                                        <input type="text" class="form-control" id="LAO_ProjectName"
+                                                            name="LAO_ProjectName" placeholder="" required>
                                                         <div class="invalid-feedback float-left">
                                                             Please provide the name of project
                                                         </div>
@@ -77,14 +77,14 @@
                                                 <!-- Objective -->
                                                 <div class="form-group">
                                                     <div class="col-md-12 mb-3">
-                                                        <label for="KHM_Objective" class="float-left">Objective</label>
+                                                        <label for="LAO_Objective" class="float-left">Objective</label>
                                                         <textarea type="text" class="form-control" row="3"
-                                                            maxlength="350" id="KHM_Objective" name="KHM_Objective"
+                                                            maxlength="350" id="LAO_Objective" name="LAO_Objective"
                                                             placeholder=""></textarea>
-                                                        <div id="khm_obj_count" class="float-right">
-                                                            <span id="khm_obj_current"
+                                                        <div id="lao_obj_count" class="float-right">
+                                                            <span id="lao_obj_current"
                                                                 style="font-weight: 300; font-size: 0.725rem;">0</span>
-                                                            <span id="khm_obj_maximum"
+                                                            <span id="lao_obj_maximum"
                                                                 style="font-weight: 300; font-size: 0.725rem;">/
                                                                 350</span>
                                                         </div>
@@ -94,9 +94,9 @@
                                                 <!-- Duration -->
                                                 <div class="form-group">
                                                     <div class="col-md-12 mb-3">
-                                                        <label for="KHM_Duration" class="float-left">Duration</label>
-                                                        <input type="text" class="form-control" name="KHM_Duration"
-                                                            id="KHM_Duration" placeholder="" required>
+                                                        <label for="LAO_Duration" class="float-left">Duration</label>
+                                                        <input type="text" class="form-control" name="LAO_Duration"
+                                                            id="LAO_Duration" placeholder="" required>
                                                         <div class="invalid-feedback float-left">
                                                             Please provide duration of project
                                                         </div>
@@ -106,14 +106,14 @@
                                                 <!-- Budget -->
                                                 <div class="form-group">
                                                     <div class="col-md-12 mb-3">
-                                                        <label for="KHM_Budget" class="float-left">Budget</label>
+                                                        <label for="LAO_Budget" class="float-left">Budget</label>
                                                         <textarea type="text" class="form-control" row="3"
-                                                            maxlength="200" id="KHM_Budget" name="KHM_Budget"
+                                                            maxlength="200" id="LAO_Budget" name="LAO_Budget"
                                                             placeholder=""></textarea>
-                                                        <div id="khm_bud_count" class="float-right">
-                                                            <span id="khm_bud_current"
+                                                        <div id="lao_bud_count" class="float-right">
+                                                            <span id="lao_bud_current"
                                                                 style="font-weight: 300; font-size: 0.725rem;">0</span>
-                                                            <span id="khm_bud_maximum"
+                                                            <span id="lao_bud_maximum"
                                                                 style="font-weight: 300; font-size: 0.725rem;">/
                                                                 200</span>
                                                         </div>
@@ -123,13 +123,13 @@
                                                 <!-- Location -->
                                                 <div class="form-group">
                                                     <div class="col-md-12 mb-3">
-                                                        <label for="KHM_Location" class="float-left">Location</label>
+                                                        <label for="LAO_Location" class="float-left">Location</label>
                                                         <input type="text" class="form-control" row="3" maxlength="150"
-                                                            id="KHM_Location" name="KHM_Location" placeholder="">
-                                                        <div id="khm_loc_count" class="float-right">
-                                                            <span id="khm_loc_current"
+                                                            id="LAO_Location" name="LAO_Location" placeholder="">
+                                                        <div id="lao_loc_count" class="float-right">
+                                                            <span id="lao_loc_current"
                                                                 style="font-weight: 300; font-size: 0.725rem;">0</span>
-                                                            <span id="khm_loc_maximum"
+                                                            <span id="lao_loc_maximum"
                                                                 style="font-weight: 300; font-size: 0.725rem;">/
                                                                 150</span>
                                                         </div>
@@ -139,9 +139,9 @@
                                                 <!-- Partners -->
                                                 <div class="form-group">
                                                     <div class="col-md-12 mb-3">
-                                                        <label for="KHM_Partners" class="float-left">Partners</label>
+                                                        <label for="LAO_Partners" class="float-left">Partners</label>
                                                         <textarea type="text" class="form-control" row="3"
-                                                            id="KHM_Partners" name="KHM_Partners"
+                                                            id="LAO_Partners" name="LAO_Partners"
                                                             placeholder=""></textarea>
 
                                                     </div>
@@ -150,14 +150,14 @@
                                                 <!-- Outcome -->
                                                 <div class="form-group">
                                                     <div class="col-md-12 mb-3">
-                                                        <label for="KHM_Outcome" class="float-left">Outcome</label>
+                                                        <label for="LAO_Outcome" class="float-left">Outcome</label>
                                                         <textarea type="text" class="form-control" row="3"
-                                                            maxlength="350" id="KHM_Outcome" name="KHM_Outcome"
+                                                            maxlength="350" id="LAO_Outcome" name="LAO_Outcome"
                                                             placeholder="" value=""></textarea>
-                                                        <div id="khm_out_count" class="float-right">
-                                                            <span id="khm_out_current"
+                                                        <div id="lao_out_count" class="float-right">
+                                                            <span id="lao_out_current"
                                                                 style="font-weight: 300; font-size: 0.725rem;">0</span>
-                                                            <span id="khm_out_maximum"
+                                                            <span id="lao_out_maximum"
                                                                 style="font-weight: 300; font-size: 0.725rem;">/
                                                                 350</span>
                                                         </div>
@@ -165,13 +165,13 @@
                                                 </div>
                                                 <!-- PDF File Upload -->
                                                 <div class="col-lg-12 col-md-12 col-sm-12">
-                                                    <label for="KHM_pdf" class="float-left">PDF file
+                                                    <label for="LAO_pdf" class="float-left">PDF file
                                                         upload</label>
 
                                                     <div class="custom-file mb-3">
-                                                        <input type="file" class="custom-file-input" name="khm_pdf"
-                                                            id="KHM_pdf" accept=".pdf" required>
-                                                        <label class="custom-file-label text-left" for="KHM_pdf">Choose
+                                                        <input type="file" class="custom-file-input" name="lao_pdf"
+                                                            id="LAO_pdf" accept=".pdf" required>
+                                                        <label class="custom-file-label text-left" for="LAO_pdf">Choose
                                                             PDF file...</label>
                                                         <small class="form-text text-muted float-left">The file name
                                                             must not have any space (Please fill it with "-" or
@@ -202,7 +202,7 @@
                     <!-- / Search and Add Panel -->
 
                     <!-- cambodia Data Table -->
-                    <table class="table" id="khm_table">
+                    <table class="table" id="lao_table">
                         <thead class="bg-light">
                             <tr>
                                 <th scope="col" class="border-0">No.</th>
@@ -217,7 +217,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for a in khm_project %}
+                            {% for a in lao_project %}
                             <tr>
                                 <td>{{ a.id }}</td>
                                 <td>{{ a.project_name }}</td>
@@ -249,16 +249,16 @@
 
 </div>
 
-<script src="{% static 'scripts/sdc_project_khm.js' %}"></script>
+<script src="{% static 'scripts/sdc_project_lao.js' %}"></script>
 <script type="text/javascript">
     //-----------------------------------------------------------------------------------------------------------//
     //--------------------------------------------- Search function  --------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
-    function KHM_SearchFunction() {
+    function LAO_SearchFunction() {
         var input, filter, table, tr, td, cell, i, j;
-        input = document.getElementById("khm_search");
+        input = document.getElementById("lao_search");
         filter = input.value.toUpperCase();
-        table = document.getElementById("khm_table");
+        table = document.getElementById("lao_table");
         tr = table.getElementsByTagName("tr");
         for (i = 1; i < tr.length; i++) {
             // Hide the row initially.
