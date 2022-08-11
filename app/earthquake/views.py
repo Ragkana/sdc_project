@@ -28,6 +28,7 @@ def earthquake(request):
     # users_list = list(earthquakes)
     # users_list = json.dumps(users_list)
     earthquakes = earthquake_events.objects.order_by("-event_datetime")[:10000]
+    # earthquakes = earthquake_events.objects.filter(magnitude__gte=6.5).order_by("-event_datetime")[:5000]
     earthquakes =  serialize('json', earthquakes, fields=['event_id', 'latitude',
          'longitude', 'magnitude', 'phase_count','mag_type', 'depth', 'event_datetime','region', 'bulletin_no',
          'status','is_fake', 'is_inside', 'is_inside', 'is_inside'])
