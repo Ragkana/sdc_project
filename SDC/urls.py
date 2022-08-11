@@ -72,12 +72,12 @@ urlpatterns = [
     ################################# Upload Data #############################################
     path('upload_data', rp_views.upload_data, name='upload_data'),
     path('upload_data/country_choose', rp_views.country_choose, name='upload_data_country'),
+    path('upload_data/province_choose', rp_views.province_choose, name='upload_data_province'),
+    path('upload_data/district_choose', rp_views.district_choose, name='upload_data_district'),
     ################################# SDC Project #############################################
-    path('sdc_project', rp_views.sdc_project, name='sdc_project'),
     path('sdc_project_cambodia', rp_views.sdc_project_khm, name='sdc_project_cambodia'),
     path('sdc_project_laos', rp_views.sdc_project_lao, name='sdc_project_laos'),
     path('sdc_project_myanmar', rp_views.sdc_project_mya, name='sdc_project_myanmar'),
-    path('sdc_project/add_cambodia', rp_views.khm_add_project, name='sdc_project_add_cambodia'),
     ################################# Reports And Project #############################################
     path('reports', rp_views.reports, name='reports'),
     path('reports/reports_pdf', rp_views.report_pdf, name='reports_pdf'),

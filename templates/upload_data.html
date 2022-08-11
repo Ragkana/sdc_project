@@ -12,7 +12,8 @@
         </div>
     </div>
     <!-- End Page Header -->
-
+    <p>{{url}}</p>
+    {{dataframe}}
     <div class="row">
         <!---------------------- Manual Upload ------------------------>
         <div class="col-lg-8 col-md-12 col-sm-12 mb-2 mx-0 my-3">
@@ -31,7 +32,8 @@
                                 <div class="row col py-3">
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <span>Country</span>
-                                        <select class="form-control my-2" name="country_select" required>
+                                        <select class="form-control my-2" name="country_select" id="country_select"
+                                            required>
                                             <option name="khm_sel" value="KHM">Cambodia</option>
                                             <option name="lao_sel" value="LAO">Laos</option>
                                             <!--<option name="mya_sel" value="MYA">Myanmar</option>-->
@@ -39,23 +41,19 @@
                                     </div>
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <span>Province</span>
-                                        <select class="form-control my-2" name="province_selected" id="province_selected" required>
-                                            <option value="">Province</option>
-                                            <option value=""></option>
+                                        <select class="form-control my-2" name="province_selected"
+                                            id="province_selected" required>
                                         </select>
                                     </div>
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <span>District</span>
-                                        <select class="form-control my-2">
-                                            <option value="">District</option>
-                                            <option value="">...</option>
+                                        <select class="form-control my-2" id="district_selected"
+                                            name="district_selected">
                                         </select>
                                     </div>
-                                    <div class="col-lg-3 col-md-12 col-sm-12">
+                                    <div class="col-lg-3 col-md-12 col-sm-12" id="commune">
                                         <span>Commune</span>
-                                        <select class="form-control my-2">
-                                            <option value="">Commune</option>
-                                            <option value="">...</option>
+                                        <select class="form-control my-2" id="commune_selected" name="commune_selected">
                                         </select>
                                     </div>
                                 </div>
@@ -82,12 +80,8 @@
                                     <!-- Select Hazard Code -->
                                     <div class="col-lg-6 col-md-12 col-sm-12">
                                         <span>Select Hazard: </span>
-                                        <select class="form-control my-2" name="khm_haz_selected" required>
-                                            <option value="">DROUGHT</option>
-                                            <option value="">FLOOD</option>
-                                            <option value="">LIGHTNING</option>
-                                            <option value="">RIVER BANK COLLAPSE</option>
-                                            <option value="">STORM</option>
+                                        <select class="form-control my-2" name="haz_selected" id="haz_selected"
+                                            required>
                                         </select>
                                     </div>
                                     <!-- End Select Hazard code -->
@@ -100,23 +94,23 @@
                                 <div class="row col py-3">
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <span>Deaths</span>
-                                        <input type="text" class="form-control my-2" value="">
+                                        <input type="text" class="form-control my-2" name="death">
                                     </div>
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <span>Injured</span>
-                                        <input type="text" class="form-control my-2" value="">
+                                        <input type="text" class="form-control my-2" name="injured">
                                     </div>
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <span>Missing</span>
-                                        <input type="text" class="form-control my-2" value="">
+                                        <input type="text" class="form-control my-2" name="missing">
                                     </div>
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <span>House Destroyed</span>
-                                        <input type="text" class="form-control my-2" value="">
+                                        <input type="text" class="form-control my-2" name="h_des">
                                     </div>
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <span>House Damaged</span>
-                                        <input type="text" class="form-control my-2" value="">
+                                        <input type="text" class="form-control my-2" name="h_dam">
                                     </div>
                                 </div>
                                 <!-- / End Impact code -->
@@ -126,17 +120,24 @@
                                 <!-- Comment -->
                                 <div class="col-12 py-3">
                                     <label for="comment">Comment</label>
-                                    <textarea class="form-control" id="comment" rows="3"></textarea>
+                                    <textarea type="text" class="form-control" row="3" maxlength="200" id="comment_box"
+                                        name="comment_box" placeholder="Type your comment here..."></textarea>
+                                    <div id="cm_count" class="float-right">
+                                        <span id="cm_current" style="font-weight: 300; font-size: 0.725rem;">0</span>
+                                        <span id="cm_maximum" style="font-weight: 300; font-size: 0.725rem;">/
+                                            200</span>
+                                    </div>
                                 </div>
                                 <!-- / End Comment code -->
 
                                 <!-- Submit Button -->
                                 <div class="col-lg-5 col-md-12 col-sm-12 pt-3">
-                                    <button type="button submit" class="btn btn-primary btn-squared"
+                                    <button type="button submit" class="btn btn-primary btn-squared" name="submit_data"
                                         style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Submit
                                         Data</button>
                                 </div>
                                 <!-- End Submit Button code -->
+
                             </form>
                         </div>
                     </div>
@@ -159,26 +160,32 @@
                             <div class="row">
                                 <div class="col-12 py-2">
                                     <!-- Custom File Upload -->
-                                    <div class="col-lg-7 col-md-12 col-sm-12">
-                                        <span>Please choose your file for upload</span>
-                                        <div class="input-group my-2">
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="customFile2"
-                                                    required="">
-                                                <label class="custom-file-label" for="customFile2">Choose
-                                                    file...</label>
+                                    <form method="post" class="py-3 needs-validation" id="csv_form"
+                                        enctype="multipart/form-data" novalidate>
+                                        {% csrf_token %}
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <span>Please choose your file for upload</span>
+                                            <div class="input-group my-2">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="disaster_csv"
+                                                        name="disaster_csv" accept=".csv" required>
+                                                    <label class="custom-file-label" for="disaster_csv">Choose
+                                                        file...</label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- / Custom File Upload -->
+                                        <!-- / Custom File Upload -->
 
-                                    <!-- Submit Button -->
-                                    <div class="col-lg-5 col-md-12 col-sm-12 pt-2">
-                                        <button type="button submit" class="btn btn-primary btn-squared"
-                                            style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Upload
-                                            File</button>
-                                    </div>
-                                    <!-- / End Submit button code -->
+                                        <!-- Submit Button -->
+                                        <div class="col-lg-5 col-md-12 col-sm-12 pt-2">
+                                            <button type="button submit" class="btn btn-primary btn-squared"
+                                                name="upload_file"
+                                                style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Upload
+                                                File</button>
+                                        </div>
+                                        <!-- / End Submit button code -->
+                                    </form>
+
                                     <div class="col-lg-12 col-md-12 col-sm-12 pt-2">
                                         <a><u>Note:</u> Download a form for csv file
                                             <a href="{% static 'sdc_project_pdf/csv_example.xlsx' %}" download><i
@@ -208,7 +215,8 @@
                                 <a>1. The data after submission cannot undo or delete. Therefore, please check
                                     the rightness of data before submit.<br></a>
                                 <a>2. The file for upload must be csv file with specified form.<br></a>
-                                <a>3. The name of province, district and commune must correct and match with the
+                                <a>3. The date format must be in 'YYYY-MM-DD' form.<br></a>
+                                <a>4. The name of province, district and commune must correct and match with the
                                     database (you can check in the example file).<br></a>
                             </div>
                         </div>
@@ -227,9 +235,22 @@
 
 <script src="{% static 'scripts/upload_data.js' %}"></script>
 <script type="text/javascript">
+
+    CommentLimiter();
+
     //---------------------------------------------------------------------------------------//
     //--------------------------------------AJAX CODE---------------------------------------//
     //--------------------------------------------------------------------------------------// 
+    // Dropdown function
+    function DropdownAjax(html_id, list) {
+        $(html_id).find('option').remove();
+        $.each(list, function (key, value) {
+            $(html_id).append('<option value="' + value + '" data-tokens="' + value + '">' + value + '</option>');
+            //$('<option>').val(value).text(value).appendTo($('#province_selected'));
+        });
+    }
+
+
     // ----------** AJAX for country select **---------- //
     // AJAX country function
     function AJAXcountry(country) {
@@ -243,8 +264,21 @@
             dataType: 'json',
             cache: false,
             success: function (c_data) {
-                //alert(c_data.country);
-                console.log(c_data.province);
+                var province = c_data.province;
+                var event = c_data.event;
+                // province dropdown
+                DropdownAjax("#province_selected", province);
+                // hazard dropdown
+                DropdownAjax("#haz_selected", event);
+                // set district default ajax for each country
+                if (c_data.country == 'KHM') {
+                    AJAXprovince('Banteay Meanchey');
+                    $('#commune').show();
+                }
+                if (c_data.country == 'LAO') {
+                    AJAXprovince('Attapeu');
+                    $('#commune').hide();
+                }
             },
             error: function () {
                 alert('error')
@@ -256,12 +290,121 @@
     // AJAX: Default
     AJAXcountry('KHM');
     // AJAX: choose country
-    $(document).on("change", "#input_form", function (p) {
+    $(document).on("change", "#country_select", function (p) {
         p.preventDefault();
 
         var country = $('[name=country_select]').val();
         AJAXcountry(country);
     });
+
+    // ----------** AJAX for province select **---------- //
+    // AJAX province function
+    var district_name;
+    function AJAXprovince(province) {
+        $.ajax({
+            type: "POST",
+            url: "upload_data/province_choose",
+            data: {
+                province: province,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            dataType: 'json',
+            cache: false,
+            success: function (p_data) {
+                district_name = p_data.district;
+                DropdownAjax("#district_selected", district_name);
+                // set default ajax for district 
+                if (p_data.province == province) {
+                    AJAXdistrict(district_name[0]);
+                }
+            },
+            error: function () {
+                alert('error')
+            }
+
+        });
+    }
+
+    // AJAX: choose province
+    $(document).on("change", "#province_selected", function (q) {
+        q.preventDefault();
+
+        var province_sel = $('[name=province_selected]').val();
+        AJAXprovince(province_sel);
+    });
+
+    // ----------** AJAX for District select **---------- //
+    // AJAX district function
+    function AJAXdistrict(district) {
+        $.ajax({
+            type: "POST",
+            url: "upload_data/district_choose",
+            data: {
+                //province: province,
+                district: district,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            dataType: 'json',
+            cache: false,
+            success: function (d_data) {
+                var commune_name = d_data.commune;
+                DropdownAjax("#commune_selected", commune_name);
+
+            },
+            error: function () {
+                alert('error')
+            }
+
+        });
+    }
+
+    // AJAX: choose district
+    $(document).on("change", "#district_selected", function (r) {
+        r.preventDefault();
+
+        //var province_sel = $('[name=province_selected]').val();
+        var district_sel = $('[name=district_selected]').val();
+        AJAXdistrict(district_sel);
+    });
+
+    //---------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------- File input function  --------------------------------------------//
+    //---------------------------------------------------------------------------------------------------------------//
+    $(document).ready(function () {
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    });
+
+
+    //-------------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------- Alert After Submit Form  --------------------------------------------//
+    //-------------------------------------------------------------------------------------------------------------------//
+    $(document).on("click", "[name=submit_data]", function () {
+        alert('Your data has been successfully submitted');
+    });
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------- invalid form function  --------------------------------------------//
+    //-----------------------------------------------------------------------------------------------------------------//
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
 
 </script>
 

@@ -1,6 +1,19 @@
 from django.db import models
 
 # Create your models here.
+class country(models.Model):
+    id = models.IntegerField(primary_key=True, null=False)
+    country_id = models.CharField(max_length=10)
+    country_name = models.CharField(max_length=128)
+    province_id = models.CharField(max_length=10)
+    province_name = models.CharField(max_length=128)
+    district_id = models.CharField(max_length=10)
+    district_name = models.CharField(max_length=128)
+    commune_id = models.CharField(max_length=10)
+    commune_name = models.CharField(max_length=128)
+    class Meta:
+        db_table = 'country'
+
 class sdc_project_cambodia(models.Model):
     id = models.IntegerField(primary_key=True, null=False)
     project_name = models.CharField(max_length=256, null=False)
