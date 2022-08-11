@@ -1,44 +1,124 @@
+from asyncio.windows_events import NULL
+from itertools import count
 from django.shortcuts import render, redirect
 from django.http import FileResponse, JsonResponse, HttpResponseRedirect
 from django.urls import reverse
-from app.report_n_project.models import sdc_project_cambodia, sdc_project_laos
+from app.report_n_project.models import sdc_project_cambodia, sdc_project_laos, country
 from app.disaster_ana.models import disaster
 import io
 from reportlab.pdfgen import canvas
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import pandas as pd
+import numpy as np
+
 
 # Create your views here.
 ##########################################################################
 ########################### Upload Data Module ###########################
 ##########################################################################
 def upload_data(request):
-    date = request.POST.get('selected_date')
-    
-    return render(request, "upload_data.html", {'url_name': 'upload_data'})
+    coun_id, coun_name = "", ""
+    prov_name, prov_id = "", ""
+    dist_name, dist_id = "", ""
+    comm_name, comm_id = "", ""
+    day = ""
+    haz, death, injured, miss, h_des, h_dam = "", "", "", "", "", ""
+    comment = ""
+    file_url, dis_data = "", ""
+
+    if request.method=='POST' and 'submit_data' in request.POST:
+        ## Retrieve data from form ##
+        coun_id = request.POST.get('country_select')
+        prov_name = request.POST.get('province_selected')
+        dist_name = request.POST.get('district_selected')
+        comm_name = request.POST.get('commune_selected')
+        day = request.POST.get('selected_date')
+        haz = request.POST.get('haz_selected')
+        death = request.POST.get('death')
+        injured = request.POST.get('injured')
+        miss = request.POST.get('missing')
+        h_des = request.POST.get('h_des')
+        h_dam = request.POST.get('h_dam')
+        comments = request.POST.get('comment_box')
+        ## Fill all ID columns ##
+        # Retrieve country name in string
+        coun_name = country.objects.values('country_name').annotate(count=Count('country_name')).filter(country_id=coun_id)
+        coun_name = list(coun_name.values_list('country_name', flat=True))[0]
+        # Retrieve province id in string
+        prov_id = country.objects.values('province_id').annotate(count=Count('province_name')).filter(province_name=prov_name)
+        prov_id = list(prov_id.values_list('province_id', flat=True))[0]
+        # Retrieve district id in string
+        dist_id = country.objects.values('district_id').annotate(count=Count('district_name')).filter(district_name=dist_name)
+        dist_id = list(dist_id.values_list('district_id', flat=True))[0]
+        # Retrieve commune id in string
+        comm_id = country.objects.values('commune_id').annotate(count=Count('commune_name')).filter(commune_name=comm_name)
+        comm_id = list(comm_id.values_list('commune_id', flat=True))[0]
+        ## Add to disaster database ##
+        data = disaster(province_id=prov_id, province_name=prov_name, district_id=dist_id, district_name=dist_name, commune_id=comm_id, commune_name=comm_name,
+        date_data=day, event=haz, deaths=death, injured=injured, missing=miss, house_destroy=h_des, house_damage=h_dam, comment=comments)
+        data.save()
+    if request.method=='POST' and 'upload_file' in request.POST:
+        data_csv = request.FILES['disaster_csv']
+        # save PDF to specific path
+        fss = FileSystemStorage(base_url='static/upload_disaster_data/', location='static/upload_disaster_data/')
+        file_path = fss.save(data_csv.name, data_csv)
+        # Get the url
+        file_url = fss.url(file_path)
+        # Open that csv file
+        dis_data = pd.read_csv(file_url)
+        # Save to database
+        SaveToDisData(dis_data)
+        
+    return render(request, "upload_data.html", {'url_name': 'upload_data', 'url':file_url, 'dataframe':dis_data})
+
+def SaveToDisData(df):
+    df['date_data'] = pd.to_datetime(df['date_data'], format = '%Y-%m-%d')
+    df = df.fillna(NULL)
+    for i in df.index:
+        dis_data = disaster(province_id=df['province_id'][i], province_name=df['province_name'][i], district_id=df['district_id'][i], 
+        district_name=df['district_name'][i], commune_id=df['commune_id'][i], commune_name=df['commune_name'][i],
+        date_data=df['date_data'][i], event=df['event'][i], deaths=df['deaths'][i], injured=df['injured'][i], missing=df['missing'][i], 
+        house_destroy=df['houses_destroy'][i], house_damage=df['houses_damage'][i], comment=df['comment'][i])
+        dis_data.save()
+
 
 def country_choose(request):
-    country = request.POST['country']
-    if country == 'KHM':
-        df = disaster.objects.values('province_id','province_name').annotate(count=Count('province_id')).filter(province_id__startswith='KHM')
-        df = list(df.values_list('province_name', flat=True))
-    if country == 'LAO':
-        df = disaster.objects.values('province_id','province_name').annotate(count=Count('province_id')).filter(province_id__startswith='LAO')
-        df = list(df.values_list('province_name', flat=True))
+    country_val = request.POST['country']
+    if country_val == 'KHM':
+        df = country.objects.values('province_name').annotate(count=Count('province_id')).filter(country_id='KHM')
+        province_name = list(df.values_list('province_name', flat=True))
+        df2 = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='KHM')
+        event = list(df2.values_list('event', flat=True))
+    if country_val == 'LAO':
+        df = country.objects.values('province_name').annotate(count=Count('province_id')).filter(country_id='LAO')
+        province_name = list(df.values_list('province_name', flat=True))
+        df2 = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='LAO')
+        event = list(df2.values_list('event', flat=True))
 
-    return JsonResponse({'country':country, 'province':df})
+    return JsonResponse({'country':country_val, 'province':province_name, 'event':event})
+
+def province_choose(request):
+    province = request.POST['province']
+    df = country.objects.values('district_name').annotate(count=Count('district_id')).filter(province_name=province).order_by('district_name')
+    df = list(df.values_list('district_name', flat=True))
+
+    return JsonResponse({'province':province, 'district':df})
+
+def district_choose(request):
+    #province = request.POST['province']
+    district = request.POST['district']
+    df = country.objects.values('commune_name').annotate(count=Count('commune_id')).filter(district_name=district)
+    #df = country.objects.values('commune_name').annotate(count=Count('commune_id')).filter(district_name=district)
+    df = list(df.values_list('commune_name', flat=True))
+
+    return JsonResponse({'district':district, 'commune':df})
 
 ##########################################################################
 ########################### SDC Project Module ###########################
 ##########################################################################
-def sdc_project(request):
-    khm_project = sdc_project_cambodia.objects.all()
-    
-    return render(request, "sdc_project.html", {'url_name': 'sdc_project', 'khm_project':khm_project})
-
 def sdc_project_khm(request):
     khm_project = sdc_project_cambodia.objects.all()
 
@@ -101,26 +181,6 @@ def sdc_project_lao(request):
 def sdc_project_mya(request):
     
     return render(request, "sdc_project_mya.html", {'url_name': 'sdc_project_myanmar'})
-
-def khm_add_project(request):
-    khm_name = request.POST['khm_name']
-    khm_obj = request.POST['khm_obj']
-    khm_dur = request.POST['khm_dur']
-    khm_bud = request.POST['khm_bud']
-    khm_loc = request.POST['khm_loc']
-    khm_par = request.POST['khm_par']
-    khm_out = request.POST['khm_out']
-    
-
-    return JsonResponse({'name':khm_name, 'obj':khm_obj, 'dur':khm_dur, 'bud':khm_bud, 'loc':khm_loc, 'par':khm_par, 'out':khm_out}, status=200)
-    """
-    if request.method == 'POST' and request.FILES['khm_pdf']:
-        khm_pdf = request.FILES['khm_pdf']
-        fss = FileSystemStorage(base_url='static/sdc_project_pdf/Cambodia/', location='static/sdc_project_pdf/Cambodia/')
-        khm_file = fss.save(khm_pdf.name, khm_pdf)
-        khm_file_url = fss.url(khm_file)
-        return render(request, "sdc_project.html", {'khm_url': khm_file_url})
-        """
 
 ######################################################################
 ########################### Reports Module ###########################

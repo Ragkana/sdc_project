@@ -29,6 +29,7 @@ class disaster(models.Model):
     damages_crops_ha = models.DecimalField(max_digits=10, decimal_places=2)
     other_sector = models.CharField(max_length=128)
     glide_number = models.CharField(max_length=128)
+    comment = models.CharField(max_length=256)
     class Meta:
         db_table = "disaster"
 
