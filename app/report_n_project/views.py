@@ -206,9 +206,5 @@ def report_pdf(request):
 #######################################################################
 ## Main Page ##
 def about_sdc(request):
-<<<<<<< HEAD
-    return render(request, "about_sdc.html", {'url_name': 'about_sdc'})
-=======
     return render(request, "about_sdc.html", {'url_name': 'about_sdc'})
 
->>>>>>> 88c1900df223b56a5ab61d8e9c0df6371964b130
