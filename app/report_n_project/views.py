@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 from itertools import count
 from django.shortcuts import render, redirect
 from django.http import FileResponse, JsonResponse, HttpResponseRedirect
@@ -76,7 +75,7 @@ def upload_data(request):
 
 def SaveToDisData(df):
     df['date_data'] = pd.to_datetime(df['date_data'], format = '%Y-%m-%d')
-    df = df.fillna(NULL)
+    df = df.fillna('')
     for i in df.index:
         dis_data = disaster(province_id=df['province_id'][i], province_name=df['province_name'][i], district_id=df['district_id'][i], 
         district_name=df['district_name'][i], commune_id=df['commune_id'][i], commune_name=df['commune_name'][i],
@@ -200,3 +199,11 @@ def report_pdf(request):
     buffer.seek(0)
 
     return FileResponse(buffer, as_attachment=True, filename='report_test.pdf')
+
+
+#######################################################################
+########################### About us Module ###########################
+#######################################################################
+## Main Page ##
+def about_sdc(request):
+    return render(request, "about_sdc.html", {'url_name': 'about_sdc'})

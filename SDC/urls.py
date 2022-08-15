@@ -81,6 +81,8 @@ urlpatterns = [
     ################################# Reports And Project #############################################
     path('reports', rp_views.reports, name='reports'),
     path('reports/reports_pdf', rp_views.report_pdf, name='reports_pdf'),
+    ################################# About US Project #############################################
+    path('about_sdc', rp_views.about_sdc, name='about_sdc'),
   
 ]
      
