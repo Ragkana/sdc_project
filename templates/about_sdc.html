@@ -4,6 +4,14 @@
 {% include "structure/sidebar.html" %}
 {% include "structure/topnavbar.html" %}
 
+<style>
+    a:link,a:visited {
+        color: #2F96B2;
+    }
+    a:hover, a:active {
+        color: #3D5178;
+    }
+</style>
 <div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
     <!-- Page Header -->
     <div class="page-header row no-gutters py-4">
@@ -151,95 +159,118 @@
                 </div>
                 <!-- /. secound content column-->
             </div>
-                <!-- Table for data collection -->
-                <div class="row px-4 pt-2">
-                    <div class="col-lg-12 col-md-12 col-sm-12">
-                        <table class="d-flex justify-content-center" style="border-collapse: collapse; padding: auto;">
-                            <tr style="background-color: #3D5178; color: #DEE1EA;">
-                                <th style="border: 2px solid #3D5178; text-align: left;padding: 8px;">s.No</th>
-                                <th style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Data Type</th>
-                                <th style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Source</th>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="border: 2px solid #3D5178; text-align: left;padding: 8px;">I. Disasters</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">1</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Disaster Damage Loss Data</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">CRED EMDAT</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">2</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Disaster Damage Loss Data</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Desinventar</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="border: 2px solid #3D5178; text-align: left;padding: 8px;">II. Socio-economic data</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">3</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Demography (Population)</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Lao and Cambodia Government</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">4</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Multidimensional Poverty Index (MPI)</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">University of Oxford</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">5</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Inform Risk Index (Exposure, Vulnerability and adaptive capacity)</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">European Commission</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">6</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Demography (Population, literacy, sex ratio)</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">National Institute of Statistics</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">7</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Development Indicators</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">World Bank, SDG DashBoard</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">8</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Agriculture, Forest cover, Land</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">FAO</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="border: 2px solid #3D5178; text-align: left;padding: 8px;">III. Maps / Geographic Boundaries</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">9</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Administrative Boundary maps</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Desinventar & SDC</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="border: 2px solid #3D5178; text-align: left;padding: 8px;">IV. Hydrometeorological</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">10</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Rainfall data</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">CHIRPS, US Govt.</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">11</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Meteorological forecasts (rainfall, Temperature, Humidity)</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">ECMWF</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="border: 2px solid #3D5178; text-align: left;padding: 8px;">V. Earthquake Monitoring Data</td>
-                            </tr>
-                            <tr>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">12</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">S-wave and P-Wave data</td>
-                                <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">IRIS, GEOFON, RIMES</td>
-                            </tr>
-                        </table>
-                    </div>
+            <!-- Table for data collection -->
+            <div class="row px-4 pt-2">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <table class="d-flex justify-content-center" style="border-collapse: collapse; padding: auto;">
+                        <tr style="background-color: #3D5178; color: #DEE1EA;">
+                            <th style="border: 2px solid #3D5178; text-align: left;padding: 8px;">s.No</th>
+                            <th style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Data Type</th>
+                            <th style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Source</th>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 2px solid #3D5178; text-align: left;padding: 8px;">I.
+                                Disasters</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">1</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Disaster Damage Loss
+                                Data</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;"><a
+                                    href="https://www.emdat.be/">CRED EMDAT</a></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">2</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Disaster Damage Loss
+                                Data</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;"><a href="https://www.desinventar.net/">Desinventar</a></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 2px solid #3D5178; text-align: left;padding: 8px;">II.
+                                Socio-economic data</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">3</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Demography
+                                (Population)</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Lao and Cambodia
+                                Government</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">4</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Multidimensional
+                                Poverty Index (MPI)</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;"><a href="https://data.humdata.org/dataset" target="_blank">University of Oxford</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">5</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Inform Risk Index
+                                (Exposure, Vulnerability and adaptive capacity)</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;"><a href="https://drmkc.jrc.ec.europa.eu/inform-index/INFORM-Risk/Country-Risk-Profile" target="_blank">European Commission</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">6</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Demography
+                                (Population, literacy, sex ratio)</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;"><a href="https://www.nis.gov.kh/index.php" target="_blank">National Institute of
+                                Statistics</a></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">7</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Development Indicators
+                            </td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;"><a href="https://data.worldbank.org/" target="_blank">World Bank</a>, <a href="https://dashboards.sdgindex.org/" target="_blank">SDG
+                                DashBoard</a></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">8</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Agriculture, Forest
+                                cover, Land</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;"><a href="https://www.fao.org/" target="_blank">FAO</a></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 2px solid #3D5178; text-align: left;padding: 8px;">III. Maps
+                                / Geographic Boundaries</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">9</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Administrative
+                                Boundary maps</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;"><a href="https://www.desinventar.net/">Desinventar</a> & SDC</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 2px solid #3D5178; text-align: left;padding: 8px;">IV.
+                                Hydrometeorological</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">10</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Rainfall data</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">CHIRPS, US Govt.</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">11</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">Meteorological
+                                forecasts (rainfall, Temperature, Humidity)</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">ECMWF</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 2px solid #3D5178; text-align: left;padding: 8px;">V.
+                                Earthquake Monitoring Data</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">12</td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">S-wave and P-Wave data
+                            </td>
+                            <td style="border: 2px solid #3D5178; text-align: left;padding: 8px;">IRIS, GEOFON, RIMES
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-                <!-- /. Table for data collection -->
-            
+            </div>
+            <!-- /. Table for data collection -->
+
         </div>
     </div>
     <!------------------------- /. Data Collection container ------------------------->
