@@ -69,6 +69,7 @@ urlpatterns = [
     path('earthquake/view-bulletin/<str:event_id>/<int:bulletin_no>/', eq_views.view_bulletin, name='earthquake-view-bulletin'),
     path('earthquake/import', api_views.import_earthquake, name='import-earthquake'),
     path('earthquake/import/bulletin', api_views.import_bulletin, name='import-earthquake'),
+    path('earthquake/filter-earthquake', eq_views.filter_earthquake, name='filter-earthquake'),
     ################################# Upload Data #############################################
     path('upload_data', rp_views.upload_data, name='upload_data'),
     path('upload_data/country_choose', rp_views.country_choose, name='upload_data_country'),

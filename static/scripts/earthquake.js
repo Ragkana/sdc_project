@@ -9,8 +9,72 @@ $(document).ready(function() {
     const SLONG = 104.888535;               
     const MYCENTER = [SLAT, SLONG]; 
     const EQ_COUNT = settings.fields.number_events;
-    const AOR_POLY = turf.polygon([[[72.268492,39.827522],[80.182943,40.096983],[92.671651,33.927409],[109.030101,20.202924],[115.010609,-7.294363],
-        [105.16036,-14.368173],[85.108067,-14.02735],[64.879645,-12.315853],[58.371445,7.081814],[61.361699,32.159338],[72.268492,39.827522]]]);
+    // console.log(settings.fields.points1);
+    const AOR_POLY1 = [[[102.193619,12.43423],[102.083683,13.974383],[102.413492,15.165258],[103.292984,15.927327],[104.632687,16.454854],[105.90795,16.539127],
+        [106.985328,16.222916],[107.513023,15.694773],[108.150846,14.251406],[108.304757,12.541494],[108.106871,11.402293],[105.864166,10.517856],[103.929283,9.890731],
+        [102.368024,10.712225],[102.193619,12.43423]]]
+    const AOR_POLY2 = [[[100.65212,21.787875],[101.267765,21.910241],[101.421676,22.90559],[102.500519,23.107839],[103.797872,21.644983],[105.029161,21.379237],
+        [105.952686,19.733421],[106.722242,17.986897],[107.976642,15.85105],[107.976642,14.366178],[106.965226,13.299425],[105.602013,13.299425],[104.018928,13.982712],
+        [104.546623,15.131125],[103.799054,16.863034],[101.952121,17.199178],[100.676857,16.863034],[100.193137,18.245655],[98.562707,19.865539],[100.65212,21.787875]]]
+    const AOR_POLY3 = [[[98.786447,18.036851],[97.159387,15.977833],[95.268479,15.131125],[92.937824,15.935581],[93.46552,17.785959],[92.058332,19.410259],[91.266789,21.141509],
+        [91.531633,23.418518],[93.774338,25.933965],[94.917766,27.504008],[96.896623,28.628528],[99.535099,29.013545],[99.667023,25.101145],[100.060656,23.499144],
+        [101.028098,22.569],[102.127463,20.607721],[98.917316,19.036805],[98.786447,18.036851]]]
+
+    const POLY1 = turf.polygon(AOR_POLY1);
+    const POLY2 = turf.polygon(AOR_POLY2);
+    const POLY3 = turf.polygon(AOR_POLY3);
+
+    const AOI1 = [{
+        "type": "Feature",
+        "geometry": {
+           "type": "Polygon",
+           "coordinates": AOR_POLY1
+        }
+     }];
+  
+     const L_AOI1 = new L.GeoJSON(AOI1,
+        {
+           fillColor: '#3dbf34',
+           color: '#3dbf34',
+           opacity :1,
+           fillOpacity: 0.4,
+           weight:2
+        }
+     )
+     const AOI2 = [{
+        "type": "Feature",
+        "geometry": {
+           "type": "Polygon",
+           "coordinates": AOR_POLY2
+        }
+     }];
+  
+     const L_AOI2 = new L.GeoJSON(AOI2,
+        {
+           fillColor: '#3dbf34',
+           color: '#3dbf34',
+           opacity :1,
+           fillOpacity: 0.4,
+           weight:2
+        }
+     )
+     const AOI3 = [{
+        "type": "Feature",
+        "geometry": {
+           "type": "Polygon",
+           "coordinates": AOR_POLY3
+        }
+     }];
+  
+     const L_AOI3 = new L.GeoJSON(AOI3,
+        {
+           fillColor: '#3dbf34',
+           color: '#3dbf34',
+           opacity :1,
+           fillOpacity: 0.4,
+           weight:2
+        }
+     )
     const MSG = {
             SEND : {
                 type : 'info',
@@ -30,12 +94,31 @@ $(document).ready(function() {
             } 
     } 
 
+
     //**** Base maps
-    const MAP_BMAP  = L.tileLayer("https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g",
-        {
-            maxZoom: MAXZOOM,
+    const URLTILEMAP_WHITE = "https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g",
+        URLTILEMAP_BLACK = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        URLTILEMAP_SATELLITE = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
+        URLTILEMAP_OSM = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+    const MWHITE  = L.tileLayer(URLTILEMAP_WHITE, {
+        maxZoom: MAXZOOM,
             minZoom: MINZZOOM,
-        });
+    }), 
+    MSATELLITE = L.tileLayer(URLTILEMAP_SATELLITE, {
+        maxZoom: MAXZOOM,
+        minZoom: MINZZOOM,
+    }),
+    MOSM =  L.tileLayer(URLTILEMAP_OSM, {
+        maxZoom: MAXZOOM,
+        minZoom: MINZZOOM,
+    }),
+    MBLACK =  L.tileLayer(URLTILEMAP_BLACK, {
+        maxZoom: MAXZOOM,
+             minZoom: MINZZOOM,
+    });
+    
+    let cbasemap = MWHITE // Current basemap
 
     //**** Initialize Map
     map = L.map('cam_map', {
@@ -43,19 +126,302 @@ $(document).ready(function() {
         zoomControl: ZOOMCTRL,
         center: MYCENTER,
         zoom: ZOOMLEVEL,
-        layers: [MAP_BMAP],
+        layers: [cbasemap],
         preferCanvas: true // recommended when loading large layers.
         
     });
 
-    heatmapPoints = events.map(function (p) { 
-        return [p.fields.latitude, p.fields.longitude, 1];
+    heatmapPoints = eheatpoints.map(function (p) { 
+        return [p.fields.latitude, p.fields.longitude, .5];
     });
 
     
-    L.heatLayer(heatmapPoints, {radius: 25}).addTo(map);
+    L_HEATMAP = L.heatLayer(heatmapPoints, {radius: 25});
 
     LoadEvents(); // Load events
+
+
+    // Legend
+    L.Control.MyControl = L.Control.extend({
+            onAdd: function(map) {
+                var el = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control c-legend');
+
+                el.innerHTML = `
+                    <div class="basemap__dropdown is-open text-center pb-2 " >
+                        <span class="options__title lbl-lrecent" style="border-bottom: 1px solid #4B4B4B;font-size:12px">Recent Earthquakes</span>
+                        <img id="map_legend" src="${img_path}map_legend.png" class="pt-1 lbl-lrecent" >
+                    </div>
+                `;
+
+                return el;
+            },
+            onClick: function(map) {
+                // Nothing to do here
+            },
+            onRemove: function(map) {
+                // Nothing to do here
+            }
+        });
+
+    L.control.myControl = function(opts) {
+        return new L.Control.MyControl(opts);
+    }
+
+    L.control.myControl({
+        position: 'topright'
+    }).addTo(map);
+
+    // Long Lat Control
+    L.Control.Watermark = L.Control.extend({
+        onAdd: function(map) {
+            const div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
+            div.innerHTML = 
+                `
+                <div class="text-muted p-1 mt-1" style="color:#667 !important">
+                    &nbsp;<i class="fa fa-location-arrow f-14"></i>&nbsp;&nbsp;Latitude:<span class="lbl-lat">0</span>&nbsp;Longitude:<span class="lbl-lon">0</span>
+                </div>
+                `
+            return div;
+        },
+    });
+
+L.control.watermark = function(opts) {
+    return new L.Control.Watermark(opts);
+}
+
+L.control.watermark({ position: 'bottomleft' }).addTo(map);
+
+// Basemaps Controls
+L.Control.MyControl = L.Control.extend({
+    onAdd: function(map) {
+        var el = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
+
+        el.innerHTML = `
+    
+            <button class="eq-button button-map-control" id="btn-basemap" ><i class="fa fa-globe f-14"></i>&nbsp;BASEMAPS</button>
+    
+        `;
+
+        return el;
+    },
+    onClick: function(map) {
+    
+    },
+    onRemove: function(map) {
+        // Nothing to do here
+    }
+});
+
+L.control.myControl = function(opts) {
+    return new L.Control.MyControl(opts);
+}
+
+L.control.myControl({
+    position: 'bottomright'
+}).addTo(map);
+
+// Basemap Selection
+L.Control.MyControl = L.Control.extend({
+            onAdd: function(map) {
+                var el = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control ctrl-basemap');
+
+                el.innerHTML = `
+                <div class="basemap__dropdown is-open noselect">
+                    <span class="options__title">Basemaps</span>
+                    <div class="basemap__options">
+                        <div class="basemap b-switch is-active" title=" White Basemap" layer="white">
+                            <img src="${img_path}white.jpg">
+                            <span class="basemap__title">WHITE</span>
+                        
+                        </div>
+                        <div class="basemap b-switch " title="Black Basemap" layer="black">
+                            <img src="${img_path}black.jpg">
+                            <span class="basemap__title">BLACK</span>
+                            
+                        </div>
+                        <div class="basemap b-switch " title="Satellite Basemap" layer="satellite">
+                            <img src="${img_path}satellite.jpg" >
+                            <span class="basemap__title">SATELLITE</span>
+                            
+                        </div>
+                        <div class="basemap b-switch " title="OSM Basemap" layer="osm">
+                            <img src="${img_path}osm.jpg" >
+                            <span class="basemap__title">OSM</span>
+                            
+                        </div>
+                    </div>
+                </div>
+                `;
+
+            
+                el.style.position = 'absolute';
+                el.style.bottom = "50px";
+                el.style.right = "0px";
+                L.DomEvent.disableClickPropagation(el);
+
+                return el;
+            },
+
+            onRemove: function(map) {
+                // Nothing to do here
+            }
+        });
+
+        L.control.myControl = function(opts) {
+            return new L.Control.MyControl(opts);
+        }
+
+        L.control.myControl({
+            position: 'bottomright'
+        }).addTo(map);
+
+        // Layer Controls
+        L.Control.MyControl = L.Control.extend({
+            onAdd: function(map) {
+                var el = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
+
+                el.innerHTML = `
+            
+                    <button class="eq-button button-map-control " id="btn-layers"><i class="fa fa-cogs f-14"></i> OPTIONS </button>
+            
+                `;
+
+                return el;
+            },
+            onClick: function(map) {
+                // Nothing to do here
+            },
+            onRemove: function(map) {
+                // Nothing to do here
+            }
+        });
+
+        L.control.myControl = function(opts) {
+            return new L.Control.MyControl(opts);
+        }
+
+        L.control.myControl({
+            position: 'bottomright'
+        }).addTo(map);
+
+
+        // Layers Selection
+        L.Control.MyControl = L.Control.extend({
+            onAdd: function(map) {
+                var el = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control ctrl-layers');
+
+                el.innerHTML = `
+                    <div class="card-block accordion-block noselect">
+                        <div id="accordion" role="tablist" aria-multiselectable="true">
+                            <div class="accordion-panel">
+                                <div class="accordion-heading" role="tab" id="headingOne">
+                                    <h3 class="card-title accordion-title mt-0 mb-0">
+                                    <a class="pl-2 p-0 accordion-msg lbl-h-layer" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                        <span class="badge--default lbl-cboundaries">0</span>Layers/Boundaries
+                                    </a>
+                                </h3>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse in collapse show" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="accordion-content accordion-desc pb-2 pr-0">
+                                        <ul class="eq-ul-layers pl-3 mb-0">
+                                            <li>
+                                                <label class="eq-switch mt-1">
+                                                    <input type="checkbox" class="l-switch s-boundaries" layer="show_heat" ${settings.fields.show_heatmap == 1 ? 'checked="checked"' : '' } >
+                                                    <span class="eq-slider round"></span>
+                                                </label>
+                                                &nbsp;&nbsp;&nbsp;Show Heatmap
+                                            </li>
+                                            <li>
+                                                <label class="eq-switch mt-1">
+                                                    <input type="checkbox" class="l-switch s-boundaries" layer="show_aoi"  ${settings.fields.show_aoi == 1  ? 'checked="checked"' : '' } >
+                                                    <span class="eq-slider round"></span>
+                                                </label>
+                                                &nbsp;&nbsp;&nbsp;Area of Interest
+                                            </li>
+                                        
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-panel">
+                                <div class="accordion-heading" role="tab" id="headingTwo">
+                                    <h3 class="card-title accordion-title mt-0 mb-0">
+                                    <a class="pl-2 p-0 accordion-msg lbl-h-layer" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <span class="badge--default lbl-cfilter">0</span>Earthquakes
+                                    </a>
+                                </h3>
+                                </div>
+                                <div id="collapseTwo" class="panel-collapse in collapse show" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="accordion-content accordion-desc pb-2 pr-0">
+                                    
+                                        <ul class="eq-ul-layers pl-3 mb-0">
+                                            <li>
+                                                <label class="eq-switch mt-1 ">
+                                                    <input type="checkbox" class="f-switch s-filter" filter="show_mag0" ${settings.fields.filter_1 == 1 ? 'checked="checked"' : '' }>
+                                                    <span class="eq-slider round"></span>
+                                                </label>
+                                                &nbsp;&nbsp;&nbsp;Show only magnitude 0 - 4.9
+                                            </li>
+                                            <li>
+                                                <label class="eq-switch mt-1">
+                                                    <input type="checkbox" class="f-switch  s-filter" filter="show_mag1"  ${settings.fields.filter_2 == 1 ? 'checked="checked"' : '' }>
+                                                    <span class="eq-slider round"></span>
+                                                </label>
+                                                &nbsp;&nbsp;&nbsp;Show only magnitude 5 - 5.9
+                                            </li>
+                                            <li>
+                                                <label class="eq-switch mt-1">
+                                                    <input type="checkbox" class="f-switch  s-filter" filter="show_mag2"  ${settings.fields.filter_3 == 1 ? 'checked="checked"' : '' }>
+                                                    <span class="eq-slider round"></span>
+                                                </label>
+                                                &nbsp;&nbsp;&nbsp;Show only magnitude 6 - 6.4
+                                            </li>
+                                            <li>
+                                                <label class="eq-switch mt-1">
+                                                    <input type="checkbox" class="f-switch  s-filter" filter="show_mag3"  ${settings.fields.filter_4 == 1 ? 'checked="checked"' : '' }>
+                                                    <span class="eq-slider round"></span>
+                                                </label>
+                                                &nbsp;&nbsp;&nbsp;Show only magnitude >= 6.5 
+                                            </li>
+                                            <li>
+                                                <label class="eq-switch mt-1">
+                                                    <input type="checkbox" class="f-switch  s-filter" filter="only_aoi"  ${settings.fields.inside_aoi == 1 ? 'checked="checked"' : '' }>
+                                                    <span class="eq-slider round"></span>
+                                                </label>
+                                                &nbsp;&nbsp;&nbsp;Show only inside AOI 
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        
+                        </div>
+                    </div>
+                `;
+
+            
+                el.style.position = 'absolute';
+                el.style.bottom = "50px";
+                el.style.right = "0px";
+                L.DomEvent.disableClickPropagation(el);
+
+                return el;
+            },
+
+            onRemove: function(map) {
+                // Nothing to do here
+            }
+        });
+
+        L.control.myControl = function(opts) {
+            return new L.Control.MyControl(opts);
+        }
+
+        L.control.myControl({
+            position: 'bottomright'
+        }).addTo(map);
 
     // FUNCTIONS
 
@@ -66,13 +432,26 @@ $(document).ready(function() {
         
         map.createPane("EventMarker");
         map.getPane("EventMarker").style.zIndex = 999;
-        for (let i = 0; i < EQ_COUNT; i++){
-            const event_li = initEventList(events[i], i);
+        // for (let i = 0; i < EQ_COUNT; i++){
+        //     const event_li = initEventList(events[i], i);
+
+        //     $('.event-list').append(event_li);
+        //     addMarker(events[i], i);
+        // }
+        events.forEach((event, i) => {
+            const event_li = initEventList(event, i);
 
             $('.event-list').append(event_li);
             addMarker(events[i], i);
-        }
+        });
     }
+
+
+    map.on('mousemove', function(e) {
+        const latLng = getCoordinates(e.latlng);
+        $(".lbl-lat").html(latLng[0]);
+        $(".lbl-lon").html(latLng[1]);
+    });
 
     function addMarker(event, index, tocenter =0) {
         let marker;
@@ -301,9 +680,10 @@ $(document).ready(function() {
             // Check if inside IOR
             const lngLat =  [new_event.longitude, new_event.latitude] ;
         
-            is_inside = (turf.booleanPointInPolygon(lngLat, AOR_POLY) ? true : false); // If in aor dont hide
-            is_inside = true;
-            if (!is_inside) // Dont add
+            is_inside1 = (turf.booleanPointInPolygon(lngLat, POLY1) ? true : false); // If in aor dont hide
+            is_inside2 = (turf.booleanPointInPolygon(lngLat, POLY2) ? true : false); 
+            is_inside3 = (turf.booleanPointInPolygon(lngLat, POLY3) ? true : false);
+            if (!is_inside1 && !is_inside2 && !is_inside3 ) // Dont add
                 return false
 
             msg = (MSG.EARTHQUAKE.msg).replace('_REGION_', new_event.region).replace('_MAG_', new_event.magnitude.concat(' ').concat(new_event.mag_type));
@@ -450,7 +830,14 @@ $(document).ready(function() {
 
     });
 
+    $('#modal-advisory').on('hidden.bs.modal', function (e) {
+        $('.event-list').css("position", "absolute"); // FIXED for scroll not clickable
+    })
+
     $(document).on('click','.btn-advisory', function() { 
+
+        // Remove absolute position // FIXED for scroll not clickable
+        $('.event-list').css("position", "unset");
 
         let opt_bulletin = "";
         const event_id  = $(this).data("id");
@@ -564,7 +951,153 @@ $(document).ready(function() {
 
     });
 
+    $(document).on('click','#btn-basemap', function() { 
+        ctrl_layer =  $(".ctrl-basemap");
+        $(".ctrl-layers").hide("slide", {direction: "right"}, 100);
+        if (ctrl_layer.is(":visible"))
+            ctrl_layer.hide("slide", {direction: "right"}, 100);
+        else
+            ctrl_layer.show("slide", {direction: "right"}, 100);
+    });
+
+    $(document).on('click','#btn-layers', function() { 
+        ctrl_layer =  $(".ctrl-layers");
+        $(".ctrl-basemap").hide("slide", {direction: "right"}, 100);
+
+        if (ctrl_layer.is(":visible"))
+            ctrl_layer.hide("slide", {direction: "right"}, 100);
+        else
+            ctrl_layer.show("slide", {direction: "right"}, 100);
+    });
 
 
+    let boundaries_count = 0;
+    let filter_count = 0;
+    if ($("input[layer='show_heat']").prop("checked") == true) { 
+        boundaries_count++;
+            map.addLayer(L_HEATMAP);  
+            $('#map_legend').attr('src', img_path + 'map_heat_legend.png');
+    }
+    if ($("input[layer='show_aoi']").prop("checked") == true) { 
+        boundaries_count++; 
+        map.addLayer(L_AOI1);
+        map.addLayer(L_AOI2);
+        map.addLayer(L_AOI3);
+     }
+    countOptBoundaries();
 
+    if ($("input[filter='show_mag0']").prop("checked") == true){ filter_count++; }
+    if ($("input[filter='show_mag1']").prop("checked") == true){ filter_count++; }
+    if ($("input[filter='show_mag2']").prop("checked") == true){ filter_count++; }
+    if ($("input[filter='show_mag3']").prop("checked") == true){ filter_count++; }
+    if ($("input[filter='only_aoi']").prop("checked") == true){ filter_count++; }
+
+    countOptFilter();
+
+    function countOptBoundaries(){
+        $('.lbl-cboundaries').html(boundaries_count);
+    }
+    function countOptFilter(){
+        $('.lbl-cfilter').html(filter_count);
+    }
+    $(document).on('change','.s-filter', function (){
+            
+        filter_count += ($(this).prop("checked") == true ? 1 : -1);
+        countOptFilter();
+
+        $.ajax({
+            type: "POST",
+            url: "earthquake/filter-earthquake",
+            data: {
+                filter1: $("input[filter='show_mag0']").prop("checked"),
+                filter2: $("input[filter='show_mag1']").prop("checked"),
+                filter3: $("input[filter='show_mag2']").prop("checked"),
+                filter4: $("input[filter='show_mag3']").prop("checked"),
+                only_aoi: $("input[filter='only_aoi']").prop("checked"),
+                csrfmiddlewaretoken: window.CSRF_TOKEN,
+            },
+            dataType: 'json',
+            success:function(data){
+                // console.log(JSON.parse(data.earthquakes));
+            
+                // Clear Layers
+                map.eachLayer(function (layer) { 
+                    if (typeof layer.event !== "undefined" ){
+                        map.removeLayer(layer); 
+                        return false;
+                    }
+                });
+
+                events = JSON.parse(data.earthquakes); // New Events
+
+                // Add Layers
+                LoadEvents();
+               
+            }
+        });
+    });
+    $(document).on('change','.s-boundaries', function (){
+        boundaries_count += ($(this).prop("checked") == true ? 1 : -1);
+        countOptBoundaries();
+    });
+
+    $(document).on('click','.b-switch', function() { 
+        const slayer = getLayer($(this).attr('layer'));
+        $('.b-switch').removeClass('is-active'); // Remove other class
+        $(this).addClass('is-active'); // Add active to selected basemap
+        map.removeLayer(cbasemap);	
+        map.addLayer(slayer);	
+        cbasemap = slayer;
+    });
+      // Show layers based on switch
+      $(document).on('change','.l-switch', function() { 
+        const slayer = getLayer($(this).attr('layer'));
+        if ($(this).is(":checked")){
+            if ($(this).attr('layer') == "show_heat") {
+                map.addLayer(slayer);	
+                $('#map_legend').attr('src', img_path + 'map_heat_legend.png');
+            }else{
+                map.addLayer(L_AOI1);
+                map.addLayer(L_AOI2);
+                map.addLayer(L_AOI3);
+            }
+        }else{
+         	
+            if ($(this).attr('layer') == "show_heat") {
+                map.removeLayer(slayer);
+                $('#map_legend').attr('src', img_path + 'map_legend.png');
+            }else{
+                map.removeLayer(L_AOI1);
+                map.removeLayer(L_AOI2);
+                map.removeLayer(L_AOI3);
+            }
+        }
+        
+    });
+
+    function getLayer(layer){
+        let slayer;
+        switch (layer) {
+            case "show_heat":
+                slayer = L_HEATMAP
+                break;
+            case "white":
+                slayer = MWHITE
+                break;
+            case "black":
+                slayer = MBLACK
+                break;
+            case "satellite":
+                slayer = MSATELLITE
+                break;
+            case "osm":
+                slayer = MOSM;
+                break;   
+        }
+        return slayer;
+    }
+
+    if (settings.fields.simulation == 0){
+        $('.div-sim').addClass('d-none')
+    }
 });

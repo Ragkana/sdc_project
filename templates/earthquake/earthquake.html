@@ -8,13 +8,32 @@
 <link rel="stylesheet" href="{% static 'styles/tata.css' %}" />
 <script>
   const recent_ico =  "{% static 'images/earthquake/recent.png' %}";
+  const img_path =  "{% static 'images/earthquake/' %}";
   const PUSHER = {{ PUSHER | safe }};
   let events = JSON.parse('{{ earthquakes | safe }}');
+  let eheatpoints = JSON.parse('{{ eheatpoints | safe }}');
   let settings = JSON.parse('{{ settings | safe }}');
   settings = settings[0];
   window.CSRF_TOKEN = "{{ csrf_token }}"
 </script>
+<style>
+  .leaflet-bottom.leaflet-right, .leaflet-bottom.leaflet-left {
+    display: inline-flex;
+  }
+  .eq-ul-layers li{
+    display: inline-flex;
+  }
 
+  @media only screen and (max-width: 1000px) {
+    .event-list {
+      position: unset !important
+    }
+  }
+  .ctrl-layers, .ctrl-basemap {
+    bottom: 30px !important;
+
+  }
+</style>
 <div class="main-content-container container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
   <!-- Page Header -->
   <div class="page-header row no-gutters py-4">
@@ -32,7 +51,7 @@
                 
                   <div class="row">
                     <div class="col-12 pl-0 pr-0">
-                      <ul class="event-list mb-0" style="overflow-y: auto; width: auto; height: calc(90vh - 12rem);">
+                      <ul class="event-list mb-0" style="overflow-y: auto; width: auto; height: calc(90vh - 12rem);position:absolute; z-index: 999999;">
                           
                       </ul>
                   </div>
@@ -90,7 +109,7 @@
            
             
           </div>
-          <div class="btn-group input-group  mt-2">
+          <div class="btn-group input-group  mt-2 div-sim">
             <label class="control-label col-lg-4 col-md-4 font-weight-bold" for="simulation">Test Advisory:</label>                            
             <div class="custom-control custom-toggle ml-3">
               <input type="checkbox"  name="simulation" id="simulation" class="custom-control-input">
@@ -109,6 +128,7 @@
 {% include "structure/footer.html" %}
 <script src="https://momentjs.com/downloads/moment.js"></script>
 <script src="https://momentjs.com/downloads/moment-timezone.js"></script>
+<script src="{% static 'scripts/jquery-ui.min.js' %}"></script>
 <script src="{% static 'scripts/earthquake.js' %}" ></script>
 <script src="{% static 'scripts/leaflet-heat.js' %}"></script>
 <script src="{% static 'scripts/tata.js' %}"></script>

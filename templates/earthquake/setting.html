@@ -54,40 +54,89 @@
               </div>
               <!-- End card -->
            </div>
-           <div class="col-md-6">
-              <div class="card card-small w-100 ml-0">
-                 <div class="card-header border-bottom">
-                    <h6 class="m-0">Boundaries Settings</h6>
-                 </div>
-                 <form action="" method="POST">
-                  {% csrf_token %}
-                     <input type="hidden" name="section" value="boundaries">
-                     <div class="card-body d-flex flex-column">
-                        <div class=" btn-group input-group">
-                           <label class="control-label col-lg-7 col-md-7" for="show_aor">Show Area of Responsibility</label>                            
-                           <label class="eq-switch mt-1">
-                           <input type="checkbox" class="l-switch" switch="show_aor"  name="show_aor"  {% if settings.show_aor %} checked="checked" {% endif %} > 
-                           <span class="eq-slider round"></span>
-                           </label>
-                        </div>
-                        <div class=" btn-group input-group">
-                           <label class="control-label col-lg-7 col-md-7" for="show_aoi">Show area of interest</label>                            
-                           <label class="eq-switch mt-1">
-                           <input type="checkbox" class="l-switch" switch="show_aoi"  name="show_aoi"  {% if settings.show_aoi %} checked="checked" {% endif %} > 
-                           <span class="eq-slider round"></span>
-                           </label>
-                        </div>
-                        <div class="btn-group input-group  mt-1">
-                           <div class="col-md-12">
-                              <input type="submit" name="update" class="btn btn-flat btn-primary" value="Save">
+           
+        </div>
+        <div class="row pt-2">
+         <div class="col-md-6">
+            <div class="card card-small w-100 ml-0">
+               <div class="card-header border-bottom">
+                  <h6 class="m-0">Boundaries Settings</h6>
+               </div>
+               <form action="" method="POST">
+                {% csrf_token %}
+                   <input type="hidden" name="section" value="boundaries">
+                   <div class="card-body d-flex flex-column">
+                      <!-- <div class=" btn-group input-group">
+                         <label class="control-label col-lg-7 col-md-7" for="show_aor">Show Area of Responsibility</label>                            
+                         <label class="eq-switch mt-1">
+                         <input type="checkbox" class="l-switch" switch="show_aor"  name="show_aor"  {% if settings.show_aor %} checked="checked" {% endif %} > 
+                         <span class="eq-slider round"></span>
+                         </label>
+                      </div> -->
+                      <div class=" btn-group input-group">
+                         <label class="control-label col-lg-6 col-md-6" for="show_aor">Show Heatmap</label>                            
+                         <label class="eq-switch mt-1">
+                         <input type="checkbox" class="l-switch" switch="show_heatmap"  name="show_heatmap"  {% if settings.show_heatmap %} checked="checked" {% endif %} > 
+                         <span class="eq-slider round"></span>
+                         </label>
+                      </div>
+                      <div class=" btn-group input-group">
+                         <label class="control-label col-lg-6 col-md-6" for="show_aoi">Show Area of Interest</label>                            
+                         <label class="eq-switch mt-1">
+                         <input type="checkbox" class="l-switch" switch="show_aoi"  name="show_aoi"  {% if settings.show_aoi %} checked="checked" {% endif %} > 
+                         <span class="eq-slider round"></span>
+                         </label>
+                      </div>
+                      <div class=" btn-group input-group ml-4">
+                         <label class="control-label col-lg-7 col-md-7" for="show_aoi"><b>Cambodia</b></label>                            
+                         <div class="col-md-6">
+                            <div class="pl-0 pr-0 col-md-12" style="display:inline-flex">
+                               <input type="text" class="form-control" id="inpt_aoi" name="inpt_aoi" value="{{ settings.points1 }}" readonly>
+                               <button class="btn btn-primary btn-change-aoi" type="button" style="border-radius:0px" title="Select area of interest">
+                                   <i class="fa fa-object-ungroup" aria-hidden="true"></i>
+                               </button>
+                             
                            </div>
+                            <div id="map1" style="width: -webkit-fill-available;height: 200px"></div>
                         </div>
-                    </form>
-                 </div>
-                 <!-- End card body -->
-              </div>
-              <!-- End card -->
-           </div>
+                      </div>
+                      <div class=" btn-group input-group ml-4 mt-4">
+                         <label class="control-label col-lg-7 col-md-7" for="show_aoi"><b>Laos</b></label>                            
+                         <div class="col-md-6">
+                            <div class="pl-0 pr-0 col-md-12" style="display:inline-flex">
+                               <input type="text" class="form-control" id="inpt_aoi" name="inpt_aoi" value="{{ settings.points1 }}" readonly>
+                               <button class="btn btn-primary btn-change-aoi" type="button" style="border-radius:0px" title="Select area of interest">
+                                   <i class="fa fa-object-ungroup" aria-hidden="true"></i>
+                               </button>
+                             
+                           </div>
+                            <div id="map2" style="width: -webkit-fill-available;height: 200px"></div>
+                        </div>
+                      </div>
+                      <div class=" btn-group input-group ml-4 mt-4">
+                         <label class="control-label col-lg-7 col-md-7" for="show_aoi"><b>Myanmar</b></label>                            
+                         <div class="col-md-6">
+                            <div class="pl-0 pr-0 col-md-12" style="display:inline-flex">
+                               <input type="text" class="form-control" id="inpt_aoi" name="inpt_aoi" value="{{ settings.points1 }}" readonly>
+                               <button class="btn btn-primary btn-change-aoi" type="button" style="border-radius:0px" title="Select area of interest">
+                                   <i class="fa fa-object-ungroup" aria-hidden="true"></i>
+                               </button>
+                             
+                           </div>
+                            <div id="map3" style="width: -webkit-fill-available;height: 200px"></div>
+                        </div>
+                      </div>
+                      <div class="btn-group input-group  mt-3">
+                         <div class="col-md-12">
+                            <input type="submit" name="update" class="btn btn-flat btn-primary" value="Save">
+                         </div>
+                      </div>
+                  </form>
+               </div>
+               <!-- End card body -->
+            </div>
+            <!-- End card -->
+         </div>
         </div>
         <div class="row pt-2">
           <div class="col-md-6">
@@ -156,6 +205,109 @@
 {% include "structure/footer.html" %}
 <script src="https://momentjs.com/downloads/moment.js"></script>
 <script src="https://momentjs.com/downloads/moment-timezone.js"></script>
+<script>
+
+
+   const AOI1 = [{
+      "type": "Feature",
+      "geometry": {
+         "type": "Polygon",
+         "coordinates": {{ settings.points1 }}
+      }
+   }];
+
+   const L_AOI1 = new L.GeoJSON(AOI1,
+      {
+         fillColor: '#3dbf34',
+         color: '#3dbf34',
+         opacity :1,
+         fillOpacity: 0.4,
+         weight:2
+      }
+   )
+   const AOI2 = [{
+      "type": "Feature",
+      "geometry": {
+         "type": "Polygon",
+         "coordinates": {{ settings.points2}}
+      }
+   }];
+
+   const L_AOI2 = new L.GeoJSON(AOI2,
+      {
+         fillColor: '#3dbf34',
+         color: '#3dbf34',
+         opacity :1,
+         fillOpacity: 0.4,
+         weight:2
+      }
+   )
+   const AOI3 = [{
+      "type": "Feature",
+      "geometry": {
+         "type": "Polygon",
+         "coordinates": {{ settings.points3 }}
+      }
+   }];
+
+   const L_AOI3 = new L.GeoJSON(AOI3,
+      {
+         fillColor: '#3dbf34',
+         color: '#3dbf34',
+         opacity :1,
+         fillOpacity: 0.4,
+         weight:2
+      }
+   )
+
+   const MINZZOOM = 3;     // Max Zoom out
+   const MAXZOOM = 9;    // Max Zoom in
+   const ZOOMLEVEL = 4;
+   const ZOOMCTRL = false;
+   const SLAT = 11.562108;   //Default to Location
+   const SLONG = 104.888535;               
+   const MYCENTER = [SLAT, SLONG];      
+
+   const URLTILEMAP_WHITE = "https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g"
+   const MWHITE1  = L.tileLayer(URLTILEMAP_WHITE, {
+      maxZoom: MAXZOOM,
+      minZoom: MINZZOOM,
+   }),MWHITE2  = L.tileLayer(URLTILEMAP_WHITE, {
+      maxZoom: MAXZOOM,
+      minZoom: MINZZOOM,
+   }),MWHITE3  = L.tileLayer(URLTILEMAP_WHITE, {
+      maxZoom: MAXZOOM,
+      minZoom: MINZZOOM,
+   })
+
+   //**** Initialize Map
+   map = L.map('map1', {
+        attributionControl: false,
+        zoomControl: ZOOMCTRL,
+        center: MYCENTER,
+        zoom: ZOOMLEVEL,
+        layers: [MWHITE1],
+   });
+   map.addLayer(L_AOI1);	
+
+   map = L.map('map2', {
+        attributionControl: false,
+        zoomControl: ZOOMCTRL,
+        center:  [ 18.562108, 103.888535],
+        zoom: ZOOMLEVEL,
+        layers: [MWHITE2],
+   });
+   map.addLayer(L_AOI2);	
+
+   map = L.map('map3', {
+        attributionControl: false,
+        zoomControl: ZOOMCTRL,
+        center: [ 22.562108, 95.888535],
+        zoom: ZOOMLEVEL,
+        layers: [MWHITE3],
+   });
+   map.addLayer(L_AOI3);	
+</script>
 
 
 {% endblock content %}
