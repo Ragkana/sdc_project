@@ -54,5 +54,9 @@ class earthquake_settings(models.Model):
     inside_aoi      = models.BooleanField(default=0) # For magnitude < 5.0
     show_aor        = models.BooleanField(default=0)
     show_aoi        = models.BooleanField(default=0)
+    show_heatmap    = models.BooleanField(default=0)
+    points1         = models.TextField(null=True, default='')
+    points2         = models.TextField(null=True, default='')
+    points3         = models.TextField(null=True, default='')
     class Meta:
         db_table = "earthquake_settings"

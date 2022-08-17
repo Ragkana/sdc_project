@@ -22,20 +22,40 @@ from django.views import View
 from xhtml2pdf import pisa
 
 def earthquake(request):
-    # earthquakes = earthquake_events.objects.order_by("-event_datetime")[:10].values('event_id', 'latitude',
-    #     'longitude', 'magnitude', 'phase_count','mag_type', 'depth', 'event_datetime','region', 'bulletin_no', 
-    #     'status','is_fake', 'is_inside', 'is_inside', 'is_inside')
-    # users_list = list(earthquakes)
-    # users_list = json.dumps(users_list)
-    earthquakes = earthquake_events.objects.order_by("-event_datetime")[:10000]
+   
+    eq_settings = earthquake_settings.objects.all()
+    num_events = eq_settings[0].number_events
+
+    filter = ""
+    filter_mag = ""
+    filter_aoi = ""
+
+    if (eq_settings[0].filter_1):
+        filter_mag += ("" if filter_mag == "" else " or ") + " magnitude < 5"
+    if (eq_settings[0].filter_2):
+        filter_mag += ("" if filter_mag == "" else " or ") + " (magnitude >= 5 and magnitude < 6)"
+    if (eq_settings[0].filter_3):
+        filter_mag += ("" if filter_mag == "" else " or ")  + " (magnitude >= 6 and magnitude < 6.5)"
+    if (eq_settings[0].filter_4):
+        filter_mag += ("" if filter_mag == "" else " or ") + " magnitude >= 6.5"
+
+    if (eq_settings[0].inside_aoi):
+        filter_aoi = ("" if filter_mag == "" else " and ") +  " is_inside = 1"
+
+    if (filter_mag != ""):
+        filter = '(' + filter_mag + ')'
+
+    filter += filter_aoi
+
+    # earthquakes = earthquake_events.objects.order_by("-event_datetime")[:num_events]
+    earthquakes = earthquake_events.objects.raw("SELECT * FROM earthquake_events WHERE " + filter + " ORDER BY event_datetime DESC")[:num_events]
     earthquakes =  serialize('json', earthquakes, fields=['event_id', 'latitude',
          'longitude', 'magnitude', 'phase_count','mag_type', 'depth', 'event_datetime','region', 'bulletin_no',
          'status','is_fake', 'is_inside', 'is_inside', 'is_inside'])
 
-    eq_settings = earthquake_settings.objects.all()
-    eq_settings =  serialize('json', eq_settings, fields=['simulation', 'number_events',
-         'auto_send', 'filter_1', 'filter_2','filter_2', 'filter_2', 'filter_2','filter_3', 'filter_3',
-         'filter_4','inside_aoi', 'show_aor', 'show_aoi', 'auto_send_email'])
+    eheatpoints = earthquake_events.objects.all()
+    eheatpoints =  serialize('json', eheatpoints, fields=['latitude',
+         'longitude', 'magnitude'])
 
     PUSHER =  { 
         'KEY': settings.PUSHER['KEY'],
@@ -44,7 +64,11 @@ def earthquake(request):
         'EVENT': settings.PUSHER['EVENT'],
     }
 
-    return render(request, "earthquake/earthquake.html", {'url_name': 'earthquake', 'earthquakes' : earthquakes , 'settings' : eq_settings, 'PUSHER' : PUSHER })
+    eq_settings =  serialize('json', eq_settings, fields=['simulation', 'number_events',
+        'auto_send', 'filter_1', 'filter_2','filter_3', 'filter_4', 'points1','points2', 'points3',
+        'inside_aoi', 'show_aor', 'show_aoi', 'show_heatmap', 'auto_send_email'])
+
+    return render(request, "earthquake/earthquake.html", {'url_name': 'earthquake', 'earthquakes' : earthquakes, 'eheatpoints' : eheatpoints , 'settings' : eq_settings, 'PUSHER' : PUSHER })
 
 def setting(request):
     settings = earthquake_settings.objects.first()
@@ -74,6 +98,7 @@ def setting(request):
         if  request.POST.get('section', False) == 'boundaries':
             settings.show_aor = False  if 'show_aor' not in request.POST else True
             settings.show_aoi = False  if 'show_aoi' not in request.POST else True
+            settings.show_heatmap = False  if 'show_heatmap' not in request.POST else True
             settings.save()
 
     return render(request, "earthquake/setting.html", {'url_name': 'earthquake_setting', 'settings' : settings})
@@ -89,6 +114,41 @@ def send_advisory(request):
     prepare_advisory(event_id, receiver_email, bulletin_no, simulation)
 
     return JsonResponse({"email": "email sent"}, status=status)
+
+def filter_earthquake(request):
+
+    eq_settings = earthquake_settings.objects.all()
+    num_events = eq_settings[0].number_events
+
+    filter = ""
+    filter_mag = ""
+    filter_aoi = ""
+
+    if (request.POST['filter1'] == "true"):
+        filter_mag += ("" if filter_mag == "" else " or ") + " magnitude < 5"
+    if ( request.POST['filter2']== "true"):
+        filter_mag += ("" if filter_mag == "" else " or ") + " (magnitude >= 5 and magnitude < 6)"
+    if (request.POST['filter3']== "true"):
+        filter_mag += ("" if filter_mag == "" else " or ")  + " (magnitude >= 6 and magnitude < 6.5)"
+    if (request.POST['filter4']== "true"):
+        filter_mag += ("" if filter_mag == "" else " or ") + " magnitude >= 6.5"
+
+    if (request.POST['only_aoi']== "true"):
+        filter_aoi = ("" if filter_mag == "" else " and ") +  " is_inside = 1"
+
+    if (filter_mag != ""):
+        filter = '(' + filter_mag + ')'
+
+    filter += filter_aoi
+    
+
+    earthquakes = earthquake_events.objects.raw("SELECT * FROM earthquake_events WHERE " + filter + " ORDER BY event_datetime DESC")[:num_events]
+    earthquakes =  serialize('json', earthquakes, fields=['event_id', 'latitude',
+         'longitude', 'magnitude', 'phase_count','mag_type', 'depth', 'event_datetime','region', 'bulletin_no',
+         'status','is_fake', 'is_inside', 'is_inside', 'is_inside'])
+
+    return JsonResponse({"earthquakes": earthquakes}, status=200)
+
 
 def view_bulletin(request ,event_id, bulletin_no):
 
