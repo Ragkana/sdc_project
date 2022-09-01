@@ -1,0 +1,61 @@
+{% extends "structure/header_n_footer.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Login form code start here-->
+<div class="container-fluid h-100">
+  <div class="row h-100">
+    <main class="main-content col">
+      <div class="main-content-container container-fluid px-4 my-auto h-100">
+        <div class="row no-gutters h-100">
+          <div class="col-lg-3 col-md-5 auth-form-grad mx-auto my-auto">
+            <div class="card">
+              <div class="card-body">
+                <img class="d-table mx-0 mb-3" src="{% static 'images/swiss-logo-ts.png' %}" style="width: 100%;">
+                <!--<h5 class="auth-form__title text-center mb-4">Access Your Account</h5>-->
+                <span class="d-flex justify-content-center pb-2" style="color: #9B0103;font-weight: 300;">{{ error }}</span>
+                <form method="post">
+                  {% csrf_token %}
+
+                  <div class="form-group">
+                    <label for="username">Email address</label>
+                    <input type="email" class="form-control" id="username" name="username" aria-describedby="emailHelp"
+                      placeholder="Enter email">
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                  </div>
+                  <!--<div class="form-group mb-3 d-table mx-auto">
+                        <div class="custom-control custom-checkbox mb-1">
+                          <input type="checkbox" class="custom-control-input" id="customCheck2">
+                          <label class="custom-control-label" for="customCheck2">Remember me for 30 days.</label>
+                        </div>
+                      </div>-->
+                      
+                  <button type="submit" class="btn btn-grad d-table mx-auto">Access Account</button>
+                </form>
+                
+              </div>
+              <!-- Social media Part-->
+              <!--<div class="card-footer border-top">
+                    <ul class="auth-form__social-icons d-table mx-auto">
+                      <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                      <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                      <li><a href="#"><i class="fab fa-github"></i></a></li>
+                      <li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
+                    </ul>
+                  </div> -->
+            </div>
+            <div class="auth-form__meta d-flex mt-4">
+              <a href="{% url 'reset_password' %}">Forgot your password?</a>
+              <a class="ml-auto" href="{% url 'register' %}">Create new account?</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+{% endblock content %}

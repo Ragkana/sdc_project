@@ -6,6 +6,7 @@ from django.db.models import Avg, Count, Sum
 from requests import Response
 from app.disaster_ana.models import disaster, vulnerability_mpi
 from django.db.models import F
+from django.contrib.auth.decorators import login_required, permission_required
 
 import json
 import pandas as pd
@@ -16,6 +17,7 @@ import numpy as np
 ##########################################################################################################################################################
 
 # Main Disaster Module view page
+@login_required(login_url='login')
 def disaster_ana(request):
     dis_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='KHM')
     lao_dis_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='LAO')
@@ -154,6 +156,8 @@ def disaster_ana_lao_yearsel(request):
 #########################################################################################################################################################
 ######################################################### Vulnerability Modul ###########################################################################
 #########################################################################################################################################################
+## Vulnerability Main page ##
+@login_required(login_url='login')
 def vulnerability(request):
     return render(request, "vulnerability.html", {'url_name': 'vulnerability'})
 
@@ -203,6 +207,7 @@ def vul_lao_mpi(request):
 #########################################################################################################################################################
     
 # Main hazard Module view page
+@login_required(login_url='login')
 def hazard_ana(request):
     # Sending disaster type value
     khm_haz_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='KHM')

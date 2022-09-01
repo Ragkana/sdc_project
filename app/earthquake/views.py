@@ -21,6 +21,10 @@ from django.template.loader import get_template
 from django.views import View
 from xhtml2pdf import pisa
 
+# For login
+from django.contrib.auth.decorators import login_required
+
+@login_required(login_url='login')
 def earthquake(request):
    
     eq_settings = earthquake_settings.objects.all()
@@ -70,6 +74,7 @@ def earthquake(request):
 
     return render(request, "earthquake/earthquake.html", {'url_name': 'earthquake', 'earthquakes' : earthquakes, 'eheatpoints' : eheatpoints , 'settings' : eq_settings, 'PUSHER' : PUSHER })
 
+@login_required(login_url='login')
 def setting(request):
     settings = earthquake_settings.objects.first()
 

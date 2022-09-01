@@ -15,20 +15,39 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+
+from django.contrib.auth import views as auth
+
 from app.weather import views as wf_views
 from app.earthquake import views as eq_views
 from app.disaster_ana import views as da_views
 from app.report_n_project import views as rp_views
 from app.api import views as api_views
+from app.sdc_auth import views as auth_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', views.dashboard, name= 'dashboard'), #Work with Homepage
-    path('login', wf_views.login, name='login'),
-    path('register', wf_views.register, name='register'),
-    path('forgot_password', wf_views.forgot_password, name='forgot_password'),
+    ################################ Login Module ##############################################
+    ## Login & Log out ##
+    path('', auth_view.login_sdc, name='login'),
+    path('logout', auth.LogoutView.as_view(template_name ='login.html'), name='logout'),
+
+    ## Register ##
+    path('register', auth_view.register, name='register'),
+    path('register_success', auth_view.register_success, name='register_success'),
+
+    #path('forgot_password', auth_view.forgot_password, name='forgot_password'),
+    #path('forgot_password/done', auth_view.password_reset_done, name='password_reset_done'),
+
+    ## Forget password ##
+    path('reset_password/', auth.PasswordResetView.as_view(template_name="login_sys/password_reset.html"), name="reset_password"),
+    path('reset_password/sent', auth.PasswordResetDoneView.as_view(template_name="login_sys/password_reset_done.html"), name="password_reset_done"),
+    path('reset_password/<uidb64>/<token>', auth.PasswordResetConfirmView.as_view(template_name="login_sys/password_reset_confirm.html"), name='password_reset_confirm'),
+    path('reset_password/complete', auth.PasswordResetCompleteView.as_view(template_name="login_sys/password_reset_complete.html"), name="password_reset_complete"),
+
     ################################ Weather Forecast Module ##############################################
-    path('', wf_views.weather_forecast_mod, name='weather_forecast'),
+    path('weather_forecast', wf_views.weather_forecast_mod, name='weather_forecast'),
     path('weather_cambodia', wf_views.wf_cambodia_submit, name='wf_cambodia_submit'),
     path('weather_laos', wf_views.wf_laos_submit, name='wf_laos_submit'),
     ################################ Observation Module ##############################################
