@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'app.earthquake', 
     'app.api',
     'app.report_n_project',
+    'app.sdc_auth',
 ]
 
 MIDDLEWARE = [
@@ -146,12 +147,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL = {
     'PORT': '465',
-    'USER': 'satark@rimes.int', 
+    #'USER': 'satark@rimes.int', 
+    'USER': 'sdcportal@rimes.int', 
     'FROM': 'no-reply@rimes.int', 
-    'PASSWORD': 'zaurzlrqmjoikiuk', 
+    #'PASSWORD': 'zaurzlrqmjoikiuk', 
+    'PASSWORD': 'xeeidtlirkihmnkd',
     'HOST': 'smtp.gmail.com',
     'NAME': 'Eartquake Advisory',
 }
+
+### Set mail for SDC system ###
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+
+EMAIL_HOST_USER='sdcportal@rimes.int'
+EMAIL_HOST_PASSWORD='xeeidtlirkihmnkd'
+
+### Login / Logout ###
+LOGIN_REDIRECT_URL = "weather_forecast"
+LOGOUT_REDIRECT_URL = "login"
+
 
 BULLETIN = {
     'directory' : os.path.join(BASE_DIR, 'bulletins/'),

@@ -1,0 +1,31 @@
+{% extends "structure/header_n_footer.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid h-100">
+  <div class="row h-100">
+    <main class="main-content col">
+      <div class="main-content-container container-fluid px-4 my-auto h-100">
+        <div class="row no-gutters h-100">
+          <div class="col-lg-3 col-md-5 auth-form-gra+ mx-auto my-auto">
+            <div class="card">
+              <div class="card-body">
+                <img class="d-table mx-auto mb-4" src="{% static 'images/swiss-logo-ts.png' %}" style="width: 80%;">
+                <h5 class="auth-form__title text-center mb-4" style="font-weight: 600; font-size:1.725rem;">Registration Successful!</h5>
+                <span class="d-flex justify-content-center" style="font-weight: 300;">Your account has been created</span>
+
+                <a href="{% url 'login' %}" class="btn btn-grad d-table mx-auto mt-4" role="button" aria-disabled="true">Continue</a>
+
+              </div>
+
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>
+{% endblock content %}

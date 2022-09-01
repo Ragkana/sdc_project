@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from app.weather.models import observation_metdata,weather_forecast_cambodia,weather_forecast_laos
 from django.db.models import Avg, Count, Min, Max
+from django.contrib.auth.decorators import login_required, permission_required
 
 import pandas as pd
 import numpy as np
@@ -16,15 +17,7 @@ import json
 #    return render(request, "Dashboard.html", {'url_name': 'dashboard'}) 
     # {'url_name': '......'} put to make it active when click and don't forgrt to add  {% if url_name == 'dashboard' %}active{% endif %} in class where your sidebar link belong.
 
-def login(request):
-    return render(request, "login.html")
-    
-def register(request):
-    return render(request, "register.html")
-
-def forgot_password(request):
-    return render(request, "forgot-password.html")
-
+@login_required(login_url='login')
 def weather_forecast_mod(request):
 
     return render(request, "weather_fore.html", {'url_name': 'weather_forecast'})
@@ -84,7 +77,7 @@ def wf_laos_submit(request):
 #########################################################################################################################################################
 ################################################################# Observation Module ####################################################################
 #########################################################################################################################################################
-
+@login_required(login_url='login')
 def observation(request):
     khm_obj = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
     lao_obj = json.load(open('static/JSON/Laos/Laos_Province.geojson'))

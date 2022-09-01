@@ -1,3 +1,4 @@
+from enum import auto
 from itertools import count
 from django.shortcuts import render, redirect
 from django.http import FileResponse, JsonResponse, HttpResponseRedirect
@@ -5,10 +6,15 @@ from django.urls import reverse
 from app.report_n_project.models import sdc_project_cambodia, sdc_project_laos, country
 from app.disaster_ana.models import disaster
 import io
-from reportlab.pdfgen import canvas
 from django.db.models import Count, Q
+from django.contrib.auth.decorators import login_required, permission_required
 
+## PDF Generator ##
 from django.core.files.storage import FileSystemStorage
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4 # 210*270 mm
+from reportlab.lib.units import mm
+
 from django.conf import settings
 import pandas as pd
 import numpy as np
@@ -18,6 +24,8 @@ import numpy as np
 ##########################################################################
 ########################### Upload Data Module ###########################
 ##########################################################################
+## Upload data module main page ##
+@login_required(login_url='login')
 def upload_data(request):
     coun_id, coun_name = "", ""
     prov_name, prov_id = "", ""
@@ -118,6 +126,8 @@ def district_choose(request):
 ##########################################################################
 ########################### SDC Project Module ###########################
 ##########################################################################
+## SDC cambodia project main page ##
+@login_required(login_url='login')
 def sdc_project_khm(request):
     khm_project = sdc_project_cambodia.objects.all()
 
@@ -148,6 +158,8 @@ def sdc_project_khm(request):
     
     return render(request, "sdc_project_khm.html", {'url_name': 'sdc_project_cambodia', 'khm_project':khm_project})
 
+## SDC Loas Project main page ##
+@login_required(login_url='login')
 def sdc_project_lao(request):
     lao_project = sdc_project_laos.objects.all()
     if request.method == 'POST' and request.FILES['lao_pdf']:
@@ -177,6 +189,8 @@ def sdc_project_lao(request):
     
     return render(request, "sdc_project_lao.html", {'url_name': 'sdc_project_laos', 'lao_project':lao_project})
 
+## SDC Project Myanmar Main page ##
+@login_required(login_url='login')
 def sdc_project_mya(request):
     
     return render(request, "sdc_project_mya.html", {'url_name': 'sdc_project_myanmar'})
@@ -186,25 +200,60 @@ def sdc_project_mya(request):
 ######################################################################
 
 ## Main Page ##
+@login_required(login_url='login')
 def reports(request):
     return render(request, "reports.html", {'url_name': 'reports'})
 
 ## PDF Generator ##
 def report_pdf(request):
     buffer = io.BytesIO()
-    report = canvas.Canvas(buffer)
+    report = canvas.Canvas(buffer, pagesize=A4)
+    
+    ## Title :: set font ##
+    # Set title name that will show in browser.
+    report.setTitle("SDC reports")
+    # Set title name that will show in document
     report.drawString(100, 100, "Test for Reports.")
+    
+    ## Template :: Draw top & bottom gradient image ##
+    # Top
+    report.drawInlineImage('static/images/report_img/sdc_template.png', x=0, y=272*mm, width=210*mm, height=25*mm)
+    # Bottom
+    report.drawInlineImage('static/images/report_img/sdc_template.png', x=0, y=0, width=210*mm, height=25*mm)
+    # SDC logo
+    report.drawImage('static/images/report_img/swiss-logo.png', x=460, y=775, width=45*mm, height=25*mm)
+    #drawMyRuler(report)
     report.showPage()
     report.save()
     buffer.seek(0)
 
     return FileResponse(buffer, as_attachment=True, filename='report_test.pdf')
 
+## Draw ruler in pdf 
+def drawMyRuler(pdf):
+    pdf.drawString(100,810, 'x100')
+    pdf.drawString(200,810, 'x200')
+    pdf.drawString(300,810, 'x300')
+    pdf.drawString(400,810, 'x400')
+    pdf.drawString(500,810, 'x500')
+
+    pdf.drawString(10,100, 'y100')
+    pdf.drawString(10,200, 'y200')
+    pdf.drawString(10,300, 'y300')
+    pdf.drawString(10,400, 'y400')
+    pdf.drawString(10,500, 'y500')
+    pdf.drawString(10,600, 'y600')
+    pdf.drawString(10,700, 'y700')
+    pdf.drawString(10,800, 'y800')
+
+
+
 
 #######################################################################
 ########################### About us Module ###########################
 #######################################################################
 ## Main Page ##
+@login_required(login_url='login')
 def about_sdc(request):
     return render(request, "about_sdc.html", {'url_name': 'about_sdc'})
 

@@ -1,0 +1,154 @@
+{% extends "structure/header_n_footer.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid h-100">
+  <div class="row h-100">
+    <main class="main-content col">
+      <div class="main-content-container container-fluid px-4 my-auto h-100">
+        <div class="row no-gutters h-100">
+          <div class="col-lg-3 col-md-5 auth-form-gra+ mx-auto my-auto">
+            <div class="card">
+              <div class="card-body">
+                <img class="d-table mx-auto mb-4" src="{% static 'images/swiss-logo-ts.png' %}" style="width: 80%;">
+                <h5 class="auth-form__title text-center mb-4" style="font-weight: 600; font-size:1.725rem;">Sign Up</h5>
+
+                <form method="post" id="register_form" class="needs-validation" novalidate>
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="f_name">First name</label>
+                    <input type="text" class="form-control" id="f_name" name="f_name" aria-describedby="emailHelp"
+                      placeholder="First name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="l_name">Last name</label>
+                    <input type="text" class="form-control" id="l_name" name="l_name" aria-describedby="emailHelp"
+                      placeholder="Last name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+                      onChange="emailCheck()" placeholder="Enter email" required>
+                    <div class="invalid-feedback" id="wrong_email">Please provide your email.</div>
+                    <div class="valid-feedback" id="right_email"></div>
+                  </div>
+                  <div class="form-group">
+                    <!-- Password Must contain at least one number and one letter, and between 6-20 characters-->
+                    <label for="password01">Password</label>
+                    <input type="password" class="form-control" id="password01" name="password01" placeholder="Password"
+                      onChange="PassCheck()" pattern="(?=.*\d).{6,20}" required>
+                    <small>The password must between 6 to 20 characters which contain at least one numeric digit and one
+                      letter.</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="password02">Confirm Password</label>
+                    <input type="password" class="form-control" id="password02" name="password02" onChange="PassCheck()"
+                      pattern="(?=.*\d).{6,20}" placeholder="Confirm Password" required>
+                    <div class="invalid-feedback" id="wrong_pass"></div>
+                  </div>
+                  <!--<div class="form-group mb-3 d-table mx-auto">
+                    <div class="custom-control custom-checkbox mb-1">
+                      <input type="checkbox" class="custom-control-input" id="customCheck2">
+                      <label class="custom-control-label" for="customCheck2">I agree with the <a href="#">Terms &
+                          Conditions</a>.</label>
+                    </div>
+                  </div>-->
+                  <button type="submit" class="btn btn-grad d-table mx-auto">Create Account</button>
+                </form>
+              </div>
+
+              <!-- Social media Part-->
+              <!--<div class="card-footer border-top">
+                <ul class="auth-form__social-icons d-table mx-auto">
+                  <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                  <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                  <li><a href="#"><i class="fab fa-github"></i></a></li>
+                  <li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
+                </ul>
+              </div>-->
+
+
+            </div>
+            <div class="auth-form__meta d-flex mt-4">
+              <a href="{% url 'reset_password' %}">Forgot your password?</a>
+              <a class="ml-auto" href="{% url 'login' %}">Sign In?</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  //----------------------------------------------------------------------------------------------------------------//
+  //--------------------------------------------- Email Check function  --------------------------------------------//
+  //----------------------------------------------------------------------------------------------------------------//
+  const mail_data = {{ all_mail | safe }};
+
+  function emailCheck() {
+    var mail = document.querySelector('input[name=email]');
+    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    var output;
+    // Check if input email is exist.
+    for (var m = 0; m < mail_data.length; m++) {
+      if (mail.value === mail_data[m]) {
+        mail.setCustomValidity('not this mail');
+        //console.log('This email is already in use!');
+        output = $('#wrong_email').text('This email is already in use!');
+        return output;
+      }
+    }
+    // Check the rightness of mail pattern
+    if (!mail.value.match(validRegex)) {
+      mail.setCustomValidity('not this mail');
+      output = $('#wrong_email').text('Please provide your email.');
+      return output;
+    }
+    else {
+      mail.setCustomValidity('');
+      //console.log('You can use this email.');
+      output = $('#right_email').text('You can use this email.');
+      return output;
+    }
+
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------//
+  //--------------------------------------------- Password Check function  --------------------------------------------//
+  //-------------------------------------------------------------------------------------------------------------------//
+  function PassCheck() {
+    var password = document.querySelector('input[name=password01]');
+    var confirm = document.querySelector('input[name=password02]');
+    if (confirm.value === password.value) {
+      confirm.setCustomValidity('');
+    } else {
+      confirm.setCustomValidity('Passwords do not match');
+      $('#wrong_pass').text('The password is not match!')
+    }
+  }
+
+  //-----------------------------------------------------------------------------------------------------------------//
+  //--------------------------------------------- invalid form function  --------------------------------------------//
+  //-----------------------------------------------------------------------------------------------------------------//
+  (function () {
+    'use strict';
+    window.addEventListener('load', function () {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function (form) {
+        form.addEventListener('submit', function (event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+</script>
+
+{% endblock content %}
