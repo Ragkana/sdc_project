@@ -69,26 +69,50 @@
                                             </select>
                                         </div>
 
-                                        <!-- Submit Button -->
-                                        <!--<div class="col-lg-2 col-md-2 col-sm-12">
-                                            <span><br></span>
-                                            <button type="submit" id="khm_submit" class="btn btn-primary btn-squared my-2" style=" border-color: #0b2d5a; background-color: #0b2d5a;border-radius: 0.2rem;">Load</button>
-                                        </div>-->
-
-
                                     </div>
                                 </form>
 
                             </div>
                         </div>
 
-                        <!-- Map body -->
-                        <div id="hc_container"></div>
-                        
-                        <!-- Color map detail -->
-                        <div class="row justify-content-md-center">
-                            <img class="col-lg-6 col-sm-12" src="{% static 'images/color_chart_hazard.png' %}">
+                        <!-- Map Container -->
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+
+                                <!-- MAP container for HTML2canvas : capture as screenshot and download -->
+                                <div class="col-12" id="cambodia_map_container">
+                                    <!-- Map display-->
+                                    <div id="hc_container"></div>
+                                    <!-- Color map detail -->
+                                    <div class="row justify-content-md-center">
+                                        <img class="col-lg-6 col-sm-12"
+                                            src="{% static 'images/color_chart_hazard.png' %}">
+                                    </div>
+                                </div>
+                                <!-- /* End MAP container for HTML1canvas -->
+
+                                <!-- Export button -->
+
+                                <div class="dropdown"
+                                    style="position: absolute;top: 0px;right: 10px;padding: 10px;z-index: 400;">
+                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false"
+                                        style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">
+                                        Download
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                                        aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="#" id="khm_download_jpg">Download JPEG</a>
+                                        <a class="dropdown-item" href="{% url 'hazard_cambodia_csv' %}">Download CSV
+                                            data</a>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
+
+
                         <!-- Year Selection -->
                         <div class="row border-top">
                             <div class="col-lg-12 col-md-12 col-sm-12 py-2">
@@ -144,12 +168,6 @@
                                             </select>
                                         </div>
 
-                                        <!-- Submit Button -->
-                                        <!--<div class="col-lg-2 col-md-2 col-sm-12">
-                                            <span><br></span>
-                                            <button type="submit" id="khm_submit" class="btn btn-primary btn-squared my-2" style=" border-color: #0b2d5a; background-color: #0b2d5a;border-radius: 0.2rem;">Load</button>
-                                        </div>-->
-
 
                                     </div>
                                 </form>
@@ -157,13 +175,45 @@
                             </div>
                         </div>
 
-                        <!-- Map body -->
-                        <div id="lao_map_container"></div>
-                        
-                        <!-- Color map detail -->
-                        <div class="row justify-content-md-center">
-                            <img class="col-lg-6 col-sm-12" src="{% static 'images/color_chart_hazard.png' %}">
+                        <!-- Map Container -->
+                        <div class="row" id="laos_map_container">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+
+                                <!-- Map body -->
+                                <!-- MAP container for HTML2canvas : capture as screenshot and download -->
+                                <div class="col-12" id="laos_map_container">
+                                    <!-- Map display-->
+                                    <div id="lao_map_container"></div>
+                                    <!-- Color map detail -->
+                                    <div class="row justify-content-md-center">
+                                        <img class="col-lg-6 col-sm-12"
+                                            src="{% static 'images/color_chart_hazard.png' %}">
+                                    </div>
+                                </div>
+                                <!-- /* End MAP container for HTML1canvas -->
+
+                                <!-- Export button -->
+
+                                <div class="dropdown"
+                                    style="position: absolute;top: 0px;right: 10px;padding: 10px;z-index: 400;">
+                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false"
+                                        style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">
+                                        Download
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                                        aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="#" id="lao_download_jpg">Download JPEG</a>
+                                        <a class="dropdown-item" href="{% url 'hazard_laos_csv' %}">Download CSV
+                                            data</a>
+                                    </div>
+                                </div>
+
+
+                            </div>
                         </div>
+
                         <!-- Year Selection -->
                         <div class="row border-top">
                             <div class="col-lg-12 col-md-12 col-sm-12 py-2">
@@ -205,7 +255,7 @@
         });
         // call AJAX for Default cambodia hazard map 
         map_ajax_KHM('DROUGHT', 'province_name');
-        
+
     });
 
     //---------------------------------------------------------------------------------------//
@@ -215,7 +265,7 @@
     // *********************************************** Cambodia AJAX *********************************************** //
     // Cambodia Submission
     // Main Canbodia submit Function 
-    function map_ajax_KHM(hazard, level){
+    function map_ajax_KHM(hazard, level) {
         $.ajax({
             type: "POST",
             url: "hazard_analytics/hazard_cambodia",
@@ -254,7 +304,7 @@
 
     // Laos Submission
     // Main Laos submit Function 
-    function Laos_AJAX_map(hazard, level){
+    function Laos_AJAX_map(hazard, level) {
         $.ajax({
             type: "POST",
             url: "hazard_analytics/hazard_laos",
@@ -286,7 +336,7 @@
         Laos_AJAX_map(lao_haz, lao_lev);
     });
 
-     //----------------------------------------------------------------------------------------------//
+    //----------------------------------------------------------------------------------------------//
     //------------------------------------Year Range Selection---------------------------------------//
     //-----------------------------------------------------------------------------------------------//  
 
@@ -334,25 +384,25 @@
             //alert(khm_y_start + ' + ' + khm_y_end);
             // Use secound AJAX to send start and end year back to views.py
             $.ajax({
-            type: "POST",
-            url: 'hazard_analytics/hazard_cambodia_yearselected',
-            cache: false,
-            data: { 
-                khm_haz_y: khm_data.haz,
-                khm_lev_y: khm_data.lev,
-                khm_year_start: khm_y_start,
-                khm_year_end: khm_y_end,
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-             },
-            dataType: 'json',
-            success: function (khm_year) {
-                KHM_MapChart(khm_year);
-                //alert(khm_year.haz+' + '+khm_year.lev+' : '+khm_year.start+ ' - '+khm_year.end);
-            },
-            error: function () {
-                alert('error')
-            }
-        });
+                type: "POST",
+                url: 'hazard_analytics/hazard_cambodia_yearselected',
+                cache: false,
+                data: {
+                    khm_haz_y: khm_data.haz,
+                    khm_lev_y: khm_data.lev,
+                    khm_year_start: khm_y_start,
+                    khm_year_end: khm_y_end,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                dataType: 'json',
+                success: function (khm_year) {
+                    KHM_MapChart(khm_year);
+                    //alert(khm_year.haz+' + '+khm_year.lev+' : '+khm_year.start+ ' - '+khm_year.end);
+                },
+                error: function () {
+                    alert('error')
+                }
+            });
         });
     }
 
@@ -393,43 +443,27 @@
             //alert(lao_y_start + ' + ' + lao_y_end);
             // Use secound AJAX to send start and end year back to views.py
             $.ajax({
-            type: "POST",
-            url: 'hazard_analytics/hazard_laos_yearselected',
-            cache: false,
-            data: { 
-                lao_haz_y: lao_data.haz,
-                lao_lev_y: lao_data.lev,
-                lao_year_start: lao_y_start,
-                lao_year_end: lao_y_end,
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-             },
-            dataType: 'json',
-            success: function (lao_year) {
-                LAO_MapChart(lao_year);
-                //alert(lao_year.haz+' + '+lao_year.lev+' : '+lao_year.start+ ' - '+lao_year.end);
-            },
-            error: function () {
-                alert('error')
-            }
-        });
+                type: "POST",
+                url: 'hazard_analytics/hazard_laos_yearselected',
+                cache: false,
+                data: {
+                    lao_haz_y: lao_data.haz,
+                    lao_lev_y: lao_data.lev,
+                    lao_year_start: lao_y_start,
+                    lao_year_end: lao_y_end,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                dataType: 'json',
+                success: function (lao_year) {
+                    LAO_MapChart(lao_year);
+                    //alert(lao_year.haz+' + '+lao_year.lev+' : '+lao_year.start+ ' - '+lao_year.end);
+                },
+                error: function () {
+                    alert('error')
+                }
+            });
         });
     }
-
-    /* Example AJAX code
-        $( "[name=khm_haz_selected]" ).change(function() {
-            var test_name = $('[name=khm_haz_selected]').val();
-            var test_name2 = $('[name=khm_level_selected]').val();
-            var year_range = $('#khm_year_slider').val();
-            alert(year_range+' '+test_name+' '+test_name2);
-        });
-     
-        $(KHM_YearSlider)[0].noUiSlider.on('change',function(v,handle){
-            var test_name = $('[name=khm_haz_selected]').val();
-            var test_name2 = $('[name=khm_level_selected]').val();
-            alert(v+' '+test_name+' '+test_name2);
-     
-        });
-    */
 
     //--------------------------------------------------------------------------------------// 
     //----------------------------------HighChart Map---------------------------------------//
@@ -469,8 +503,8 @@
     function KHM_MapChart(mdata) {
         var MapData = mdata.map_data;
         Highcharts.getJSON(Threelevel(mdata.lev), function (geojson) {
-            
-        var KHM_MapContainer = document.getElementById('hc_container');
+
+            var KHM_MapContainer = document.getElementById('hc_container');
 
             // Initialize the chart
             Highcharts.mapChart(KHM_MapContainer, {
@@ -478,6 +512,19 @@
                     map: geojson,
                     //borderWidth: 2,
                     backgroundColor: false
+                },
+                // Remove highchart logo
+                credits: {
+                    enabled: false
+                },
+                // Export button 
+                exporting: {
+                    enabled: false,
+                    buttons: {
+                        contextButton: {
+                            menuItems: ["viewFullscreen", "printChart", "separator", "downloadPNG", "downloadJPEG"]
+                        }
+                    }
                 },
 
                 title: {
@@ -506,8 +553,8 @@
                     ]
                 },
                 // Hide the legend of the map
-                legend:{
-                    enabled:false
+                legend: {
+                    enabled: false
                 },
                 series: [{
                     data: MapData,
@@ -559,8 +606,8 @@
     function LAO_MapChart(mdata) {
         var laoMapData = mdata.map_data;
         Highcharts.getJSON(Twolevel(mdata.lev), function (geojson) {
-            
-        var LAO_MapContainer = document.getElementById('lao_map_container');
+
+            var LAO_MapContainer = document.getElementById('lao_map_container');
 
             // Initialize the chart
             Highcharts.mapChart(LAO_MapContainer, {
@@ -568,6 +615,19 @@
                     map: geojson,
                     //borderWidth: 2,
                     backgroundColor: false
+                },
+                // Remove highchart logo
+                credits: {
+                    enabled: false
+                },
+                // Export button 
+                exporting: {
+                    enabled: false,
+                    buttons: {
+                        contextButton: {
+                            menuItems: ["viewFullscreen", "printChart", "separator", "downloadPNG", "downloadJPEG"]
+                        }
+                    }
                 },
 
                 title: {
@@ -596,8 +656,8 @@
                     ]
                 },
                 // Hide the legend of the map
-                legend:{
-                    enabled:false
+                legend: {
+                    enabled: false
                 },
                 series: [{
                     data: laoMapData,
@@ -622,6 +682,63 @@
     }
 
     //--------------------------------------------------------------------------------------// 
+
+    //--------------------------------------------------------------------------------------// 
+    //---------------------------------- Download Map---------------------------------------//
+    //--------------------------------------------------------------------------------------//
+    // ---------------- Global Map dawnload function ---------------- //
+    function simulateDownloadImageClick(uri, filename) {
+        var link = document.createElement('a');
+        if (typeof link.download !== 'string') {
+            window.open(uri);
+        } else {
+            link.href = uri;
+            link.download = filename;
+            accountForFirefox(clickLink, link);
+        }
+    }
+
+    function clickLink(link) {
+        link.click();
+    }
+
+    function accountForFirefox(click) { // wrapper function
+        let link = arguments[1];
+        document.body.appendChild(link);
+        click(link);
+        document.body.removeChild(link);
+    }
+
+    // --------------------------------------------------* Cambodia *-------------------------------------------------------------//
+
+    KHMdownloadChartasJPEG();
+
+    function  KHMdownloadChartasJPEG() {
+        var khm_haz = $('[name=khm_haz_selected]').val();
+        var khm_lev = $('[name=khm_level_selected]').val();
+        document.getElementById("khm_download_jpg").addEventListener("click", function () {
+            html2canvas(document.getElementById("cambodia_map_container")).then(function (canvas) {
+                console.log(canvas);
+                simulateDownloadImageClick(canvas.toDataURL(), 'KHM_'+ khm_haz + '_' + ThreeDatalevel(khm_lev) + '.jpg');
+            });
+        });
+    }  
+
+    // --------------------------------------------------* Laos *-------------------------------------------------------------//
+
+    LAOdownloadChartasJPEG();
+
+    function  LAOdownloadChartasJPEG() {
+        var lao_haz = $('[name=lao_haz_selected]').val();
+        var lao_lev = $('[name=lao_level_selected]').val();
+        document.getElementById("lao_download_jpg").addEventListener("click", function () {
+            html2canvas(document.getElementById("laos_map_container")).then(function (canvas) {
+                console.log(canvas);
+                simulateDownloadImageClick(canvas.toDataURL(), 'LAO_'+ lao_haz + '_' + TwoDatalevel(lao_lev) + '.jpg');
+            });
+        });
+    }  
+
 </script>
 
 {% include "structure/footer.html" %}

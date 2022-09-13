@@ -8,6 +8,11 @@ from app.disaster_ana.models import disaster, vulnerability_mpi
 from django.db.models import F
 from django.contrib.auth.decorators import login_required, permission_required
 
+# Python Library for CSV file download
+import csv
+from django.utils.encoding import smart_str
+
+# Python Library for python dataframe
 import json
 import pandas as pd
 import numpy as np
@@ -253,6 +258,41 @@ def hazard_cambodia_yearselected(request):
 
     return JsonResponse({'end':year_end, 'start':year_start, 'haz':year_haz, 'lev':year_lev, 'map_data':khm_data}, status=200)
 
+# For Cambodia csv file download
+def hazard_khm_csv(request):
+	# response content type
+	response = HttpResponse(content_type='text/csv')
+	#decide the file name
+	response['Content-Disposition'] = 'attachment; filename="cambodia_disdata.csv"'
+
+	writer = csv.writer(response, csv.excel)
+	response.write(u'\ufeff'.encode('utf8'))
+
+	#write the headers
+	writer.writerow([
+		smart_str(u"province_id"),
+		smart_str(u"province_name"),
+		smart_str(u"district_id"),
+        smart_str(u"district_name"),
+        smart_str(u"commune_id"),
+        smart_str(u"commune_name"),
+        smart_str(u"date"),
+        smart_str(u"event"),
+        #smart_str(u"datacard_records"),
+        smart_str(u"deaths"),
+        smart_str(u"injured"),
+        smart_str(u"missing"),
+        smart_str(u"house_destroy"),
+        smart_str(u"house_damage")
+	])
+	#get data from database or from text file....
+	data = disaster.objects.values_list('province_id','province_name','district_id','district_name','commune_id','commune_name','date_data','event','deaths','injured','missing',
+    'house_destroy','house_damage').filter(province_id__startswith='KHM')
+	for a in data:
+		writer.writerow(a)
+
+	return response
+
 
 ### Hazard module : Laos ###
 
@@ -293,6 +333,43 @@ def hazard_laos_yearselected(request):
     lao_data = level_select(year_lev, lao_hazard_df, year_start,year_end)
 
     return JsonResponse({'end':year_end, 'start':year_start, 'haz':year_haz, 'lev':year_lev, 'map_data':lao_data}, status=200)
+
+# For Laos csv file download
+def hazard_lao_csv(request):
+	# response content type
+	response = HttpResponse(content_type='text/csv')
+	#decide the file name
+	response['Content-Disposition'] = 'attachment; filename="laos_disdata.csv"'
+
+	writer = csv.writer(response, csv.excel)
+	response.write(u'\ufeff'.encode('utf8'))
+
+	#write the headers
+	writer.writerow([
+		smart_str(u"province_id"),
+		smart_str(u"province_name"),
+		smart_str(u"district_id"),
+        smart_str(u"district_name"),
+        smart_str(u"commune_id"),
+        smart_str(u"commune_name"),
+        smart_str(u"date"),
+        smart_str(u"event"),
+        #smart_str(u"datacard_records"),
+        smart_str(u"deaths"),
+        smart_str(u"injured"),
+        smart_str(u"missing"),
+        smart_str(u"house_destroy"),
+        smart_str(u"house_damage")
+	])
+	#get data from database or from text file....
+	data = disaster.objects.values_list('province_id','province_name','district_id','district_name','commune_id','commune_name','date_data','event','deaths','injured','missing',
+    'house_destroy','house_damage').filter(province_id__startswith='LAO')
+	for b in data:
+		writer.writerow(b)
+
+	return response
+
+## ---------------------------------------------------------------------------------------------------------------------- ##
 
 # Create function to prepare the output data groupby level.
 def level_select(level, data, year_start,year_end):
