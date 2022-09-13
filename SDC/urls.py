@@ -62,9 +62,11 @@ urlpatterns = [
     path('hazard_analytics', da_views.hazard_ana, name='hazard_ana'),
     path('hazard_analytics/hazard_cambodia', da_views.hazard_cambodia, name='hazard_ana_cambodia'), # AJAX in hazard_analytics page
     path('hazard_analytics/hazard_cambodia_yearselected', da_views.hazard_cambodia_yearselected, name='hazard_ana_cambodia_yearselected'),
+    path('hazard_analytics/hazard_khm_csv', da_views.hazard_khm_csv, name='hazard_cambodia_csv'),
 
     path('hazard_analytics/hazard_laos', da_views.hazard_laos, name='hazard_ana_laos'), # AJAX in hazard_analytics page
     path('hazard_analytics/hazard_laos_yearselected', da_views.hazard_laos_yearselected, name='hazard_ana_laos_yearselected'),
+    path('hazard_analytics/hazard_laos_csv', da_views.hazard_lao_csv, name='hazard_laos_csv'),
     ################################ Disaster Module ##############################################
     path('disaster_analytics', da_views.disaster_ana, name='disaster_ana'), 
 

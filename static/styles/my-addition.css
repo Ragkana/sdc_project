@@ -10,6 +10,14 @@ This CSS file will contain my additional CSS for the site
     text-indent: 3em;
 }
 
+/* Change dropdown menu hover style */
+.dropdown-menu-change > a:hover {
+    color: #fff !important;
+    background-color: #0B2D5A !important;
+}
+
+
+/* button color for login system */
 .btn-grad {
     background-image: linear-gradient(to right, #0b2d5a 0%, #86b6cd 51%, #0b2d5a 100%)
 }
@@ -188,4 +196,3 @@ profileimg {
     font-size: 1rem;
     line-height: 2.5rem;
 }
-

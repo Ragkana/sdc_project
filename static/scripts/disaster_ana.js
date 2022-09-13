@@ -73,6 +73,11 @@ function KHM_MapChart(khm_data) {
                 backgroundColor: false
             },
 
+            // Remove highchart logo
+            credits: {
+                enabled: false
+            },
+
             title: {
                 text: ''
             },
@@ -154,6 +159,11 @@ function LAO_MapChart(lao_data) {
                 map: geojson,
                 //borderWidth: 2,
                 backgroundColor: false
+            },
+
+            // Remove highchart logo
+            credits: {
+                enabled: false
             },
 
             title: {
