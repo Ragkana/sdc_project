@@ -148,24 +148,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL = {
     'PORT': '465',
     #'USER': 'satark@rimes.int', 
-    'USER': 'sdcportal@rimes.int', 
+    'USER': 'sdc@rimes.int', 
     'FROM': 'no-reply@rimes.int', 
     #'PASSWORD': 'zaurzlrqmjoikiuk', 
-    'PASSWORD': 'xeeidtlirkihmnkd',
+    'PASSWORD': 'bheemzuypfoxnkuh',
     'HOST': 'smtp.gmail.com',
     'NAME': 'Eartquake Advisory',
 }
 
 ### Set mail for SDC system ###
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST = 'ssl://smtp.googlemail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_HOST = 'ssl://smtp.googlemail.com'
 EMAIL_USE_TLS = True
-#EMAIL_PORT = 587
-EMAIL_PORT = 465
+EMAIL_PORT = 587
 
-EMAIL_HOST_USER='sdcportal@rimes.int'
-EMAIL_HOST_PASSWORD='xeeidtlirkihmnkd'
+EMAIL_HOST_USER='sdc@rimes.int'
+EMAIL_HOST_PASSWORD='bheemzuypfoxnkuh'
 
 ### Login / Logout ###
 LOGIN_REDIRECT_URL = "weather_forecast"
