@@ -53,7 +53,8 @@ def register(request):
         ## Send email verification for successful registration ##
         subject = 'welcome to SDC Portal'
         message = f'Hi {user.first_name} {user.last_name}, thank you for registering in SDC Portal.'
-        email_from = settings.EMAIL_HOST_USER
+        #email_from = settings.EMAIL_HOST_USER
+        email_from = "SDC team <Do not reply>"
         recipient_list = [user.email, ]
         send_mail( subject, message, email_from, recipient_list )
 
