@@ -207,9 +207,10 @@ def vul_lao_mpi(request):
 
     mpimap_sum = [list(e) for e in zip(area,value)]
     return JsonResponse({'mpi_select':mpi_select, 'mpi_map_data':mpimap_sum}, status=200)
-#########################################################################################################################################################
-######################################################### Hazard Modul ##################################################################################
-#########################################################################################################################################################
+
+##########################################################################################################################################################
+######################################################### Hazard Module ##################################################################################
+##########################################################################################################################################################
     
 # Main hazard Module view page
 @login_required(login_url='login')
@@ -218,14 +219,19 @@ def hazard_ana(request):
     khm_haz_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='KHM')
     lao_haz_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='LAO')
 
-    return render(request, "hazard_ana.html", {'url_name': 'hazard_ana', 'khm_haz_event':khm_haz_event, 'lao_haz_event':lao_haz_event})
+    return render(request, "hazard_ana_edit.html", {'url_name': 'hazard_ana', 'khm_haz_event':khm_haz_event, 'lao_haz_event':lao_haz_event})
     
 # For 1st submissiom (Load button) in cambodia hazard module
 def hazard_cambodia(request): 
     haz = request.POST['khm_haz']
     lev = request.POST['khm_lev']
     ## Create Hazard DataFrame for Cambodia ##
-    khm_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(province_id__startswith='KHM'))
+    if lev == 'province_name' :
+        khm_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(province_id__startswith='KHM'))
+    if lev == 'district_name':
+        khm_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(district_id__startswith='KHM'))
+    if lev == 'commune_name':
+        khm_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(commune_id__startswith='KHM'))
     # Add year 
     khm_hazard_df['year'] = pd.DatetimeIndex(khm_hazard_df['date_data']).year
     # Filter by hazard selection
@@ -233,8 +239,12 @@ def hazard_cambodia(request):
     # Get max-Min Year
     year_start = int(khm_hazard_df['year'].min())
     year_end = int(khm_hazard_df['year'].max())
+    # import GEOJSON file
+    khm_province = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
+    khm_district = json.load(open('static/JSON/Cambodia/Cambodia_District.geojson'))
+    khm_commune = json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson'))
     # Group data for selected level by using function
-    khm_data = level_select(lev, khm_hazard_df, year_start,year_end)
+    khm_data = level_select(lev, khm_hazard_df, year_start, year_end, province = khm_province, district = khm_district, commune = khm_commune)
 
     return JsonResponse({'haz': haz, 'lev':lev, 'year_start':year_start, 'year_end':year_end, 'map_data':khm_data}, status=200)
     
@@ -248,13 +258,22 @@ def hazard_cambodia_yearselected(request):
     year_lev = request.POST['khm_lev_y']
 
     ## Create Hazard DataFrame for Cambodia ##
-    khm_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(province_id__startswith='KHM'))
+    if year_lev == 'province_name' :
+        khm_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(province_id__startswith='KHM'))
+    if year_lev == 'district_name':
+        khm_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(district_id__startswith='KHM'))
+    if year_lev == 'commune_name':
+        khm_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(commune_id__startswith='KHM'))
     # Add year 
     khm_hazard_df['year'] = pd.DatetimeIndex(khm_hazard_df['date_data']).year
     # Filter by hazard selection
     khm_hazard_df = khm_hazard_df[khm_hazard_df['event']==year_haz]
+    # import GEOJSON file
+    khm_province = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
+    khm_district = json.load(open('static/JSON/Cambodia/Cambodia_District.geojson'))
+    khm_commune = json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson'))
     # Group data for selected level by using function
-    khm_data = level_select(year_lev, khm_hazard_df, year_start,year_end)
+    khm_data = level_select(year_lev, khm_hazard_df, year_start,year_end, province = khm_province, district = khm_district, commune = khm_commune)
 
     return JsonResponse({'end':year_end, 'start':year_start, 'haz':year_haz, 'lev':year_lev, 'map_data':khm_data}, status=200)
 
@@ -300,8 +319,11 @@ def hazard_khm_csv(request):
 def hazard_laos(request): 
     haz = request.POST['lao_haz']
     lev = request.POST['lao_lev']
-    ## Create Hazard DataFrame for Cambodia ##
-    lao_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(province_id__startswith='LAO'))
+    ## Create Hazard DataFrame for Laos ##
+    if lev == 'province_name' :
+        lao_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(province_id__startswith='LAO'))
+    if lev == 'district_name':
+        lao_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(district_id__startswith='LAO'))
     # Add year 
     lao_hazard_df['year'] = pd.DatetimeIndex(lao_hazard_df['date_data']).year
     # Filter by hazard selection
@@ -309,8 +331,11 @@ def hazard_laos(request):
     # Get max-Min Year
     year_start = int(lao_hazard_df['year'].min())
     year_end = int(lao_hazard_df['year'].max())
+    # import GEOJSON file
+    lao_province = json.load(open('static/JSON/Laos/Laos_Province.geojson'))
+    lao_district = json.load(open('static/JSON/Laos/Laos_District.geojson'))
     # Group data for selected level by using function
-    lao_data = level_select(lev, lao_hazard_df, year_start,year_end)
+    lao_data = level_select(lev, lao_hazard_df, year_start, year_end, province = lao_province, district = lao_district, commune=None)
 
     return JsonResponse({'haz': haz, 'lev':lev, 'year_start':year_start, 'year_end':year_end, 'map_data':lao_data}, status=200)
     
@@ -323,14 +348,20 @@ def hazard_laos_yearselected(request):
     year_haz = request.POST['lao_haz_y']
     year_lev = request.POST['lao_lev_y']
 
-    ## Create Hazard DataFrame for Cambodia ##
-    lao_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(province_id__startswith='LAO'))
+    ## Create Hazard DataFrame for Laos ##
+    if year_lev == 'province_name' :
+        lao_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(province_id__startswith='LAO'))
+    if year_lev == 'district_name':
+        lao_hazard_df = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(district_id__startswith='LAO'))
     # Add year 
     lao_hazard_df['year'] = pd.DatetimeIndex(lao_hazard_df['date_data']).year
     # Filter by hazard selection
     lao_hazard_df = lao_hazard_df[lao_hazard_df['event']==year_haz]
+    # import GEOJSON file
+    lao_province = json.load(open('static/JSON/Laos/Laos_Province.geojson'))
+    lao_district = json.load(open('static/JSON/Laos/Laos_District.geojson'))
     # Group data for selected level by using function
-    lao_data = level_select(year_lev, lao_hazard_df, year_start,year_end)
+    lao_data = level_select(year_lev, lao_hazard_df, year_start, year_end, province = lao_province, district = lao_district, commune=None)
 
     return JsonResponse({'end':year_end, 'start':year_start, 'haz':year_haz, 'lev':year_lev, 'map_data':lao_data}, status=200)
 
@@ -372,25 +403,49 @@ def hazard_lao_csv(request):
 ## ---------------------------------------------------------------------------------------------------------------------- ##
 
 # Create function to prepare the output data groupby level.
-def level_select(level, data, year_start,year_end):
+def level_select(level, data, year_start,year_end, province, district, commune):
     if level == 'commune_name':
         df = data.groupby(['commune_name','year']).count().reset_index()
         df = df.loc[(df['year'] >=year_start) & (df['year'] <= year_end)]
         df = df.groupby(['commune_name']).sum().reset_index()
-        code, value = df['commune_name'].to_list(), df['commune_id'].to_list()
-        disdata = [list(x) for x in zip(code,value)]
+        # Add percentage column
+        df['percentage'] = (df.commune_id / df.commune_id.max()) * 100
+        for index,row in df.iterrows():
+            comm = row['commune_name']
+            # Append in dict
+            for c in commune['features']:
+                if c['properties']['Commune'] == comm:
+                    c['properties']['value'] = float(row['commune_id'])
+                    c['properties']['percentage'] = float(row['percentage'])
+        disdata = commune
     if level == 'district_name':
         df = data.groupby(['district_name','year']).count().reset_index()
         df = df.loc[(df['year'] >=year_start) & (df['year'] <= year_end)]
         df = df.groupby(['district_name']).sum().reset_index()
-        code, value = df['district_name'].to_list(), df['district_id'].to_list()
-        disdata = [list(y) for y in zip(code,value)]
+        # Add percentage column
+        df['percentage'] = (df.district_id / df.district_id.max()) * 100
+        for index,row in df.iterrows():
+            dist = row['district_name']
+            # Append in dict
+            for d in district['features']:
+                if d['properties']['District'] == dist:
+                    d['properties']['value'] = float(row['district_id'])
+                    d['properties']['percentage'] = float(row['percentage'])
+        disdata = district
     if level == 'province_name':
         df = data.groupby(['province_name','year']).count().reset_index()
         df = df.loc[(df['year'] >=year_start) & (df['year'] <= year_end)]
         df = df.groupby(['province_name']).sum().reset_index()
-        code, value = df['province_name'].to_list(), df['province_id'].to_list()
-        disdata = [list(z) for z in zip(code,value)]
+        # Add percentage column
+        df['percentage'] = (df.province_id / df.province_id.max()) * 100
+        for index,row in df.iterrows():
+            prov = row['province_name']
+            # Append in dict
+            for p in province['features']:
+                if p['properties']['Province'] == prov:
+                    p['properties']['value'] = float(row['province_id'])
+                    p['properties']['percentage'] = float(row['percentage'])
+        disdata = province
     return disdata
 
 ## Function for converting data in list from string to float

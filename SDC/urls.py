@@ -37,9 +37,6 @@ urlpatterns = [
     path('register', auth_view.register, name='register'),
     path('register_success', auth_view.register_success, name='register_success'),
 
-    #path('forgot_password', auth_view.forgot_password, name='forgot_password'),
-    #path('forgot_password/done', auth_view.password_reset_done, name='password_reset_done'),
-
     ## Forget password ##
     path('reset_password/', auth.PasswordResetView.as_view(template_name="login_sys/password_reset.html"), name="reset_password"),
     path('reset_password/sent', auth.PasswordResetDoneView.as_view(template_name="login_sys/password_reset_done.html"), name="password_reset_done"),
