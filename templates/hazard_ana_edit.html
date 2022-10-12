@@ -44,33 +44,91 @@
                         <div class="row border-bottom py-2 bg-light">
                             <div class="col-12 col-sm-12 mb-2">
 
-                                <form method="post" class="py-2" id="khm_form">
-                                    {% csrf_token %}
-                                    <!-- Hazard Selection -->
-                                    <div class="row w-100">
+                                <div class="row">
+                                    <form method="post" class="py-2 col-12" id="khm_form">
+                                        {% csrf_token %}
+                                        <!-- Hazard Selection -->
+                                        <div class="row">
 
-                                        <div class="col-lg-3 col-md-3 col-sm-12">
-                                            <span>Select Event :</span>
-                                            <select class="form-control my-2" name="khm_haz_selected">
-                                                {% for a in khm_haz_event %}
-                                                <option value="{{a.event}}">{{a.event}}</option>
-                                                {% endfor %}
-                                            </select>
+                                            <div class="col-lg-3 col-md-3 col-sm-12">
+                                                <span>Select Event :</span>
+                                                <select class="form-control my-2" name="khm_haz_selected">
+                                                    {% for a in khm_haz_event %}
+                                                    <option value="{{a.event}}">{{a.event}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <!-- Level Selection -->
+                                            <div class="col-lg-3 col-md-3 col-sm-12">
+                                                <span>Select Level :</span>
+                                                <select class="form-control my-2" name="khm_level_selected">
+                                                    <option value="province_name">Province</option>
+                                                    <option value="district_name">District</option>
+                                                    <option value="commune_name">Commune</option>
+                                                </select>
+                                            </div>
+                                            <!-- /. Level Selection -->
+
+                                            <!-- SDC Project selection -->
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                                <span>Select SDC project :</span>
+                                                <div class="row pt-2">
+                                                    {% for p in khm_sdc %}
+                                                    <div class="form-check form-check-inline">
+                                                        {% if p.project == 'CHAIN' %}
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="{{p.project}}" name="KHM_sdc_project"
+                                                            value="{{p.project}}" checked>
+                                                        <label class="form-check-label" for="{{p.project}}"><img
+                                                                src="{% static 'images/Project_dot_on_map/pink_dot.png' %}"
+                                                                style="max-width: 1rem;">&nbsp;&nbsp;{{p.project}}</label>
+
+                                                        {% elif p.project == 'ISAF' %}
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="{{p.project}}" name="KHM_sdc_project"
+                                                            value="{{p.project}}">
+                                                        <label class="form-check-label" for="{{p.project}}"><img
+                                                                src="{% static 'images/Project_dot_on_map/green_dot.png' %}"
+                                                                style="max-width: 1rem;">&nbsp;&nbsp;{{p.project}}</label>
+                                                        {% elif p.project == 'MINE' %}
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="{{p.project}}" name="KHM_sdc_project"
+                                                            value="{{p.project}}">
+                                                        <label class="form-check-label" for="{{p.project}}"><img
+                                                                src="{% static 'images/Project_dot_on_map/purple_dot.png' %}"
+                                                                style="max-width: 1rem;">&nbsp;&nbsp;{{p.project}}</label>
+                                                        {% elif p.project == 'PAFF' %}
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="{{p.project}}" name="KHM_sdc_project"
+                                                            value="{{p.project}}">
+                                                        <label class="form-check-label" for="{{p.project}}"><img
+                                                                src="{% static 'images/Project_dot_on_map/orange_dot.png' %}"
+                                                                style="max-width: 1rem;">&nbsp;&nbsp;{{p.project}}</label>
+                                                        {% else %}
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="{{p.project}}" name="KHM_sdc_project"
+                                                            value="{{p.project}}">
+                                                        <label class="form-check-label" for="{{p.project}}"><img
+                                                                src="{% static 'images/Project_dot_on_map/yellow_dot.png' %}"
+                                                                style="max-width: 1rem;">&nbsp;&nbsp;{{p.project}}</label>
+                                                        {% endif %}
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="khm_project_text">
+                                                    <span style="font-weight: 300;">Note : <a
+                                                            href="{% url 'sdc_project_cambodia' %}">Click here for more details...</a></span>
+                                                </div>
+                                            </div>
+                                            <!-- /. SDC Project selection -->
+
                                         </div>
+                                    </form>
 
-                                        <!-- Level Selection -->
 
-                                        <div class="col-lg-3 col-md-3 col-sm-12">
-                                            <span>Select Level :</span>
-                                            <select class="form-control my-2" name="khm_level_selected">
-                                                <option value="province_name">Province</option>
-                                                <option value="district_name">District</option>
-                                                <option value="commune_name">Commune</option>
-                                            </select>
-                                        </div>
 
-                                    </div>
-                                </form>
+                                </div>
 
                             </div>
                         </div>
@@ -92,23 +150,33 @@
                                 </div>
                                 <!-- /* End MAP container for HTML1canvas -->
 
-                                <!-- Export button -->
+                                <!-- Dropdown button on map -->
+                                <div class="button-group"
+                                    style="position: absolute;top: 0px;right: 10px;padding: 20px;z-index: 400;">
+                                    <div class="row">
 
-                                <div class="dropdown"
-                                    style="position: absolute;top: 0px;right: 10px;padding: 10px;z-index: 400;">
-                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false"
-                                        style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">
-                                        Download
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
-                                        aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#" id="khm_download_jpg">Download JPEG</a>
-                                        <a class="dropdown-item" href="{% url 'hazard_cambodia_csv' %}">Download CSV
-                                            data</a>
+                                        <!-- Export button -->
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button"
+                                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false"
+                                                style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem; padding: 0.5rem;">
+                                                Download
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                                                aria-labelledby="dropdownMenuButton"
+                                                style="padding:0; min-width:fit-content;">
+                                                <a class="dropdown-item" href="#" id="khm_download_jpg">Download
+                                                    JPEG</a>
+                                                <a class="dropdown-item" href="{% url 'hazard_cambodia_csv' %}">Download
+                                                    CSV
+                                                    data</a>
+                                            </div>
+                                        </div>
+                                        <!-- /. Export button -->
                                     </div>
                                 </div>
+                                <!-- /. Dropdown button on map -->
 
                             </div>
                         </div>
@@ -251,6 +319,19 @@
 
 <script type="text/javascript">
 
+
+
+    //---------------------------------------------------------------------------------------------------------//
+    //-------------------------------------- Set variable/Call function ---------------------------------------//
+    //--------------------------------------------------------------------------------------------------------//
+    //---------* SDC Project data *---------//
+    var KHM_project = {{ khm_project| safe }};
+    var LAO_project = {{ lao_project| safe }};
+
+
+    //---------* SDC Project data Checkbox : Cambodia *---------//
+    var KHMproject_arr = ['CHAIN'];
+
     //-----------------------------------------------------------------------------------//
     //--------------------------------------Tab-----------------------------------------//
     //----------------------------------------------------------------------------------//  
@@ -260,7 +341,6 @@
             $(this).tab("show");
         });
         map_ajax_KHM('DROUGHT', 'province_name');
-        
     });
 
     //---------* Make the map avaliable in each tab *---------//
@@ -311,8 +391,8 @@
             dataType: 'json',
             cache: false,
             success: function (khm_data) {
-                KHM_MapChart(khm_data);
-                CreateKHM_Slider(khm_data);
+                KHM_MapChart(khm_data, KHMproject_arr);
+                CreateKHM_Slider(khm_data, KHMproject_arr);
                 //alert(khm_data.haz + ' & ' + khm_data.lev + ' Year: ' + khm_data.year_start + ' - ' + khm_data.year_end);
                 //console.log(khm_data.map_data);
             },
@@ -329,6 +409,19 @@
         var khm_haz = $('[name=khm_haz_selected]').val();
         var khm_lev = $('[name=khm_level_selected]').val();
         map_ajax_KHM(khm_haz, khm_lev);
+
+        // Adding SDC project maker in cambodia
+        KHMproject_arr = [];
+        {
+            $('[name=KHM_sdc_project]:checked').each(function () {
+                //if(values.indexOf($(this).val()) === -1){
+                KHMproject_arr.push($(this).val());
+                // }
+
+            });
+            //console.log(KHMproject_arr);
+        }
+
     });
 
     // *********************************************** Laos AJAX *********************************************** //
@@ -385,7 +478,7 @@
     var khm_y_end;
 
     // Create new slider for Cambodia
-    function CreateKHM_Slider(khm_data) {
+    function CreateKHM_Slider(khm_data, arr) {
         destroyExistingSlider(KHM_YearSlider);
 
         KHM_YearSlider = document.getElementById('khm_year_slider');
@@ -428,7 +521,7 @@
                 },
                 dataType: 'json',
                 success: function (khm_year) {
-                    KHM_MapChart(khm_year);
+                    KHM_MapChart(khm_year, arr);
                     //alert(khm_year.haz+' + '+khm_year.lev+' : '+khm_year.start+ ' - '+khm_year.end);
                 },
                 error: function () {

@@ -1,3 +1,5 @@
+from typing import ChainMap
+from unittest.util import _MAX_LENGTH
 from django.db import models
 
 # Create your models here.
@@ -48,4 +50,38 @@ class vulnerability_mpi(models.Model):
     number_of_mpi = models.DecimalField(max_digits=100, decimal_places=5)
     class Meta:
         db_table = "vulnerability_mpi"
+
+class sdc_project_location_cambodia(models.Model):
+    id = models.IntegerField(primary_key=True, null=False)
+    project = models.CharField(max_length=256, null=False)
+    country_id = models.CharField(max_length=10)
+    country_name = models.CharField(max_length=128)
+    province_id = models.CharField(max_length=10, null=False)
+    province_name = models.CharField(max_length=128)
+    district_id = models.CharField(max_length=10)
+    district_name = models.CharField(max_length=128)
+    commune_id = models.CharField(max_length=10)
+    commune_name = models.CharField(max_length=128)
+    latitude = models.DecimalField(max_digits=18, decimal_places=11)
+    longitude = models.DecimalField(max_digits=18, decimal_places=11)
+    detail = models.CharField(max_length=512)
+    class Meta:
+        db_table = "sdc_project_location_cambodia"
+
+class sdc_project_location_laos(models.Model):
+    id = models.IntegerField(primary_key=True, null=False)
+    project = models.CharField(max_length=256, null=False)
+    country_id = models.CharField(max_length=10)
+    country_name = models.CharField(max_length=128)
+    province_id = models.CharField(max_length=10, null=False)
+    province_name = models.CharField(max_length=128)
+    district_id = models.CharField(max_length=10)
+    district_name = models.CharField(max_length=128)
+    commune_id = models.CharField(max_length=10)
+    commune_name = models.CharField(max_length=128)
+    latitude = models.DecimalField(max_digits=18, decimal_places=11)
+    longitude = models.DecimalField(max_digits=18, decimal_places=11)
+    detail = models.CharField(max_length=512)
+    class Meta:
+        db_table = "sdc_project_location_laos"
 

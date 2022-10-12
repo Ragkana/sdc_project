@@ -1,10 +1,11 @@
-from dataclasses import dataclass
-from datetime import date
+# Import database for this application
+from turtle import title
+from app.disaster_ana.models import disaster, vulnerability_mpi, sdc_project_location_cambodia, sdc_project_location_laos
+
 from django.shortcuts import render
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Avg, Count, Sum
 from requests import Response
-from app.disaster_ana.models import disaster, vulnerability_mpi
 from django.db.models import F
 from django.contrib.auth.decorators import login_required, permission_required
 
@@ -219,7 +220,34 @@ def hazard_ana(request):
     khm_haz_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='KHM')
     lao_haz_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='LAO')
 
-    return render(request, "hazard_ana_edit.html", {'url_name': 'hazard_ana', 'khm_haz_event':khm_haz_event, 'lao_haz_event':lao_haz_event})
+    # Sending SDC project value
+    khm_sdc = sdc_project_location_cambodia.objects.values('project').annotate(count=Count('project'))
+
+    ## Sending SDC project latitude and longitude ##
+    # Cambodia
+    khm_loc = pd.DataFrame(sdc_project_location_cambodia.objects.values('id', 'project', 'country_id', 'country_name', 'province_id', 'province_name', 'district_id', 'district_name',
+    'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
+    khm_data = project_location_JSON(khm_loc)
+        
+    # Laos
+    lao_loc = pd.DataFrame(sdc_project_location_laos.objects.values('id', 'project', 'country_id', 'country_name', 'province_id', 'province_name', 'district_id', 'district_name',
+    'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
+    lao_data = project_location_JSON(lao_loc)
+
+    return render(request, "hazard_ana_edit.html", {'url_name': 'hazard_ana', 'khm_haz_event':khm_haz_event, 'lao_haz_event':lao_haz_event, 
+    'khm_project':khm_data, 'lao_project':lao_data, 'khm_sdc':khm_sdc})
+
+def project_location_JSON(df):
+    project = df['project'].to_list() 
+    index = df['id'].to_list()
+    lat, long = df['latitude'].to_list(), df['longitude'].to_list()
+    lat, long = np.array(lat, float), np.array(long, float)
+    location = [list(x) for x in zip(lat,long)]
+    dict_data = {}
+    for a, b, c in zip(index, project, location):
+        dict_data[a] = dict(Project=b, location=c)
+    json_data = json.dumps(dict_data)
+    return json_data
     
 # For 1st submissiom (Load button) in cambodia hazard module
 def hazard_cambodia(request): 

@@ -106,7 +106,90 @@ function getColor(param, level) {
 
 var cam_map;
 
-function KHM_MapChart(data) {
+// ------- Location marker image function ------- //
+const pinkDot = new L.icon({
+    iconUrl: '/static/images/Project_dot_on_map/pink_dot.png',
+
+    iconSize: [14, 14], // size of the icon
+    // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
+    iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
+});
+
+const greenDot = new L.icon({
+    iconUrl: '/static/images/Project_dot_on_map/green_dot.png',
+
+    iconSize: [14, 14], // size of the icon
+    // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
+    iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
+});
+
+const purpleDot = new L.icon({
+    iconUrl: '/static/images/Project_dot_on_map/purple_dot.png',
+
+    iconSize: [14, 14], // size of the icon
+    // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
+    iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
+});
+
+const orangeDot = new L.icon({
+    iconUrl: '/static/images/Project_dot_on_map/orange_dot.png',
+
+    iconSize: [14, 14], // size of the icon
+    // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
+    iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
+});
+
+const yellowDot = new L.icon({
+    iconUrl: '/static/images/Project_dot_on_map/yellow_dot.png',
+
+    iconSize: [14, 14], // size of the icon
+    // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
+    iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
+});
+
+// ------- Cambodis Project Marker color ------- //
+function KHM_markerColor(val) {
+    if (val == 'CHAIN') {
+        return pinkDot;
+    }
+    if (val == 'ISAF') {
+        return greenDot;
+    }
+    if (val == 'MINE') {
+        return purpleDot;
+    }
+    if (val == 'PAFF') {
+        return orangeDot;
+    }
+    else {
+        return yellowDot;
+    }
+}
+// ------- Cambodis Project Marker ------- //
+
+function KHM_createMarker(arr) {
+    var Group = L.layerGroup([]);
+    for (var p in KHM_project) {
+        var obj = KHM_project[p];
+
+        for (var ind = 0; ind < arr.length; ind++) {
+            if (obj.Project == arr[ind]) {
+                var khm_loc = L.marker(obj.location, { icon: KHM_markerColor(arr[ind]) }).bindPopup(obj.Project + "<a href= '{% url 'sdc_project_cambodia' %}'>More...</a>");
+                khm_loc.addTo(Group);
+            }
+        }
+
+
+    }
+    return Group;
+}
+
+function KHM_MapChart(data, arr) {
     destroyExistingMap(cam_map);
     cam_map = L.map('cam_map', {
         zoomControl: false,
@@ -193,7 +276,12 @@ function KHM_MapChart(data) {
         onEachFeature: onEachFeature
     }).addTo(cam_map);
 
+    // Add SDC Project location
+    var test = KHM_createMarker(arr);
+    test.addTo(cam_map);
+
 }
+
 
 //-----------------------------------------------------------------------------------------------------//
 //----------------------------------------- Laos leaflet Map -----------------------------------------//
