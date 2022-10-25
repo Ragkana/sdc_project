@@ -4,6 +4,12 @@
 {% include "structure/sidebar.html" %}
 {% include "structure/topnavbar.html" %}
 
+<style>
+    a:hover {
+        color: #000 !important;
+    }
+</style>
+
 <div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
     <!-- Page Header -->
     <div class="page-header row no-gutters py-4">
@@ -118,7 +124,8 @@
                                                 </div>
                                                 <div class="khm_project_text">
                                                     <span style="font-weight: 300;">Note : <a
-                                                            href="{% url 'sdc_project_cambodia' %}">Click here for more details...</a></span>
+                                                            href="{% url 'sdc_project_cambodia' %}">Click here for more
+                                                            details...</a></span>
                                                 </div>
                                             </div>
                                             <!-- /. SDC Project selection -->
@@ -152,25 +159,28 @@
 
                                 <!-- Dropdown button on map -->
                                 <div class="button-group"
-                                    style="position: absolute;top: 0px;right: 10px;padding: 20px;z-index: 400;">
+                                    style="position: absolute;top: 0px;right: 2rem;padding: 10px;z-index: 400;">
                                     <div class="row">
 
                                         <!-- Export button -->
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false"
-                                                style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem; padding: 0.5rem;">
-                                                Download
+                                        <div class="dropdown dropleft">
+                                            <button class="btn btn-light" type="button"
+                                                id="KHM_dropdownmenubuttonDownload" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false" style="border-radius: 0.2rem; padding: 0.5rem;">
+                                                <i class="fa-solid fa-download" style="font-size: 1rem;"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
-                                                aria-labelledby="dropdownMenuButton"
+                                                aria-labelledby="KHM_dropdownmenubuttonDownload"
                                                 style="padding:0; min-width:fit-content;">
                                                 <a class="dropdown-item" href="#" id="khm_download_jpg">Download
                                                     JPEG</a>
                                                 <a class="dropdown-item" href="{% url 'hazard_cambodia_csv' %}">Download
-                                                    CSV
-                                                    data</a>
+                                                    CSV</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" id="khm_download_geojson" href="#"
+                                                    onclick="KHM_onDownload_JSON(khm_map_data)">Download GeoJSON</a>
+                                                <a class="dropdown-item" id="khm_download_geotiff" href="#"
+                                                    onclick="KHM_onDownload_TIFF(khm_map_data)">Download GeoTIFF</a>
                                             </div>
                                         </div>
                                         <!-- /. Export button -->
@@ -319,8 +329,6 @@
 
 <script type="text/javascript">
 
-
-
     //---------------------------------------------------------------------------------------------------------//
     //-------------------------------------- Set variable/Call function ---------------------------------------//
     //--------------------------------------------------------------------------------------------------------//
@@ -331,6 +339,9 @@
 
     //---------* SDC Project data Checkbox : Cambodia *---------//
     var KHMproject_arr = ['CHAIN'];
+
+    //---------* Cambodia GeoJSON file generate and download *---------//
+    var khm_map_data;
 
     //-----------------------------------------------------------------------------------//
     //--------------------------------------Tab-----------------------------------------//
@@ -395,6 +406,10 @@
                 CreateKHM_Slider(khm_data, KHMproject_arr);
                 //alert(khm_data.haz + ' & ' + khm_data.lev + ' Year: ' + khm_data.year_start + ' - ' + khm_data.year_end);
                 //console.log(khm_data.map_data);
+
+                // Add download file
+                khm_map_data = khm_data;
+
             },
             error: function () {
                 alert('error')
@@ -523,6 +538,9 @@
                 success: function (khm_year) {
                     KHM_MapChart(khm_year, arr);
                     //alert(khm_year.haz+' + '+khm_year.lev+' : '+khm_year.start+ ' - '+khm_year.end);
+
+                    // Add download file
+                    khm_map_data = khm_year;
                 },
                 error: function () {
                     alert('error')

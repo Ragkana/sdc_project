@@ -179,7 +179,7 @@ function KHM_createMarker(arr) {
 
         for (var ind = 0; ind < arr.length; ind++) {
             if (obj.Project == arr[ind]) {
-                var khm_loc = L.marker(obj.location, { icon: KHM_markerColor(arr[ind]) }).bindPopup(obj.Project + "<a href= '{% url 'sdc_project_cambodia' %}'>More...</a>");
+                var khm_loc = L.marker(obj.location, { icon: KHM_markerColor(arr[ind]) }).bindPopup(obj.Project);
                 khm_loc.addTo(Group);
             }
         }
@@ -375,4 +375,29 @@ function LAO_MapChart(data) {
 }
 
 
+//--------------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------- GeoJSON generate and download function -----------------------------------------//
+//-------------------------------------------------------------------------------------------------------------------------//
+
+//--------* Cambodia *--------//
+function download(content, fileName, contentType) {
+    var a = document.createElement("a");
+    var file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+}
+
+
+function KHM_onDownload_JSON(data) {
+    //console.log(data.mapdata_out);
+    download(JSON.stringify(data.mapdata_out), "KHM_" + data.haz + "_" + ThreeDatalevel(data.lev) + ".geojson", "text/plain");
+}
+
+function KHM_onDownload_TIFF(data) {
+    //console.log(data.mapdata_out);
+    download(JSON.stringify(data.mapdata_out), "KHM_" + data.haz + "_" + ThreeDatalevel(data.lev) + ".tiff", "text/plain");
+}
+
+//--------* Laos *--------//
 

@@ -1,9 +1,11 @@
 # Import database for this application
+from lib2to3.pgen2 import driver
 from turtle import title
+from urllib import response
 from app.disaster_ana.models import disaster, vulnerability_mpi, sdc_project_location_cambodia, sdc_project_location_laos
 
 from django.shortcuts import render
-from django.http import JsonResponse,HttpResponse
+from django.http import JsonResponse,HttpResponse, FileResponse
 from django.db.models import Avg, Count, Sum
 from requests import Response
 from django.db.models import F
@@ -241,6 +243,7 @@ def project_location_JSON(df):
     project = df['project'].to_list() 
     index = df['id'].to_list()
     lat, long = df['latitude'].to_list(), df['longitude'].to_list()
+    # Convert data type from decimal to float
     lat, long = np.array(lat, float), np.array(long, float)
     location = [list(x) for x in zip(lat,long)]
     dict_data = {}
@@ -268,13 +271,14 @@ def hazard_cambodia(request):
     year_start = int(khm_hazard_df['year'].min())
     year_end = int(khm_hazard_df['year'].max())
     # import GEOJSON file
-    khm_province = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
-    khm_district = json.load(open('static/JSON/Cambodia/Cambodia_District.geojson'))
-    khm_commune = json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson'))
+    khm_province, khm_province2 = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
+    khm_district, khm_district2 = json.load(open('static/JSON/Cambodia/Cambodia_District.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_District.geojson'))
+    khm_commune, khm_commune2 = json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson'))
     # Group data for selected level by using function
     khm_data = level_select(lev, khm_hazard_df, year_start, year_end, province = khm_province, district = khm_district, commune = khm_commune)
+    khm_data_out = khm_to_GeoJSON_download(lev, khm_hazard_df, year_start, year_end, province = khm_province2, district = khm_district2, commune = khm_commune2)
 
-    return JsonResponse({'haz': haz, 'lev':lev, 'year_start':year_start, 'year_end':year_end, 'map_data':khm_data}, status=200)
+    return JsonResponse({'haz': haz, 'lev':lev, 'year_start':year_start, 'year_end':year_end, 'map_data':khm_data, 'mapdata_out':khm_data_out}, status=200)
     
 # For 2nd submissiom (year range select) in cambodia hzard module
 def hazard_cambodia_yearselected(request):
@@ -302,8 +306,9 @@ def hazard_cambodia_yearselected(request):
     khm_commune = json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson'))
     # Group data for selected level by using function
     khm_data = level_select(year_lev, khm_hazard_df, year_start,year_end, province = khm_province, district = khm_district, commune = khm_commune)
+    khm_data_out = khm_to_GeoJSON_download(year_lev, khm_hazard_df, year_start,year_end, province = khm_province, district = khm_district, commune = khm_commune)
 
-    return JsonResponse({'end':year_end, 'start':year_start, 'haz':year_haz, 'lev':year_lev, 'map_data':khm_data}, status=200)
+    return JsonResponse({'end':year_end, 'start':year_start, 'haz':year_haz, 'lev':year_lev, 'map_data':khm_data, 'mapdata_out':khm_data_out}, status=200)
 
 # For Cambodia csv file download
 def hazard_khm_csv(request):
@@ -339,6 +344,12 @@ def hazard_khm_csv(request):
 		writer.writerow(a)
 
 	return response
+
+# For Cambodia JSON file download
+def hazard_khm_json(request):
+    response = FileResponse(open('static/JSON/Cambodia/Cambodia_Commune.geojson', 'rb'), as_attachment=True, filename="cambodia_hazard.geojson")
+
+    return response
 
 
 ### Hazard module : Laos ###
@@ -475,6 +486,43 @@ def level_select(level, data, year_start,year_end, province, district, commune):
                     p['properties']['percentage'] = float(row['percentage'])
         disdata = province
     return disdata
+
+# Create function for download GeoJSON file (remove percentage)
+def khm_to_GeoJSON_download(level, data, year_start,year_end, province, district, commune):
+    if level == 'commune_name':
+        df2 = data.groupby(['commune_name','year']).count().reset_index()
+        df2 = df2.loc[(df2['year'] >=year_start) & (df2['year'] <= year_end)]
+        df2 = df2.groupby(['commune_name']).sum().reset_index()
+        for index,row in df2.iterrows():
+            comm2 = row['commune_name']
+            # Append in dict
+            for cc in commune['features']:
+                if cc['properties']['Commune'] == comm2:
+                    cc['properties']['freq'] = float(row['commune_id'])
+        disdata_out = commune
+    if level == 'district_name':
+        df2 = data.groupby(['district_name','year']).count().reset_index()
+        df2 = df2.loc[(df2['year'] >=year_start) & (df2['year'] <= year_end)]
+        df2 = df2.groupby(['district_name']).sum().reset_index()
+        for index,row in df2.iterrows():
+            dist2 = row['district_name']
+            # Append in dict
+            for dd in district['features']:
+                if dd['properties']['District'] == dist2:
+                    dd['properties']['freq'] = float(row['district_id'])
+        disdata_out = district
+    if level == 'province_name':
+        df2 = data.groupby(['province_name','year']).count().reset_index()
+        df2 = df2.loc[(df2['year'] >=year_start) & (df2['year'] <= year_end)]
+        df2 = df2.groupby(['province_name']).sum().reset_index()
+        for index,row in df2.iterrows():
+            prov2 = row['province_name']
+            # Append in dict
+            for pp in province['features']:
+                if pp['properties']['Province'] == prov2:
+                    pp['properties']['freq'] = float(row['province_id'])
+        disdata_out = province
+    return disdata_out
 
 ## Function for converting data in list from string to float
 # Using for Observation page to convert string list of weather parameter (rainfall, min temp and max temp) to float.
