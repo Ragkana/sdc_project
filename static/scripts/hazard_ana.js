@@ -86,18 +86,31 @@ function destroyExistingMap(map) {
 function getColor(param, level) {
     if (level == 'province_name' || level == 'district_name') {
         return param == undefined ? '#fff' :
-            param > 70 ? '#061C43' :
+            param > 70 ? '#370001' :
                 param > 40 ? '#9B0103' :
                     param > 15 ? '#F78900' :
                         param > 5 ? '#FFB200' :
                             '#FFEABB';
     } if (level == 'commune_name') {
         return param == undefined ? '#fff' :
-            param > 90 ? '#061C43' :
+            param > 90 ? '#370001' :
                 param > 60 ? '#9B0103' :
                     param > 40 ? '#F78900' :
                         param > 15 ? '#FFB200' :
                             '#FFEABB';
+    }
+}
+
+// Map tile selection Function 
+function getMapTile(mt) {
+    if (mt == 'satellite') {
+        return 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}';
+    }
+    if (mt == 'terrain') {
+        return 'http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}';
+    }
+    if (mt == 'base') {
+        return 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
     }
 }
 //-----------------------------------------------------------------------------------------------------//
@@ -200,7 +213,8 @@ function KHM_MapChart(data, arr) {
         preferCanvas: true
     }).setView([12.562108, 104.888535], 7);
     //L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(cam_map);
-    L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+    //L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+    L.tileLayer(getMapTile(KHM_MapTile), {
         maxZoom: 20,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     }).addTo(cam_map);
@@ -239,12 +253,21 @@ function KHM_MapChart(data, arr) {
             // Add Info popup when mouseover
             if (data.lev == 'province_name') {
                 layer.bindPopup('<b>' + data.haz + '</b><br>' + layer.feature.properties.Province + ' : ' + layer.feature.properties.value).openPopup();
+                layer.on('mouseout', function () {
+                    this.closePopup();
+                });
             }
             if (data.lev == 'district_name') {
                 layer.bindPopup('<b>' + data.haz + '</b><br>' + layer.feature.properties.District + ' : ' + layer.feature.properties.value).openPopup();
+                layer.on('mouseout', function () {
+                    this.closePopup();
+                });
             }
             if (data.lev == 'commune_name') {
                 layer.bindPopup('<b>' + data.haz + '</b><br>' + layer.feature.properties.Commune + ' : ' + layer.feature.properties.value).openPopup();
+                layer.on('mouseout', function () {
+                    this.closePopup();
+                });
             }
 
         }
