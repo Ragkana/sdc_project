@@ -224,6 +224,7 @@ def hazard_ana(request):
 
     # Sending SDC project value
     khm_sdc = sdc_project_location_cambodia.objects.values('project').annotate(count=Count('project'))
+    lao_sdc = sdc_project_location_laos.objects.values('project').annotate(count=Count('project'))
 
     ## Sending SDC project latitude and longitude ##
     # Cambodia
@@ -237,7 +238,7 @@ def hazard_ana(request):
     lao_data = project_location_JSON(lao_loc)
 
     return render(request, "hazard_ana_edit.html", {'url_name': 'hazard_ana', 'khm_haz_event':khm_haz_event, 'lao_haz_event':lao_haz_event, 
-    'khm_project':khm_data, 'lao_project':lao_data, 'khm_sdc':khm_sdc})
+    'khm_project':khm_data, 'lao_project':lao_data, 'khm_sdc':khm_sdc, 'lao_sdc':lao_sdc})
 
 def project_location_JSON(df):
     project = df['project'].to_list() 
@@ -276,7 +277,7 @@ def hazard_cambodia(request):
     khm_commune, khm_commune2 = json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson'))
     # Group data for selected level by using function
     khm_data = level_select(lev, khm_hazard_df, year_start, year_end, province = khm_province, district = khm_district, commune = khm_commune)
-    khm_data_out = khm_to_GeoJSON_download(lev, khm_hazard_df, year_start, year_end, province = khm_province2, district = khm_district2, commune = khm_commune2)
+    khm_data_out = to_GeoJSON_download(lev, khm_hazard_df, year_start, year_end, province = khm_province2, district = khm_district2, commune = khm_commune2)
 
     return JsonResponse({'haz': haz, 'lev':lev, 'year_start':year_start, 'year_end':year_end, 'map_data':khm_data, 'mapdata_out':khm_data_out}, status=200)
     
@@ -301,12 +302,12 @@ def hazard_cambodia_yearselected(request):
     # Filter by hazard selection
     khm_hazard_df = khm_hazard_df[khm_hazard_df['event']==year_haz]
     # import GEOJSON file
-    khm_province = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
-    khm_district = json.load(open('static/JSON/Cambodia/Cambodia_District.geojson'))
-    khm_commune = json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson'))
+    khm_province, khm_province2 = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
+    khm_district, khm_district2 = json.load(open('static/JSON/Cambodia/Cambodia_District.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_District.geojson'))
+    khm_commune, khm_commune2 = json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson'))
     # Group data for selected level by using function
     khm_data = level_select(year_lev, khm_hazard_df, year_start,year_end, province = khm_province, district = khm_district, commune = khm_commune)
-    khm_data_out = khm_to_GeoJSON_download(year_lev, khm_hazard_df, year_start,year_end, province = khm_province, district = khm_district, commune = khm_commune)
+    khm_data_out = to_GeoJSON_download(year_lev, khm_hazard_df, year_start,year_end, province = khm_province2, district = khm_district2, commune = khm_commune2)
 
     return JsonResponse({'end':year_end, 'start':year_start, 'haz':year_haz, 'lev':year_lev, 'map_data':khm_data, 'mapdata_out':khm_data_out}, status=200)
 
@@ -345,12 +346,6 @@ def hazard_khm_csv(request):
 
 	return response
 
-# For Cambodia JSON file download
-def hazard_khm_json(request):
-    response = FileResponse(open('static/JSON/Cambodia/Cambodia_Commune.geojson', 'rb'), as_attachment=True, filename="cambodia_hazard.geojson")
-
-    return response
-
 
 ### Hazard module : Laos ###
 
@@ -371,12 +366,13 @@ def hazard_laos(request):
     year_start = int(lao_hazard_df['year'].min())
     year_end = int(lao_hazard_df['year'].max())
     # import GEOJSON file
-    lao_province = json.load(open('static/JSON/Laos/Laos_Province.geojson'))
-    lao_district = json.load(open('static/JSON/Laos/Laos_District.geojson'))
+    lao_province, lao_province2 = json.load(open('static/JSON/Laos/Laos_Province.geojson')), json.load(open('static/JSON/Laos/Laos_Province.geojson'))
+    lao_district, lao_district2 = json.load(open('static/JSON/Laos/Laos_District.geojson')), json.load(open('static/JSON/Laos/Laos_District.geojson'))
     # Group data for selected level by using function
     lao_data = level_select(lev, lao_hazard_df, year_start, year_end, province = lao_province, district = lao_district, commune=None)
+    lao_data_out = to_GeoJSON_download(lev, lao_hazard_df, year_start, year_end, province = lao_province2, district = lao_district2, commune=None)
 
-    return JsonResponse({'haz': haz, 'lev':lev, 'year_start':year_start, 'year_end':year_end, 'map_data':lao_data}, status=200)
+    return JsonResponse({'haz': haz, 'lev':lev, 'year_start':year_start, 'year_end':year_end, 'map_data':lao_data, 'mapdata_out':lao_data_out}, status=200)
     
 # For 2nd submissiom (year range select) in cambodia hzard module
 def hazard_laos_yearselected(request):
@@ -397,12 +393,13 @@ def hazard_laos_yearselected(request):
     # Filter by hazard selection
     lao_hazard_df = lao_hazard_df[lao_hazard_df['event']==year_haz]
     # import GEOJSON file
-    lao_province = json.load(open('static/JSON/Laos/Laos_Province.geojson'))
-    lao_district = json.load(open('static/JSON/Laos/Laos_District.geojson'))
+    lao_province, lao_province2 = json.load(open('static/JSON/Laos/Laos_Province.geojson')), json.load(open('static/JSON/Laos/Laos_Province.geojson'))
+    lao_district, lao_district2 = json.load(open('static/JSON/Laos/Laos_District.geojson')), json.load(open('static/JSON/Laos/Laos_District.geojson'))
     # Group data for selected level by using function
     lao_data = level_select(year_lev, lao_hazard_df, year_start, year_end, province = lao_province, district = lao_district, commune=None)
+    lao_data_out = to_GeoJSON_download(year_lev, lao_hazard_df, year_start, year_end, province = lao_province2, district = lao_district2, commune=None)
 
-    return JsonResponse({'end':year_end, 'start':year_start, 'haz':year_haz, 'lev':year_lev, 'map_data':lao_data}, status=200)
+    return JsonResponse({'end':year_end, 'start':year_start, 'haz':year_haz, 'lev':year_lev, 'map_data':lao_data, 'mapdata_out':lao_data_out}, status=200)
 
 # For Laos csv file download
 def hazard_lao_csv(request):
@@ -488,7 +485,7 @@ def level_select(level, data, year_start,year_end, province, district, commune):
     return disdata
 
 # Create function for download GeoJSON file (remove percentage)
-def khm_to_GeoJSON_download(level, data, year_start,year_end, province, district, commune):
+def to_GeoJSON_download(level, data, year_start,year_end, province, district, commune):
     if level == 'commune_name':
         df2 = data.groupby(['commune_name','year']).count().reset_index()
         df2 = df2.loc[(df2['year'] >=year_start) & (df2['year'] <= year_end)]

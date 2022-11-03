@@ -4,12 +4,6 @@
 {% include "structure/sidebar.html" %}
 {% include "structure/topnavbar.html" %}
 
-<style>
-    a:hover {
-        color: #000 !important;
-    }
-</style>
-
 <div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
     <!-- Page Header -->
     <div class="page-header row no-gutters py-3">
@@ -43,7 +37,7 @@
                 <div class="card w-100 card-small">
                     <!-- Card Header -->
                     <div class="card-header border-bottom">
-                        <h6 class="m-0">Cambodia Hazard</h6>
+                        <h6 class="m-0">Cambodia Hazard Analytics</h6>
                     </div>
                     <!-- Card Body -->
                     <div class="card-body pt-0">
@@ -143,38 +137,11 @@
 
                                                 {% for p in khm_sdc %}
                                                 <div class="form-check pt-1">
-                                                    {% if p.project == 'CHAIN' %}
-                                                    <input class="form-check-input" type="checkbox" id="{{p.project}}"
-                                                        name="KHM_sdc_project" value="{{p.project}}">
-                                                    <label class="form-check-label" for="{{p.project}}"><img
-                                                            src="{% static 'images/Project_dot_on_map/pink_dot.png' %}"
-                                                            style="max-width: 1rem;">&nbsp;&nbsp;{{p.project}}</label>
 
-                                                    {% elif p.project == 'ISAF' %}
                                                     <input class="form-check-input" type="checkbox" id="{{p.project}}"
                                                         name="KHM_sdc_project" value="{{p.project}}">
-                                                    <label class="form-check-label" for="{{p.project}}"><img
-                                                            src="{% static 'images/Project_dot_on_map/green_dot.png' %}"
-                                                            style="max-width: 1rem;">&nbsp;&nbsp;{{p.project}}</label>
-                                                    {% elif p.project == 'MINE' %}
-                                                    <input class="form-check-input" type="checkbox" id="{{p.project}}"
-                                                        name="KHM_sdc_project" value="{{p.project}}">
-                                                    <label class="form-check-label" for="{{p.project}}"><img
-                                                            src="{% static 'images/Project_dot_on_map/purple_dot.png' %}"
-                                                            style="max-width: 1rem;">&nbsp;&nbsp;{{p.project}}</label>
-                                                    {% elif p.project == 'PAFF' %}
-                                                    <input class="form-check-input" type="checkbox" id="{{p.project}}"
-                                                        name="KHM_sdc_project" value="{{p.project}}">
-                                                    <label class="form-check-label" for="{{p.project}}"><img
-                                                            src="{% static 'images/Project_dot_on_map/orange_dot.png' %}"
-                                                            style="max-width: 1rem;">&nbsp;&nbsp;{{p.project}}</label>
-                                                    {% else %}
-                                                    <input class="form-check-input" type="checkbox" id="{{p.project}}"
-                                                        name="KHM_sdc_project" value="{{p.project}}">
-                                                    <label class="form-check-label" for="{{p.project}}"><img
-                                                            src="{% static 'images/Project_dot_on_map/yellow_dot.png' %}"
-                                                            style="max-width: 1rem;">&nbsp;&nbsp;{{p.project}}</label>
-                                                    {% endif %}
+                                                    <label class="form-check-label"
+                                                        for="{{p.project}}">{{p.project}}</label>
                                                 </div>
                                                 {% endfor %}
 
@@ -238,7 +205,7 @@
                 <div class="card w-100 card-small">
                     <!-- Card Header -->
                     <div class="card-header border-bottom">
-                        <h6 class="m-0">Laos Hazard</h6>
+                        <h6 class="m-0">Laos Hazard Analytics</h6>
                     </div>
                     <!-- Card Body -->
                     <div class="card-body pt-0">
@@ -294,23 +261,88 @@
                                 </div>
                                 <!-- /* End MAP container for HTML1canvas -->
 
-                                <!-- Export button -->
+                                <!-- Dropdown button on map -->
+                                <div class="btn-group-vertical"
+                                    style="position: absolute;top: 0px;right: 0.125rem;padding: 10px;z-index: 400;">
+                                    <div class="row">
 
-                                <div class="dropdown"
-                                    style="position: absolute;top: 0px;right: 10px;padding: 10px;z-index: 400;">
-                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false"
-                                        style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">
-                                        Download
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
-                                        aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#" id="lao_download_jpg">Download JPEG</a>
-                                        <a class="dropdown-item" href="{% url 'hazard_laos_csv' %}">Download CSV
-                                            data</a>
+                                        <!-- Map Tile & SDC project location button -->
+                                        <div class="btn-group dropleft">
+                                            <button class="btn btn-light" type="button"
+                                                id="KHM_dropdownmenubuttonLayers" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false"
+                                                style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                                                <i class="fa-solid fa-layer-group" style="font-size: 1rem;"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                                                aria-labelledby="KHM_dropdownmenubuttonLayers"
+                                                style="padding:0.425rem; width:fit-content;">
+
+                                                <!-- Map tile selection -->
+                                                <span>Map tiles</span>
+                                                <div class="form-check pt-1">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="LAO_maptileOptions" id="LAO_BaseMap" value="base">
+                                                    <label class="form-check-label" for="LAO_BaseMap">Base</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="LAO_maptileOptions" id="LAO_Satellite" value="satellite"
+                                                        checked>
+                                                    <label class="form-check-label"
+                                                        for="LAO_Satellite">Satellite</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="LAO_maptileOptions" id="LAO_Terrain" value="terrain">
+                                                    <label class="form-check-label" for="LAO_Terrain">Terrain</label>
+                                                </div>
+                                                <!-- /. Map tile selection -->
+
+                                                <div class="dropdown-divider"></div>
+
+                                                <!-- SDC Project selection -->
+                                                <span>SDC projects</span>
+                                                {% for q in lao_sdc %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="{{q.project}}"
+                                                        name="LAO_sdc_project" value="{{q.project}}">
+                                                    <label class="form-check-label"
+                                                        for="{{q.project}}">{{q.project}}</label>
+                                                </div>
+                                                {% endfor %}
+                                                <!-- /. SDC Project selection -->
+
+                                            </div>
+                                        </div>
+                                        <!-- /. Map Tile & SDC project location button -->
+
+                                        <!-- Export button -->
+                                        <div class="btn-group dropleft">
+                                            <button class="btn btn-light" type="button"
+                                                id="LAO_dropdownmenubuttonDownload" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false"
+                                                style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                                                <i class="fa-solid fa-download" style="font-size: 1rem;"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                                                aria-labelledby="LAO_dropdownmenubuttonDownload"
+                                                style="padding:0; min-width:fit-content;">
+                                                <a class="dropdown-item" href="#" id="lao_download_jpg">Download
+                                                    JPEG</a>
+                                                <a class="dropdown-item" href="{% url 'hazard_laos_csv' %}">Download
+                                                    CSV</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" id="lao_download_geojson" href="#"
+                                                    onclick="LAO_onDownload_JSON(lao_map_data)">Download GeoJSON</a>
+                                                <a class="dropdown-item" id="lao_download_geotiff" href="#"
+                                                    onclick="LAO_onDownload_TIFF(lao_map_data)">Download GeoTIFF</a>
+                                            </div>
+                                        </div>
+                                        <!-- /. Export button -->
                                     </div>
                                 </div>
+                                <!-- /. Dropdown button on map -->
 
 
                             </div>
@@ -359,11 +391,13 @@
     var LAO_project = {{ lao_project| safe }};
 
 
-    //---------* SDC Project data Checkbox : Cambodia *---------//
+    //---------* SDC Project data Checkbox *---------//
     var KHMproject_arr = [];
+    var LAOproject_arr = [];
 
-    //---------* Cambodia GeoJSON file generate and download *---------//
+    //---------* GeoJSON data generate and download *---------//
     var khm_map_data;
+    var lao_map_data;
 
 
     //-----------------------------------------------------------------------------------//
@@ -469,9 +503,12 @@
             dataType: 'json',
             cache: false,
             success: function (lao_data) {
-                LAO_MapChart(lao_data);
-                CreateLAO_Slider(lao_data);
+                LAO_MapChart(lao_data, LAOproject_arr);
+                CreateLAO_Slider(lao_data, LAOproject_arr);
                 //alert(lao_data.haz + ' & ' + lao_data.lev + ' Year: ' + lao_data.year_start + ' - ' + lao_data.year_end);
+
+                // Add download file
+                lao_map_data = lao_data;
             },
             error: function () {
                 alert('error')
@@ -568,7 +605,7 @@
     var lao_y_end;
 
     // Create new slider for Cambodia
-    function CreateLAO_Slider(lao_data) {
+    function CreateLAO_Slider(lao_data, arr) {
         destroyExistingSlider(LAO_YearSlider);
 
         LAO_YearSlider = document.getElementById('lao_year_slider');
@@ -611,8 +648,11 @@
                 },
                 dataType: 'json',
                 success: function (lao_year) {
-                    LAO_MapChart(lao_year);
+                    LAO_MapChart(lao_year, arr);
                     //alert(lao_year.haz+' + '+lao_year.lev+' : '+lao_year.start+ ' - '+lao_year.end);
+
+                    // Add download file
+                    lao_map_data = lao_year;
                 },
                 error: function () {
                     alert('error')
@@ -646,6 +686,13 @@
     });
 
     //--------- * Laos map tile selection *-----------*//
+    var LAO_MapTile = 'satellite';
+
+    // LAO map tile selection
+    $(document).on('click', '[name=LAO_maptileOptions]:checked', function () {
+        LAO_MapTile = $('[name=LAO_maptileOptions]:checked').val();
+        Laos_AJAX_map($('[name=lao_haz_selected]').val(), $('[name=lao_level_selected]').val());
+    });
 
     //------------------------------------------------------------------------------------------------------//
     //-------------------------------------- SDC Project Selection -----------------------------------------//
@@ -665,9 +712,19 @@
         map_ajax_KHM($('[name=khm_haz_selected]').val(), $('[name=khm_level_selected]').val());
     });
 
-
-
-
+    //--------- * Laos project selection *-----------*//
+    $(document).on('change', '[name=LAO_sdc_project]', function () {
+        LAOproject_arr = [];
+        {
+            $('[name=LAO_sdc_project]:checked').each(function () {
+                //if(values.indexOf($(this).val()) === -1){
+                LAOproject_arr.push($(this).val());
+                // }
+            });
+            console.log(LAOproject_arr);
+        }
+        Laos_AJAX_map($('[name=lao_haz_selected]').val(), $('[name=lao_level_selected]').val());
+    });
 
 
 </script>
