@@ -113,16 +113,13 @@ function getMapTile(mt) {
         return 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
     }
 }
-//-----------------------------------------------------------------------------------------------------//
-//--------------------------------------- Cambodia leaflet Map ----------------------------------------//
-//----------------------------------------------------------------------------------------------------//
 
-var cam_map;
-
+//-------------------------------------------------------------------------------------------------------------//
+//--------------------------------------- Global leaflet Map  Function ----------------------------------------//
+//-------------------------------------------------------------------------------------------------------------//
 // ------- Location marker image function ------- //
 const pinkDot = new L.icon({
     iconUrl: '/static/images/Project_dot_on_map/pink_dot.png',
-
     iconSize: [14, 14], // size of the icon
     // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
     iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
@@ -165,26 +162,86 @@ const yellowDot = new L.icon({
     popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
 });
 
+const darkpurpleDot = new L.icon({
+    iconUrl: '/static/images/Project_dot_on_map/darkpurple_dot.png',
+    iconSize: [14, 14], // size of the icon
+    // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
+    iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
+});
+
+const blueDot = new L.icon({
+    iconUrl: '/static/images/Project_dot_on_map/blue_dot.png',
+    iconSize: [14, 14], // size of the icon
+    // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
+    iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
+});
+
+const lightblueDot = new L.icon({
+    iconUrl: '/static/images/Project_dot_on_map/lightblue_dot.png',
+    iconSize: [14, 14], // size of the icon
+    // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
+    iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
+});
+
+const lightgreenDot = new L.icon({
+    iconUrl: '/static/images/Project_dot_on_map/lightgreen_dot.png',
+    iconSize: [14, 14], // size of the icon
+    // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
+    iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
+});
+
+const lightpinkDot = new L.icon({
+    iconUrl: '/static/images/Project_dot_on_map/lightpink_dot.png',
+    iconSize: [14, 14], // size of the icon
+    // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
+    iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
+});
+
 // ------- Cambodis Project Marker color ------- //
-function KHM_markerColor(val) {
-    if (val == 'CHAIN') {
+function markerColor(val) {
+    if (val == 0) {
         return pinkDot;
     }
-    if (val == 'ISAF') {
+    if (val == 1) {
         return greenDot;
     }
-    if (val == 'MINE') {
+    if (val == 2) {
         return purpleDot;
     }
-    if (val == 'PAFF') {
+    if (val == 3) {
         return orangeDot;
     }
-    else {
+    if (val == 4) {
+        return blueDot;
+    }
+    if (val == 5) {
         return yellowDot;
     }
+    if (val == 6) {
+        return lightgreenDot;
+    }
+    if (val == 7) {
+        return darkpurpleDot;
+    }
+    if (val == 8) {
+        return lightblueDot;
+    }
+    if (val == 9) {
+        return lightpinkDot;
+    }
 }
-// ------- Cambodis Project Marker ------- //
 
+//-----------------------------------------------------------------------------------------------------//
+//--------------------------------------- Cambodia leaflet Map ----------------------------------------//
+//----------------------------------------------------------------------------------------------------//
+var cam_map;
+
+// ------- Cambodis Project Marker ------- //
 function KHM_createMarker(arr) {
     var Group = L.layerGroup([]);
     for (var p in KHM_project) {
@@ -192,16 +249,16 @@ function KHM_createMarker(arr) {
 
         for (var ind = 0; ind < arr.length; ind++) {
             if (obj.Project == arr[ind]) {
-                var khm_loc = L.marker(obj.location, { icon: KHM_markerColor(arr[ind]) }).bindPopup(obj.Project);
+                var khm_loc = L.marker(obj.location, { icon: markerColor(ind) }).bindPopup(obj.Project);
                 khm_loc.addTo(Group);
             }
         }
-
 
     }
     return Group;
 }
 
+// ------- Cambodis Leaflet Map Generate Function ------- //
 function KHM_MapChart(data, arr) {
     destroyExistingMap(cam_map);
     cam_map = L.map('cam_map', {
@@ -300,8 +357,8 @@ function KHM_MapChart(data, arr) {
     }).addTo(cam_map);
 
     // Add SDC Project location
-    var test = KHM_createMarker(arr);
-    test.addTo(cam_map);
+    var KHM_marker = KHM_createMarker(arr);
+    KHM_marker.addTo(cam_map);
 
 }
 
@@ -309,10 +366,26 @@ function KHM_MapChart(data, arr) {
 //-----------------------------------------------------------------------------------------------------//
 //----------------------------------------- Laos leaflet Map -----------------------------------------//
 //----------------------------------------------------------------------------------------------------//
-
 var lao_map;
 
-function LAO_MapChart(data) {
+// ------- laos Project Marker ------- //
+function LAO_createMarker(arr) {
+    var Group = L.layerGroup([]);
+    for (var p in LAO_project) {
+        var obj = LAO_project[p];
+
+        for (var ind = 0; ind < arr.length; ind++) {
+            if (obj.Project == arr[ind]) {
+                var lao_loc = L.marker(obj.location, { icon: markerColor(ind) }).bindPopup(obj.Project);
+                lao_loc.addTo(Group);
+            }
+        }
+
+    }
+    return Group;
+}
+
+function LAO_MapChart(data, arr) {
     destroyExistingMap(lao_map);
     lao_map = L.map('lao_map', {
         zoomControl: false,
@@ -322,7 +395,7 @@ function LAO_MapChart(data) {
         scrollWheelZoom: false, // You can't get the correct screenshot If allow to use scroll.
         preferCanvas: true
     }).setView([17.6384, 105.2195], 6);
-    L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+    L.tileLayer(getMapTile(LAO_MapTile), {
         maxZoom: 20,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     }).addTo(lao_map);
@@ -361,9 +434,15 @@ function LAO_MapChart(data) {
             // Add Info popup when mouseover
             if (data.lev == 'province_name') {
                 layer.bindPopup('<b>' + data.haz + '</b><br>' + layer.feature.properties.Province + ' : ' + layer.feature.properties.value).openPopup();
+                layer.on('mouseout', function () {
+                    this.closePopup();
+                });
             }
             if (data.lev == 'district_name') {
                 layer.bindPopup('<b>' + data.haz + '</b><br>' + layer.feature.properties.District + ' : ' + layer.feature.properties.value).openPopup();
+                layer.on('mouseout', function () {
+                    this.closePopup();
+                });
             }
 
         }
@@ -395,6 +474,10 @@ function LAO_MapChart(data) {
         onEachFeature: onEachFeature
     }).addTo(lao_map);
 
+    // Add SDC Project location
+    var LAO_marker = LAO_createMarker(arr);
+    LAO_marker.addTo(lao_map);
+
 }
 
 
@@ -402,7 +485,6 @@ function LAO_MapChart(data) {
 //----------------------------------------- GeoJSON generate and download function -----------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------//
 
-//--------* Cambodia *--------//
 function download(content, fileName, contentType) {
     var a = document.createElement("a");
     var file = new Blob([content], { type: contentType });
@@ -411,7 +493,7 @@ function download(content, fileName, contentType) {
     a.click();
 }
 
-
+//--------* Cambodia *--------//
 function KHM_onDownload_JSON(data) {
     //console.log(data.mapdata_out);
     download(JSON.stringify(data.mapdata_out), "KHM_" + data.haz + "_" + ThreeDatalevel(data.lev) + ".geojson", "text/plain");
@@ -423,4 +505,13 @@ function KHM_onDownload_TIFF(data) {
 }
 
 //--------* Laos *--------//
+function LAO_onDownload_JSON(data) {
+    //console.log(data.mapdata_out);
+    download(JSON.stringify(data.mapdata_out), "LAO_" + data.haz + "_" + TwoDatalevel(data.lev) + ".geojson", "text/plain");
+}
+
+function LAO_onDownload_TIFF(data) {
+    //console.log(data.mapdata_out);
+    download(JSON.stringify(data.mapdata_out), "LAO_" + data.haz + "_" + TwoDatalevel(data.lev) + ".tiff", "text/plain");
+}
 
