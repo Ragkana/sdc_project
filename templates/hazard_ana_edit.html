@@ -86,14 +86,26 @@
 
                                 <!-- MAP container for HTML2canvas : capture as screenshot and download -->
                                 <div id="cambodia_map_container">
+
                                     <!-- Map display-->
                                     <div class="map w-100 col-12" style="height: calc(100vh - 27.5rem);" id="cam_map">
                                     </div>
+
+                                    <!-- SDC Project with current marker -->
+                                    <div class="row p-2">
+                                        <div class="col-lg-12 col-sm-12 justify-content-md-center" id="KHM_project_show"
+                                            style="text-align: center;"></div>
+                                    </div>
+                                    <!-- /. SDC Project with current marker -->
+
                                     <!-- Color map detail -->
                                     <div class="row justify-content-md-center">
+
                                         <img class="col-lg-8 col-sm-12"
                                             src="{% static 'images/color_chart_hazard_03.png' %}">
                                     </div>
+                                    <!-- /. Color map detail -->
+
                                 </div>
                                 <!-- /* End MAP container for HTML1canvas -->
 
@@ -177,6 +189,8 @@
                                 </div>
                                 <!-- /. Dropdown button on map -->
 
+
+
                             </div>
                         </div>
 
@@ -253,6 +267,14 @@
                                     <!-- Map display-->
                                     <div class="map w-100 col-12" style="height: calc(100vh - 27.5rem);" id="lao_map">
                                     </div>
+
+                                    <!-- SDC Project with current marker -->
+                                    <div class="row p-2">
+                                        <div class="col-lg-12 col-sm-12 justify-content-md-center" id="LAO_project_show"
+                                            style="text-align: center;"></div>
+                                    </div>
+                                    <!-- /. SDC Project with current marker -->
+
                                     <!-- Color map detail -->
                                     <div class="row justify-content-md-center">
                                         <img class="col-lg-8 col-sm-12"
@@ -701,15 +723,16 @@
     // Adding SDC project maker in cambodia
     $(document).on('change', '[name=KHM_sdc_project]', function () {
         KHMproject_arr = [];
+
         {
             $('[name=KHM_sdc_project]:checked').each(function () {
-                //if(values.indexOf($(this).val()) === -1){
                 KHMproject_arr.push($(this).val());
-                // }
             });
-            console.log(KHMproject_arr);
+            //console.log(KHMproject_arr);
         }
         map_ajax_KHM($('[name=khm_haz_selected]').val(), $('[name=khm_level_selected]').val());
+        KHM_MakerNoteBox(KHMproject_arr);
+        //$('#KHM_project_show').text(KHMproject_arr);
     });
 
     //--------- * Laos project selection *-----------*//
@@ -717,13 +740,12 @@
         LAOproject_arr = [];
         {
             $('[name=LAO_sdc_project]:checked').each(function () {
-                //if(values.indexOf($(this).val()) === -1){
                 LAOproject_arr.push($(this).val());
-                // }
             });
-            console.log(LAOproject_arr);
+            //console.log(LAOproject_arr);
         }
         Laos_AJAX_map($('[name=lao_haz_selected]').val(), $('[name=lao_level_selected]').val());
+        LAO_MakerNoteBox(LAOproject_arr);
     });
 
 
