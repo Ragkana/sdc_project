@@ -16,7 +16,8 @@ class country(models.Model):
 
 class sdc_project_cambodia(models.Model):
     id = models.IntegerField(primary_key=True, null=False)
-    project_name = models.CharField(max_length=256, null=False)
+    project_fullname = models.CharField(max_length=256, null=False)
+    project_shortname = models.CharField(max_length=128, null=False)
     objective = models.CharField(max_length=512)
     duration = models.CharField(max_length=256)
     budget = models.CharField(max_length=256)
@@ -29,7 +30,8 @@ class sdc_project_cambodia(models.Model):
 
 class sdc_project_laos(models.Model):
     id = models.IntegerField(primary_key=True, null=False)
-    project_name = models.CharField(max_length=256, null=False)
+    project_fullname = models.CharField(max_length=256, null=False)
+    project_shortname = models.CharField(max_length=128, null=False)
     objective = models.CharField(max_length=512)
     duration = models.CharField(max_length=256)
     budget = models.CharField(max_length=256)

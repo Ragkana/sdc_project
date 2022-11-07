@@ -133,7 +133,8 @@ def sdc_project_khm(request):
 
     if request.method == 'POST' and request.FILES['khm_pdf']:
         ## Retrieve string data
-        khm_name = request.POST.get('KHM_ProjectName')
+        khm_fullname = request.POST.get('KHM_ProjectName')
+        khm_abb_name = request.POST.get('KHM_ProjectABBName')
         khm_obj = request.POST.get('KHM_Objective')
         khm_dur = request.POST.get('KHM_Duration')
         khm_bud = request.POST.get('KHM_Budget')
@@ -151,7 +152,7 @@ def sdc_project_khm(request):
         khm_file_url = khm_file_url[7:]
         #return render(request, "sdc_project_khm.html", {'khm_url': khm_file_url, 'duration':khm_dur, 'khm_project':khm_project})
         ## Save data to database
-        khm_data = sdc_project_cambodia(project_name=khm_name, objective=khm_obj, duration=khm_dur,
+        khm_data = sdc_project_cambodia(project_fullname=khm_fullname, project_shortname=khm_abb_name, objective=khm_obj, duration=khm_dur,
          budget=khm_bud, location=khm_loc, partners=khm_par, outcome=khm_out, pdf_download=khm_file_url)
         khm_data.save()
         return HttpResponseRedirect(reverse('sdc_project_cambodia'))
@@ -164,7 +165,8 @@ def sdc_project_lao(request):
     lao_project = sdc_project_laos.objects.all()
     if request.method == 'POST' and request.FILES['lao_pdf']:
         ## Retrieve string data
-        lao_name = request.POST.get('LAO_ProjectName')
+        lao_fullname = request.POST.get('LAO_ProjectName')
+        lao_abb_name = request.POST.get('LAO_ProjectABBName')
         lao_obj = request.POST.get('LAO_Objective')
         lao_dur = request.POST.get('LAO_Duration')
         lao_bud = request.POST.get('LAO_Budget')
@@ -182,7 +184,7 @@ def sdc_project_lao(request):
         lao_file_url = lao_file_url[7:]
         #return render(request, "sdc_project_lao.html", {'lao_url': lao_file_url, 'duration':lao_dur, 'lao_project':lao_project})
         ## Save data to database
-        lao_data = sdc_project_laos(project_name=lao_name, objective=lao_obj, duration=lao_dur,
+        lao_data = sdc_project_laos(project_fullname=lao_fullname, project_shortname=lao_abb_name, objective=lao_obj, duration=lao_dur,
          budget=lao_bud, location=lao_loc, partners=lao_par, outcome=lao_out, pdf_download=lao_file_url)
         lao_data.save()
         return HttpResponseRedirect(reverse('sdc_project_laos'))
