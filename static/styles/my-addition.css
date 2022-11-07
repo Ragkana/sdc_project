@@ -48,7 +48,7 @@ This CSS file will contain my additional CSS for the site
     padding: 0.5rem;
     text-align: center;
     border-radius: 10px;
-    background-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.8);
 }
 .box-shadow {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
