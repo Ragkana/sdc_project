@@ -92,9 +92,9 @@
                                     </div>
 
                                     <!-- SDC Project with current marker -->
-                                    <div class="row p-2">
-                                        <div class="col-lg-12 col-sm-12 justify-content-md-center" id="KHM_project_show"
-                                            style="text-align: center;"></div>
+                                    <div class="text-box"
+                                        style="z-index: 400;position: absolute;top: calc(100vh - 30.5rem);right: 1.525rem;" id="KHM_projectbox_show">
+                                        <div id="KHM_project_show"></div>
                                     </div>
                                     <!-- /. SDC Project with current marker -->
 
@@ -269,9 +269,9 @@
                                     </div>
 
                                     <!-- SDC Project with current marker -->
-                                    <div class="row p-2">
-                                        <div class="col-lg-12 col-sm-12 justify-content-md-center" id="LAO_project_show"
-                                            style="text-align: center;"></div>
+                                    <div class="text-box"
+                                        style="z-index: 400;position: absolute;top: calc(100vh - 30.5rem);right: 1.525rem;" id="LAO_projectbox_show">
+                                        <div id="LAO_project_show"></div>
                                     </div>
                                     <!-- /. SDC Project with current marker -->
 
@@ -721,21 +721,28 @@
     //------------------------------------------------------------------------------------------------------//
     //--------- * Cambodia project selection *-----------*//
     // Adding SDC project maker in cambodia
+    $('#KHM_projectbox_show').hide();
     $(document).on('change', '[name=KHM_sdc_project]', function () {
         KHMproject_arr = [];
-
         {
             $('[name=KHM_sdc_project]:checked').each(function () {
                 KHMproject_arr.push($(this).val());
             });
-            //console.log(KHMproject_arr);
         }
+        //console.log(KHMproject_arr.length);
+        if (KHMproject_arr.length == 0) {
+            $('#KHM_projectbox_show').hide();
+        }
+        else if (KHMproject_arr.length != 0) {
+            $('#KHM_projectbox_show').show();
+        }
+
         map_ajax_KHM($('[name=khm_haz_selected]').val(), $('[name=khm_level_selected]').val());
         KHM_MakerNoteBox(KHMproject_arr);
-        //$('#KHM_project_show').text(KHMproject_arr);
     });
 
     //--------- * Laos project selection *-----------*//
+    $('#LAO_projectbox_show').hide();
     $(document).on('change', '[name=LAO_sdc_project]', function () {
         LAOproject_arr = [];
         {
@@ -744,6 +751,13 @@
             });
             //console.log(LAOproject_arr);
         }
+        if (LAOproject_arr.length == 0) {
+            $('#LAO_projectbox_show').hide();
+        }
+        else if (LAOproject_arr.length != 0) {
+            $('#LAO_projectbox_show').show();
+        }
+
         Laos_AJAX_map($('[name=lao_haz_selected]').val(), $('[name=lao_level_selected]').val());
         LAO_MakerNoteBox(LAOproject_arr);
     });
