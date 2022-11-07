@@ -202,7 +202,15 @@ const lightpinkDot = new L.icon({
     popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
 });
 
-// ------- Cambodis Project Marker color ------- //
+const whiteDot = new L.icon({
+    iconUrl: '/static/images/Project_dot_on_map/white_dot.png',
+    iconSize: [14, 14], // size of the icon
+    // remember that iconAnchor must always relate to iconSize by [x=x/2,y=y]
+    iconAnchor: [7, 14], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
+});
+
+// ------- Project Marker color ------- //
 function markerColor(val) {
     if (val == 0) {
         return pinkDot;
@@ -232,8 +240,89 @@ function markerColor(val) {
         return lightblueDot;
     }
     if (val == 9) {
+        return whiteDot;
+    }
+    else {
         return lightpinkDot;
     }
+}
+
+// ------- Cambodia SDC project Marker color notation in box ------- //
+function KHM_MakerNoteBox(arr) {
+    var marker_arr = [];
+    for (var i = 0; i < arr.length; i++) {
+        if (i == 0) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/pink_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 1) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/green_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 2) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/purple_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 3) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/orange_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 4) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/blue_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 5) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/yellow_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 6) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/lightgreen_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 7) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/darkpurple_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 8) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/lightblue_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        else if (i >= 9) {
+            marker_arr.push("<img src='/static/images/Project_dot_on_map/lightpink_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        
+    }
+    return document.getElementById('KHM_project_show').innerHTML = marker_arr;
+}
+
+// ------- Cambodia SDC project Marker color notation in box ------- //
+function LAO_MakerNoteBox(arr) {
+    var marker_arr = [];
+    for (var i = 0; i < arr.length; i++) {
+        if (i == 0) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/pink_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 1) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/green_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 2) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/purple_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 3) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/orange_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 4) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/blue_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 5) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/yellow_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 6) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/lightgreen_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 7) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/darkpurple_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        if (i == 8) {
+            marker_arr.push(" <img src='/static/images/Project_dot_on_map/lightblue_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        else if (i >= 9) {
+            marker_arr.push("<img src='/static/images/Project_dot_on_map/lightpink_dot.png' style='width:1rem'> " + arr[i]);
+        }
+        
+    }
+    return document.getElementById('LAO_project_show').innerHTML = marker_arr;
 }
 
 //-----------------------------------------------------------------------------------------------------//
