@@ -73,6 +73,17 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <!-- Project Abbreviation name -->
+                                                <div class="form-group">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="KHM_ProjectABBName" class="float-left">Abbreviation</label>
+                                                        <input type="text" class="form-control" id="KHM_ProjectABBName"
+                                                            name="KHM_ProjectABBName" placeholder="" required>
+                                                        <div class="invalid-feedback float-left">
+                                                            Please provide the abbreviation of project
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <!-- Objective -->
                                                 <div class="form-group">
                                                     <div class="col-md-12 mb-3">
@@ -205,7 +216,8 @@
                         <thead class="bg-light">
                             <tr>
                                 <th scope="col" class="border-0">No.</th>
-                                <th scope="col" class="border-0">Project Name</th>
+                                <th scope="col" class="border-0">Project full Name</th>
+                                <th scope="col" class="border-0">Abbreviation</th>
                                 <th scope="col" class="border-0">Objective</th>
                                 <th scope="col" class="border-0">Duration</th>
                                 <th scope="col" class="border-0">Budget</th>
@@ -219,7 +231,8 @@
                             {% for a in khm_project %}
                             <tr>
                                 <td>{{ a.id }}</td>
-                                <td>{{ a.project_name }}</td>
+                                <td>{{ a.project_fullname }}</td>
+                                <td>{{ a.project_shortname }}</td>
                                 <td>{{ a.objective }}</td>
                                 <td>{{ a.duration }}</td>
                                 <td>{{ a.budget }}</td>
