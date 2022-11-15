@@ -1,0 +1,206 @@
+{% load static %}
+{% include "structure/header_n_footer.html" %}
+{% block content %}
+{% include "structure/sidebar.html" %}
+{% include "structure/topnavbar.html" %}
+
+<div class="container-fluid card" style="margin: 10px; width: auto;background-color: #dee1ea;">
+    <!-- Page Header -->
+    <div class="page-header row no-gutters py-3">
+        <div class="col-12 col-sm-4 text-center text-sm-left mb-2 mb-sm-0">
+            <h3 class="page-title">Add SDC project location</h3>
+        </div>
+    </div>
+    <!-- End Page Header -->
+
+    <div class="row">
+
+        <div class="col-lg-12 col-md-12 col-sm-12 mb-2 mx-0 my-3">
+            <div class="card card-small m-0">
+                <!-- Card Header -->
+                <div class="card-header border-bottom">
+                    <h6 class="m-0">Add SDC project location</h6>
+                </div>
+                <!-- /. Card Header -->
+
+                <!-- Card Body content -->
+                <div class="card-body p-0 pb-3">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <!-- Country selection -->
+                            <form method="post" class="py-2 col-12" id="location_form">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-12">
+
+                                        <label for="country_selected">Select Country :</label>
+                                        <select class="form-control my-2" name="country_selected">
+                                            <option name="khm_sel" value="KHM">Cambodia</option>
+                                            <option name="lao_sel" value="LAO">Laos</option>
+                                            <!--<option name="mya_sel" value="MYA">Myanmar</option>-->
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3 col-sm-12">
+                                        <label for="project_selected">Select Project :</label>
+                                        <select class="form-control my-2" id="project_selected" name="project_selected" required>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <!-- /. Country selection -->
+
+                                <!-- leaflet Get latitude & longitude container -->
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="latitude">Latitude</label>
+                                                    <input type="text" class="form-control" id="latitude"
+                                                        name="latitude" value="" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="longitude">Longitude</label>
+                                                    <input type="text" class="form-control" id="longitude"
+                                                        name="longitude" value="" required>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!--<p>Lon: <span id='long'></span><br>
+                                        Lat: <span id='lat'></span></p>-->
+                                    </div>
+                                </div>
+                                <!-- /. leaflet Get latitude & longitude container -->
+
+                                <!-- leaflet Map container -->
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div id="location_map"></div>
+                                    </div>
+                                </div>
+                                <!-- /. leaflet Map container -->
+
+                                <!-- Details input container -->
+                                <div class="row pt-2">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <label for="detail">Details</label>
+                                        <textarea type="text" class="form-control" row="3" maxlength="250" id="detail"
+                                            name="detail" placeholder="Type your detail here..."></textarea>
+                                        <div id="detail_count" class="float-right">
+                                            <span id="detail_current"
+                                                style="font-weight: 300; font-size: 0.725rem;">0</span>
+                                            <span id="detail_maximum" style="font-weight: 300; font-size: 0.725rem;">/
+                                                250</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /. Details input container -->
+
+                                <!-- Submit Button -->
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <button type="button submit" class="btn btn-primary btn-squared"
+                                            name="submit_data"
+                                            style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;">Submit
+                                            Data</button>
+                                    </div>
+                                </div>
+                                <!-- End Submit Button code -->
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /. Card Body content -->
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% include "structure/footer.html" %}
+<script src="{% static 'scripts/add_project_location.js' %}"></script>
+<script type="text/javascript">
+    // ---------------------------------------------------------------------------------------------------------------------------------- //
+    // ----------------------------------- Function Calling from 'add_project_location.js' file ----------------------------------------- //
+    // ---------------------------------------------------------------------------------------------------------------------------------- //
+    // call map function : Set Cambodia as default
+    locationMap('KHM');
+    // call detail limiter text function
+    DetailFontLimiter();
+
+    // ---------------------------------------------------------------------------------- //
+    // ----------------------------------- AJAX ----------------------------------------- //
+    // ---------------------------------------------------------------------------------- //
+    // AJAX: Default
+    AJAXcountryProject('KHM');
+
+    function AJAXcountryProject(country) {
+        $.ajax({
+            type: "POST",
+            url: "sdc_project_location/country_project_choose",
+            data: {
+                country: country,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            dataType: 'json',
+            cache: false,
+            success: function (c_data) {
+                var project_name = c_data.project;
+                // project dropdown
+                DropdownAjax("#project_selected", project_name);
+                console.log(project_name);
+
+            },
+            error: function () {
+                alert('error')
+            }
+
+        });
+    }
+
+    // ------------------------------------------------------------------------------------------------------------------------------ //
+    // ----------------------------------- send lat & lon to input box after select country ----------------------------------------- //
+    // ------------------------------------------------------------------------------------------------------------------------------ //
+    var country;
+    // Default lat & lon : Set in Cambodia location
+    document.getElementById('longitude').value = 104.888535;
+    document.getElementById('latitude').value = 12.562108;
+
+
+    // --------------------------------------------------------------------------------------------------------------- //
+    // ----------------------------------- JS on change in country selection ----------------------------------------- //
+    // --------------------------------------------------------------------------------------------------------------- //
+    $(document).on('change', '[name=country_selected]', function () {
+        country = $('[name=country_selected]').val();
+        //alert(country);
+        locationMap(country);
+        // reset latitude & longitude to selected country location
+        if (country == 'KHM') {
+            document.getElementById('longitude').value = 104.888535;
+            document.getElementById('latitude').value = 12.562108;
+        }
+        if (country == 'LAO') {
+            document.getElementById('longitude').value = 105.2195;
+            document.getElementById('latitude').value = 17.6384;
+        }
+        if (country == 'MYA') {
+            document.getElementById('longitude').value = 95.9560;
+            document.getElementById('latitude').value = 21.9162;
+        }
+        /*document.getElementById('longitude').value = "";
+        document.getElementById('latitude').value = "";*/
+
+        AJAXcountryProject(country);
+    });
+
+
+</script>
+{% endblock content %}

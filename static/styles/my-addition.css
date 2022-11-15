@@ -193,6 +193,13 @@ a:hover {
     margin: 0 auto;
 }
 
+/* leaflet Map container in Add SDC project location page */
+#location_map {
+    height: calc(100vh - 27.5rem);
+    width: 100%;
+    margin: 0 auto;
+}
+
 /* For user profile image */
 profileimg {
     width: 2.5rem;

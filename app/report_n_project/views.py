@@ -3,7 +3,9 @@ from itertools import count
 from django.shortcuts import render, redirect
 from django.http import FileResponse, JsonResponse, HttpResponseRedirect
 from django.urls import reverse
+## import database ##
 from app.report_n_project.models import sdc_project_cambodia, sdc_project_laos, country
+from app.disaster_ana.models import sdc_project_location_cambodia, sdc_project_location_laos
 from app.disaster_ana.models import disaster
 import io
 from django.db.models import Count, Q
@@ -33,7 +35,7 @@ def upload_data(request):
     comm_name, comm_id = "", ""
     day = ""
     haz, death, injured, miss, h_des, h_dam = "", "", "", "", "", ""
-    comment = ""
+    comments = ""
     file_url, dis_data = "", ""
 
     if request.method=='POST' and 'submit_data' in request.POST:
@@ -115,10 +117,8 @@ def province_choose(request):
     return JsonResponse({'province':province, 'district':df})
 
 def district_choose(request):
-    #province = request.POST['province']
     district = request.POST['district']
     df = country.objects.values('commune_name').annotate(count=Count('commune_id')).filter(district_name=district)
-    #df = country.objects.values('commune_name').annotate(count=Count('commune_id')).filter(district_name=district)
     df = list(df.values_list('commune_name', flat=True))
 
     return JsonResponse({'district':district, 'commune':df})
@@ -196,6 +196,48 @@ def sdc_project_lao(request):
 def sdc_project_mya(request):
     
     return render(request, "sdc_project_mya.html", {'url_name': 'sdc_project_myanmar'})
+
+## SDC Project location main page ##
+@login_required(login_url='login')
+def sdc_project_location(request):
+    country = ""
+    project = ""
+    lat = ""
+    long = ""
+    detail = ""
+    if request.method=='POST' and 'submit_data' in request.POST:
+        country = request.POST.get('country_selected')
+        project = request.POST.get('project_selected')
+        lat = request.POST.get('latitude')
+        long = request.POST.get('longitude')
+        detail = request.POST.get('detail')
+        if country == 'KHM':
+            c_name = "Cambodia"
+            data = sdc_project_location_cambodia(project=project, country_id=country, country_name=c_name, latitude=lat, longitude=long, detail=detail)
+            data.save()
+        if country == 'LAO':
+            c_name = "Laos"
+            data = sdc_project_location_laos(project=project, country_id=country, country_name=c_name, latitude=lat, longitude=long, detail=detail)
+            data.save()
+        if country == 'MYA':
+            c_name = "Myanmar"
+            #data = sdc_project_location_cambodia(project=project, country_id=country, country_name=c_name, latitude=lat, longitude=long, detail=detail)
+            #data.save()
+        
+    return render(request, "add_project_location.html", {'url_name': 'sdc_project_location'})
+
+def country_project_choose(request):
+    country_project = request.POST['country']
+    if country_project == 'KHM':
+        p_name = list(sdc_project_cambodia.objects.values_list('project_shortname', flat=True))
+    if country_project == 'LAO':
+        p_name = list(sdc_project_laos.objects.values_list('project_shortname', flat=True))
+    if country_project == 'MYA':
+        p_name = list()
+
+    return JsonResponse({'project':p_name})
+
+
 
 ######################################################################
 ########################### Reports Module ###########################

@@ -97,6 +97,9 @@ urlpatterns = [
     path('sdc_project_cambodia', rp_views.sdc_project_khm, name='sdc_project_cambodia'),
     path('sdc_project_laos', rp_views.sdc_project_lao, name='sdc_project_laos'),
     path('sdc_project_myanmar', rp_views.sdc_project_mya, name='sdc_project_myanmar'),
+
+    path('sdc_project_location', rp_views.sdc_project_location, name='sdc_project_location'),
+    path('sdc_project_location/country_project_choose', rp_views.country_project_choose, name='sdc_project_country'),
     ################################# Reports And Project #############################################
     path('reports', rp_views.reports, name='reports'),
     path('reports/reports_pdf', rp_views.report_pdf, name='reports_pdf'),
