@@ -26,73 +26,75 @@
                             <form method="post" class="py-2">
                                 {% csrf_token %}
 
-                                <!-- Select Country -->
-                                <div class="row col py-3">
+
+                                <div class="row col">
+                                    <!-- Select Country -->
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <span>Select Country: </span>
-                                        <select class="form-control my-2" name="country_selected">
+                                        <select class="form-control my-2" name="country_selected" id="country_selected">
                                             <option name="khm_sel" value="KHM">Cambodia</option>
                                             <option name="lao_sel" value="LAO">Laos</option>
                                             <!--<option name="mya_sel" value="MYA">Myanmar</option>-->
                                         </select>
                                     </div>
+                                    <!-- / Select Country -->
+
+                                    <!-- Select Event -->
+                                    <div class="col-lg-3 col-md-12 col-sm-12">
+                                        <span>Select Event: </span>
+                                        <select class="form-control my-2" id="haz_selected" name="haz_selected">
+
+                                        </select>
+                                    </div>
+                                    <!-- /. Select Event -->
+
                                 </div>
-                                <!-- / Select Country -->
+
 
                                 <!-- Profile Report Checkbox -->
                                 <div class="row col">
                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <span>Select report profile:</span>
-                                        <div class="form-check mx-3">
-                                            <input class="form-check-input" type="checkbox" value="" id="hazard_profile">
+                                        <span>Select report profile:<br></span>
+                                        <div class="form-check form-check-inline mx-3 mt-2">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="hazard_profile">
                                             <label class="form-check-label" for="hazard_profile">
                                                 Hazard Profile
                                             </label>
                                         </div>
-                                        <div class="form-check mx-3">
-                                            <input class="form-check-input" type="checkbox" value="" id="disaster_profile">
+                                        <div class="form-check form-check-inline mx-3">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="disaster_profile">
                                             <label class="form-check-label" for="disaster_profile">
                                                 Disaster Profile
                                             </label>
                                         </div>
-                                        <div class="form-check mx-3">
-                                            <input class="form-check-input" type="checkbox" value="" id="vulnerability_profile">
+                                        <div class="form-check form-check-inline mx-3">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="vulnerability_profile">
                                             <label class="form-check-label" for="vulnerability_profile">
                                                 Vulnerability Profile
                                             </label>
                                         </div>
-                                        <div class="form-check mx-3">
-                                            <input class="form-check-input" type="checkbox" value="" id="climate_profile">
+                                        <div class="form-check form-check-inline mx-3">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="climate_profile">
                                             <label class="form-check-label" for="climate_profile">
                                                 Climate Profile
                                             </label>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <!-- / Profile Report Checkbox -->
 
-                                <!-- Select Event -->
-                                <div class="row col py-3">
-                                    <div class="col-lg-3 col-md-12 col-sm-12">
-                                        <span>Select Event: </span>
-                                        <select class="form-control my-2" name="event_selected">
-                                            <option value="">DROUGHT</option>
-                                            <option value="">FLOOD</option>
-                                            <option value="">LIGHTNING</option>
-                                            <option value="">RIVER BANK COLLAPSE</option>
-                                            <option value="">STORM</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!-- / Select Event -->
 
                                 <!-- Submit Button -->
-                                <div class="row col">
+                                <div class="row col mt-4">
                                     <div class="col-lg-3 col-md-12 col-sm-12">
                                         <a type="button submit" class="btn btn-primary btn-squared"
                                             style="border-color: #0b2d5a; background-color: #0b2d5a; border-radius: 0.2rem;"
-                                            href="{% url 'reports_pdf' %}" target="_blank">Generate</a>
+                                            href="{% url 'reports_pdf' %}" target="_blank">Generate PDF</a>
                                     </div>
                                 </div>
                                 <!-- End Submit Button code -->
@@ -113,4 +115,53 @@
 
 
 {% include "structure/footer.html" %}
+
+<script type="text/javascript">
+    //---------------------------------------------------------------------------------------//
+    //--------------------------------------AJAX CODE---------------------------------------//
+    //--------------------------------------------------------------------------------------// 
+    // Dropdown function
+    function DropdownAjax(html_id, list) {
+        $(html_id).find('option').remove();
+        $.each(list, function (key, value) {
+            $(html_id).append('<option value="' + value + '" data-tokens="' + value + '">' + value + '</option>');
+        });
+    }
+
+
+    // ----------** AJAX for country select **---------- //
+    // AJAX country selected function
+    function AJAXcountry(country) {
+        $.ajax({
+            type: "POST",
+            url: "upload_data/country_event",
+            data: {
+                country: country,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            dataType: 'json',
+            cache: false,
+            success: function (c_data) {
+                var event = c_data.event;
+                // hazard dropdown
+                DropdownAjax("#haz_selected", event);
+            },
+            error: function () {
+                alert('error')
+            }
+
+        });
+    }
+
+    // AJAX: Default
+    AJAXcountry('KHM');
+    // AJAX: choose country
+    $(document).on("change", "#country_selected", function (p) {
+        p.preventDefault();
+
+        var country = $('[name=country_selected]').val();
+        AJAXcountry(country);
+    });
+
+</script>
 {% endblock content %}

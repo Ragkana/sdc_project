@@ -1,7 +1,7 @@
 from enum import auto
 from itertools import count
 from django.shortcuts import render, redirect
-from django.http import FileResponse, JsonResponse, HttpResponseRedirect
+from django.http import FileResponse, JsonResponse, HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 ## import database ##
 from app.report_n_project.models import sdc_project_cambodia, sdc_project_laos, country
@@ -11,11 +11,15 @@ import io
 from django.db.models import Count, Q
 from django.contrib.auth.decorators import login_required, permission_required
 
-## PDF Generator ##
+## PDF Generator || reportlab ##
 from django.core.files.storage import FileSystemStorage
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4 # 210*270 mm
 from reportlab.lib.units import mm
+from io import BytesIO
+## PDF Generator || xhtml2pdf ##
+from xhtml2pdf import pisa
+from django.template.loader import get_template
 
 from django.conf import settings
 import pandas as pd
@@ -248,8 +252,27 @@ def country_project_choose(request):
 def reports(request):
     return render(request, "reports.html", {'url_name': 'reports'})
 
+def country_event(request):
+    country_val = request.POST['country']
+    if country_val == 'KHM':
+        df = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='KHM')
+        event = list(df.values_list('event', flat=True))
+    if country_val == 'LAO':
+        df = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='LAO')
+        event = list(df.values_list('event', flat=True))
+    if country_val == 'MYA':
+        df = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='MYA')
+        event = list(df.values_list('event', flat=True))
+
+    return JsonResponse({'country':country_val, 'event':event})
+
 ## PDF Generator ##
 def report_pdf(request):
+    country = ""
+    if request.method=='POST' in request.POST:
+        ## Retrieve data from form ##
+        country = request.POST.get('country_select')
+
     buffer = io.BytesIO()
     report = canvas.Canvas(buffer, pagesize=A4)
     
@@ -258,20 +281,24 @@ def report_pdf(request):
     report.setTitle("SDC reports")
     # Set title name that will show in document
     report.drawString(100, 100, "Test for Reports.")
+    # set font style and size for pdf
+    report.set_font('Arial', size= 16)
+    report.drawString(100, 10, country + " Test")
     
     ## Template :: Draw top & bottom gradient image ##
-    # Top
+    # Banner Top
     report.drawInlineImage('static/images/report_img/sdc_template.png', x=0, y=272*mm, width=210*mm, height=25*mm)
-    # Bottom
+    # Banner Bottom
     report.drawInlineImage('static/images/report_img/sdc_template.png', x=0, y=0, width=210*mm, height=25*mm)
     # SDC logo
     report.drawImage('static/images/report_img/swiss-logo.png', x=460, y=775, width=45*mm, height=25*mm)
-    #drawMyRuler(report)
+    drawMyRuler(report)
     report.showPage()
     report.save()
     buffer.seek(0)
 
     return FileResponse(buffer, as_attachment=True, filename='report_test.pdf')
+
 
 ## Draw ruler in pdf 
 def drawMyRuler(pdf):

@@ -2,7 +2,7 @@
 from lib2to3.pgen2 import driver
 from turtle import title
 from urllib import response
-from app.disaster_ana.models import disaster, vulnerability_mpi, sdc_project_location_cambodia, sdc_project_location_laos
+from app.disaster_ana.models import disaster, vulnerability_mpi, sdc_project_location_cambodia, sdc_project_location_laos, sdc_project_location_myanmar
 
 from django.shortcuts import render
 from django.http import JsonResponse,HttpResponse, FileResponse
@@ -29,25 +29,64 @@ import numpy as np
 def disaster_ana(request):
     dis_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='KHM')
     lao_dis_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='LAO')
+    mya_dis_event = disaster.objects.values('event').annotate(count=Count('event')).filter(province_id__startswith='MYA')
 
-    return render(request, "disaster_ana.html", {'url_name': 'disaster_ana', 'dis_event':dis_event, 'lao_dis_event':lao_dis_event})
+    # Sending SDC project value
+    khm_sdc = sdc_project_location_cambodia.objects.values('project').annotate(count=Count('project'))
+    lao_sdc = sdc_project_location_laos.objects.values('project').annotate(count=Count('project'))
+    #mya_sdc = sdc_project_location_myanmar.objects.values('project').annotate(count=Count('project'))
 
+    ## Sending SDC project latitude and longitude ##
+    # Cambodia
+    khm_loc = pd.DataFrame(sdc_project_location_cambodia.objects.values('id', 'project', 'country_id', 'country_name', 'province_id', 'province_name', 'district_id', 'district_name',
+    'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
+    khm_data = project_location_JSON(khm_loc)
+        
+    # Laos
+    lao_loc = pd.DataFrame(sdc_project_location_laos.objects.values('id', 'project', 'country_id', 'country_name', 'province_id', 'province_name', 'district_id', 'district_name',
+    'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
+    lao_data = project_location_JSON(lao_loc)
+
+    # Myanmar
+    #mya_loc = pd.DataFrame(sdc_project_location_myanmar.objects.values('id', 'project', 'country_id', 'country_name', 'province_id', 'province_name', 'district_id', 'district_name',
+    #'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
+    #mya_data = project_location_JSON(mya_loc)
+
+    return render(request, "disaster_ana.html", {'url_name': 'disaster_ana', 'dis_event':dis_event, 'lao_dis_event':lao_dis_event, 'mya_dis_event':mya_dis_event,
+    'khm_project':khm_data, 'lao_project':lao_data, 'khm_sdc':khm_sdc, 'lao_sdc':lao_sdc})
+
+########## Cambodia ##########
 def disaster_ana_khm(request):
     disaster_selected = request.POST['khm_dis']
     impact_selected = request.POST['khm_impact']
     level_selected = request.POST['khm_level']
 
-    # Summation data for HighCharts Map
-    dis_sum = disaster.objects.values('event', level_selected).annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(province_id__startswith='KHM')
+    # import GEOJSON file
+    khm_province, khm_province2 = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
+    khm_district, khm_district2 = json.load(open('static/JSON/Cambodia/Cambodia_District.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_District.geojson'))
+    khm_commune, khm_commune2 = json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson'))
+
+    ## Create Disaster Data for Cambodia ##
+    if level_selected == 'province_name' :
+        dis_sum = disaster.objects.values('event', 'province_name').annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(province_id__startswith='KHM')
+    if level_selected == 'district_name':
+        dis_sum = disaster.objects.values('event', 'district_name').annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(district_id__startswith='KHM')
+    if level_selected == 'commune_name':
+        dis_sum = disaster.objects.values('event', 'commune_name').annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(commune_id__startswith='KHM')
+
     ## Change column name
     dis_sum = dis_sum.values('value').annotate(code=F(level_selected))
     dis_sum = dis_sum.all().filter(code__isnull = False)
     ## Separate as list
     code = list(dis_sum.values_list('code', flat=True))
     value = list(dis_sum.values_list('value', flat=True))
-    ## combine 2 list for highchart map
-    map_sum = [list(e) for e in zip(code,value)]
-    #map_sum = json.dumps(map_sum)
+    ## combine 2 list to dataframe
+    summ = pd.DataFrame(list(zip(code, value)), columns =['code', 'value'])
+    summ['percentage'] = (summ['value'] / summ['value'].max()) * 100
+    # After calculate, we've got NaN in some record. Thus, we have to set NaN to 0.
+    summ = summ.fillna(0)
+    map_sum = disaster_data(level_selected, summ, khm_province, khm_district, khm_commune)
+    map_export = disaster_data_export(level_selected, summ, khm_province2, khm_district2, khm_commune2)
 
     ## Extract year from date column ##
     dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(province_id__startswith='KHM')
@@ -58,17 +97,17 @@ def disaster_ana_khm(request):
     # extract year from date as new column
     df['year'] = pd.DatetimeIndex(df['date_data']).year
 
-    df = df.groupby(['year','event']).sum().reset_index()
+    df = df.groupby(['year','event']).sum(numeric_only=True).reset_index()
     df = df.loc[df['event']==disaster_selected]
     
     list_year = df['year'].to_list()
-    list_impact = df[impact_selected].tolist()
+    list_impact = df[impact_selected].to_list()
 
     # start and end for Year
     year_start, year_end = min(list_year), max(list_year)
 
     return JsonResponse({'dis':disaster_selected, 'impact':impact_selected, 'level':level_selected, 'map_data':map_sum, 'level_code':code, 'level_value':value, 'list_year':list_year, 'list_impact':list_impact,
-    'year_start':year_start, 'year_end':year_end}, status=200)
+    'year_start':year_start, 'year_end':year_end, 'mapdata_out':map_export}, status=200)
 
 def disaster_ana_khm_yearsel(request):
     disaster_selected = request.POST['khm_dis']
@@ -78,8 +117,19 @@ def disaster_ana_khm_yearsel(request):
     y_start = int(request.POST['khm_year_start'])
     y_end = int(request.POST['khm_year_end'])
 
-    ## Extract year from date column ##
-    dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', level_selected).filter(province_id__startswith='KHM')
+    # import GEOJSON file
+    khm_province, khm_province2 = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
+    khm_district, khm_district2 = json.load(open('static/JSON/Cambodia/Cambodia_District.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_District.geojson'))
+    khm_commune, khm_commune2 = json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_Commune.geojson'))
+
+    ## Create Disaster Data for Cambodia & Extract year ##
+    if level_selected == 'province_name' :
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', 'province_name').filter(province_id__startswith='KHM')
+    if level_selected == 'district_name':
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', 'district_name').filter(district_id__startswith='KHM')
+    if level_selected == 'commune_name':
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', 'commune_name').filter(commune_id__startswith='KHM')
+
     # set to dataframe
     df = pd.DataFrame(dis_year)
     # change column type
@@ -87,14 +137,19 @@ def disaster_ana_khm_yearsel(request):
     # extract year from date as new column
     df['year'] = pd.DatetimeIndex(df['date_data']).year
     df1 = df.loc[(df['year'] >=y_start) & (df['year'] <= y_end) & (df['event'] == disaster_selected)]
-    df1 = df1.groupby([level_selected]).sum().reset_index()
+    df1 = df1.groupby([level_selected]).sum(numeric_only=True).reset_index()
     code = df1[level_selected].to_list()
     value = df1[impact_selected].to_list()
     ## combine 2 list for highchart map
-    map_sum = [list(e) for e in zip(code,value)]
+    map_sum = pd.DataFrame(list(zip(code, value)), columns =['code', 'value'])
+    map_sum['percentage'] = (map_sum['value'] / map_sum['value'].max()) * 100
+    # After calculate, we've got NaN in some record. Thus, we have to set NaN to 0.
+    map_sum = map_sum.fillna(0)
+    map_data = disaster_data(level_selected, map_sum, khm_province, khm_district, khm_commune)
+    map_export = disaster_data_export(level_selected, map_sum, khm_province2, khm_district2, khm_commune2)
 
     return JsonResponse({'dis':disaster_selected, 'impact':impact_selected, 'level':level_selected, 'year_start':y_start, 'year_end':y_end,
-    'map_data':map_sum, 'level_code':code, 'level_value':value}, status=200)
+    'map_data':map_data, 'level_code':code, 'level_value':value, 'mapdata_out':map_export}, status=200)
 
     ########## LAOS ##########
 def disaster_ana_lao(request):
@@ -102,17 +157,29 @@ def disaster_ana_lao(request):
     impact_selected = request.POST['lao_impact']
     level_selected = request.POST['lao_level']
 
-    # Summation data for HighCharts Map
-    dis_sum = disaster.objects.values('event', level_selected).annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(province_id__startswith='LAO')
+    # import GEOJSON file
+    lao_province, lao_province2 = json.load(open('static/JSON/Laos/Laos_Province.geojson')), json.load(open('static/JSON/Laos/Laos_Province.geojson'))
+    lao_district, lao_district2 = json.load(open('static/JSON/Laos/Laos_District.geojson')), json.load(open('static/JSON/Laos/Laos_District.geojson'))
+
+    ## Create Hazard DataFrame for Laos ##
+    if level_selected == 'province_name' :
+        dis_sum = disaster.objects.values('event', 'province_name').annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(province_id__startswith='LAO')
+    if level_selected == 'district_name':
+        dis_sum = disaster.objects.values('event', 'district_name').annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(district_id__startswith='LAO')
+
     ## Change column name
     dis_sum = dis_sum.values('value').annotate(code=F(level_selected))
     dis_sum = dis_sum.all().filter(code__isnull = False)
     ## Separate as list
     code = list(dis_sum.values_list('code', flat=True))
     value = list(dis_sum.values_list('value', flat=True))
-    ## combine 2 list for highchart map
-    map_sum = [list(e) for e in zip(code,value)]
-    #map_sum = json.dumps(map_sum)
+    ## combine 2 list to dataframe
+    summ = pd.DataFrame(list(zip(code, value)), columns =['code', 'value'])
+    summ['percentage'] = (summ['value'] / summ['value'].max()) * 100
+    # After calculate, we've got NaN in some record. Thus, we have to set NaN to 0.
+    summ = summ.fillna(0)
+    map_sum = disaster_data(level_selected, summ, lao_province, lao_district, commune=None)
+    map_export = disaster_data_export(level_selected, summ, lao_province2, lao_district2, commune=None)
 
     ## Extract year from date column ##
     dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(province_id__startswith='LAO')
@@ -123,17 +190,17 @@ def disaster_ana_lao(request):
     # extract year from date as new column
     df['year'] = pd.DatetimeIndex(df['date_data']).year
 
-    df = df.groupby(['year','event']).sum().reset_index()
+    df = df.groupby(['year','event']).sum(numeric_only=True).reset_index()
     df = df.loc[df['event']==disaster_selected]
     
     list_year = df['year'].to_list()
-    list_impact = df[impact_selected].tolist()
+    list_impact = df[impact_selected].to_list()
 
     # start and end for Year
     year_start, year_end = min(list_year), max(list_year)
 
     return JsonResponse({'dis':disaster_selected, 'impact':impact_selected, 'level':level_selected, 'map_data':map_sum, 'list_year':list_year, 'list_impact':list_impact,
-    'year_start':year_start, 'year_end':year_end, 'level_code':code, 'level_value':value}, status=200)
+    'year_start':year_start, 'year_end':year_end, 'level_code':code, 'level_value':value, 'mapdata_out':map_export}, status=200)
 
 def disaster_ana_lao_yearsel(request):
     disaster_selected = request.POST['lao_dis']
@@ -143,8 +210,16 @@ def disaster_ana_lao_yearsel(request):
     y_start = int(request.POST['lao_year_start'])
     y_end = int(request.POST['lao_year_end'])
 
-    ## Extract year from date column ##
-    dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', level_selected).filter(province_id__startswith='LAO')
+    # import GEOJSON file
+    lao_province, lao_province2 = json.load(open('static/JSON/Laos/Laos_Province.geojson')), json.load(open('static/JSON/Laos/Laos_Province.geojson'))
+    lao_district, lao_district2 = json.load(open('static/JSON/Laos/Laos_District.geojson')), json.load(open('static/JSON/Laos/Laos_District.geojson'))
+
+    ## Create Hazard DataFrame for Laos ##
+    if level_selected == 'province_name' :
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', 'province_name').filter(province_id__startswith='LAO')
+    if level_selected == 'district_name':
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', 'district_name').filter(district_id__startswith='LAO')
+
     # set to dataframe
     df = pd.DataFrame(dis_year)
     # change column type
@@ -155,11 +230,172 @@ def disaster_ana_lao_yearsel(request):
     df1 = df1.groupby([level_selected]).sum().reset_index()
     code = df1[level_selected].to_list()
     value = df1[impact_selected].to_list()
-    ## combine 2 list for highchart map
-    map_sum = [list(e) for e in zip(code,value)]
+    ## combine 2 list for map
+    map_sum = pd.DataFrame(list(zip(code, value)), columns =['code', 'value'])
+    map_sum['percentage'] = (map_sum['value'] / map_sum['value'].max()) * 100
+    # After calculate, we've got NaN in some record. Thus, we have to set NaN to 0.
+    map_sum = map_sum.fillna(0)
+    map_data = disaster_data(level_selected, map_sum, lao_province, lao_district, commune=None)
+    map_export = disaster_data_export(level_selected, map_sum, lao_province2, lao_district2, commune=None)
 
     return JsonResponse({'dis':disaster_selected, 'impact':impact_selected, 'level':level_selected, 'year_start':y_start, 'year_end':y_end,
-    'map_data':map_sum, 'level_code':code, 'level_value':value}, status=200)
+    'map_data':map_data, 'level_code':code, 'level_value':value, 'mapdata_out':map_export}, status=200)
+
+########## Myanmar ##########
+def disaster_ana_mya(request):
+    disaster_selected = request.POST['mya_dis']
+    impact_selected = request.POST['mya_impact']
+    level_selected = request.POST['mya_level']
+
+    # import GEOJSON file
+    mya_province, mya_province2 = "", ""
+    mya_district, mya_district2 = "", ""
+    mya_commune, mya_commune2 = "", ""
+
+    ## Create Disaster Data for Cambodia ##
+    if level_selected == 'province_name' :
+        dis_sum = disaster.objects.values('event', 'province_name').annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(province_id__startswith='MYA')
+    if level_selected == 'district_name':
+        dis_sum = disaster.objects.values('event', 'district_name').annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(district_id__startswith='MYA')
+    if level_selected == 'commune_name':
+        dis_sum = disaster.objects.values('event', 'commune_name').annotate(value=Sum(impact_selected)).filter(event=disaster_selected).filter(commune_id__startswith='MYA')
+
+    ## Change column name
+    dis_sum = dis_sum.values('value').annotate(code=F(level_selected))
+    dis_sum = dis_sum.all().filter(code__isnull = False)
+    ## Separate as list
+    code = list(dis_sum.values_list('code', flat=True))
+    value = list(dis_sum.values_list('value', flat=True))
+    ## combine 2 list to dataframe
+    summ = pd.DataFrame(list(zip(code, value)), columns =['code', 'value'])
+    summ['percentage'] = (summ['value'] / summ['value'].max()) * 100
+    # After calculate, we've got NaN in some record. Thus, we have to set NaN to 0.
+    summ = summ.fillna(0)
+    map_sum = disaster_data(level_selected, summ, mya_province, mya_district, mya_commune)
+    map_export = disaster_data_export(level_selected, summ, mya_province2, mya_district2, mya_commune2)
+
+    ## Extract year from date column ##
+    dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(province_id__startswith='MYA')
+    # set to dataframe
+    df = pd.DataFrame(dis_year)
+    # change column type
+    df['date_data']= pd.to_datetime(df['date_data'])
+    # extract year from date as new column
+    df['year'] = pd.DatetimeIndex(df['date_data']).year
+
+    df = df.groupby(['year','event']).sum(numeric_only=True).reset_index()
+    df = df.loc[df['event']==disaster_selected]
+    
+    list_year = df['year'].to_list()
+    list_impact = df[impact_selected].to_list()
+
+    # start and end for Year
+    year_start, year_end = min(list_year), max(list_year)
+
+    return JsonResponse({'dis':disaster_selected, 'impact':impact_selected, 'level':level_selected, 'map_data':map_sum, 'level_code':code, 'level_value':value, 'list_year':list_year, 'list_impact':list_impact,
+    'year_start':year_start, 'year_end':year_end, 'mapdata_out':map_export}, status=200)
+
+def disaster_ana_mya_yearsel(request):
+    disaster_selected = request.POST['mya_dis']
+    impact_selected = request.POST['mya_impact']
+    level_selected = request.POST['mya_level']
+
+    y_start = int(request.POST['mya_year_start'])
+    y_end = int(request.POST['mya_year_end'])
+
+    # import GEOJSON file
+    mya_province, mya_province2 = "", ""
+    mya_district, mya_district2 = "", ""
+    mya_commune, mya_commune2 = "", ""
+
+    ## Create Disaster Data for Cambodia & Extract year ##
+    if level_selected == 'province_name' :
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', 'province_name').filter(province_id__startswith='MYA')
+    if level_selected == 'district_name':
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', 'district_name').filter(district_id__startswith='MYA')
+    if level_selected == 'commune_name':
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage', 'commune_name').filter(commune_id__startswith='MYA')
+
+    # set to dataframe
+    df = pd.DataFrame(dis_year)
+    # change column type
+    df['date_data']= pd.to_datetime(df['date_data'])
+    # extract year from date as new column
+    df['year'] = pd.DatetimeIndex(df['date_data']).year
+    df1 = df.loc[(df['year'] >=y_start) & (df['year'] <= y_end) & (df['event'] == disaster_selected)]
+    df1 = df1.groupby([level_selected]).sum(numeric_only=True).reset_index()
+    code = df1[level_selected].to_list()
+    value = df1[impact_selected].to_list()
+    ## combine 2 list for highchart map
+    map_sum = pd.DataFrame(list(zip(code, value)), columns =['code', 'value'])
+    map_sum['percentage'] = (map_sum['value'] / map_sum['value'].max()) * 100
+    # After calculate, we've got NaN in some record. Thus, we have to set NaN to 0.
+    map_sum = map_sum.fillna(0)
+    map_data = disaster_data(level_selected, map_sum, mya_province, mya_district, mya_commune)
+    map_export = disaster_data_export(level_selected, map_sum, mya_province2, mya_district2, mya_commune2)
+
+    return JsonResponse({'dis':disaster_selected, 'impact':impact_selected, 'level':level_selected, 'year_start':y_start, 'year_end':y_end,
+    'map_data':map_data, 'level_code':code, 'level_value':value, 'mapdata_out':map_export}, status=200)
+
+### Create GeoJson map data ###
+def disaster_data(level, data, province, district, commune):
+    if level == 'commune_name':
+        for index,row in data.iterrows():
+            comm = row['code']
+            # Append in dict
+            for c in commune['features']:
+                if c['properties']['Commune'] == comm:
+                    c['properties']['value'] = float(row['value'])
+                    c['properties']['percentage'] = float(row['percentage'])
+        dis_data = commune
+    if level == 'district_name':
+        for index,row in data.iterrows():
+            dist = row['code']
+            # Append in dict
+            for d in district['features']:
+                if d['properties']['District'] == dist:
+                    d['properties']['value'] = float(row['value'])
+                    d['properties']['percentage'] = float(row['percentage'])
+        dis_data = district
+    if level == 'province_name':
+        for index,row in data.iterrows():
+            prov = row['code']
+            # Append in dict
+            for p in province['features']:
+                if p['properties']['Province'] == prov:
+                    p['properties']['value'] = float(row['value'])
+                    p['properties']['percentage'] = float(row['percentage'])
+        dis_data = province
+    return dis_data
+
+### Create GeoJson map data for export as GeoTIFF&GeoJSON ###
+def disaster_data_export(level, data, province, district, commune):
+    if level == 'commune_name':
+        for index,row in data.iterrows():
+            comm = row['code']
+            # Append in dict
+            for c in commune['features']:
+                if c['properties']['Commune'] == comm:
+                    c['properties']['value'] = float(row['value'])
+        dis_export = commune
+    if level == 'district_name':
+        for index,row in data.iterrows():
+            dist = row['code']
+            # Append in dict
+            for d in district['features']:
+                if d['properties']['District'] == dist:
+                    d['properties']['value'] = float(row['value'])
+        dis_export = district
+    if level == 'province_name':
+        for index,row in data.iterrows():
+            prov = row['code']
+            # Append in dict
+            for p in province['features']:
+                if p['properties']['Province'] == prov:
+                    p['properties']['value'] = float(row['value'])
+        dis_export = province
+    return dis_export
+
 
 #########################################################################################################################################################
 ######################################################### Vulnerability Modul ###########################################################################
@@ -237,7 +473,7 @@ def hazard_ana(request):
     'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
     lao_data = project_location_JSON(lao_loc)
 
-    return render(request, "hazard_ana_edit.html", {'url_name': 'hazard_ana', 'khm_haz_event':khm_haz_event, 'lao_haz_event':lao_haz_event, 
+    return render(request, "hazard_ana.html", {'url_name': 'hazard_ana', 'khm_haz_event':khm_haz_event, 'lao_haz_event':lao_haz_event, 
     'khm_project':khm_data, 'lao_project':lao_data, 'khm_sdc':khm_sdc, 'lao_sdc':lao_sdc})
 
 def project_location_JSON(df):

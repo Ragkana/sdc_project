@@ -28,6 +28,18 @@ class weather_forecast_laos(models.Model):
     class Meta:
         db_table = "weather_forecast_laos"
 
+class weather_forecast_myanmar(models.Model):
+    id = models.IntegerField(primary_key=True, null=False)
+    date_data = models.DateField()
+    province_name = models.CharField(max_length=128, null=False)
+    rainfall = models.DecimalField(max_digits=10, decimal_places=2)
+    humidity = models.DecimalField(max_digits=10, decimal_places=2)
+    max_temp = models.DecimalField(max_digits=10, decimal_places=2)
+    min_temp = models.DecimalField(max_digits=10, decimal_places=2)
+    windspeed = models.DecimalField(max_digits=10, decimal_places=2)
+    class Meta:
+        db_table = "weather_forecast_myanmar"
+
 # Retrieve data from observation_metdata table
 class observation_metdata(models.Model):
     id = models.IntegerField(primary_key=True, null=False)

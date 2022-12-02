@@ -72,6 +72,9 @@ urlpatterns = [
 
     path('disaster_analytics/laos', da_views.disaster_ana_lao, name='disaster_ana_laos'),
     path('disaster_analytics/laos_yearsel', da_views.disaster_ana_lao_yearsel, name='disaster_ana_laos_yearsel'),
+
+    path('disaster_analytics/myanmar', da_views.disaster_ana_mya, name='disaster_ana_myanmar'),
+    path('disaster_analytics/myanmar_yearsel', da_views.disaster_ana_mya_yearsel, name='disaster_ana_myanmar_yearsel'),
     ################################ Vulnerability Module ##############################################
     path('vulnerability', da_views.vulnerability, name='vulnerability'),
 
@@ -102,6 +105,7 @@ urlpatterns = [
     path('sdc_project_location/country_project_choose', rp_views.country_project_choose, name='sdc_project_country'),
     ################################# Reports And Project #############################################
     path('reports', rp_views.reports, name='reports'),
+    path('upload_data/country_event', rp_views.country_event, name='report_country'),
     path('reports/reports_pdf', rp_views.report_pdf, name='reports_pdf'),
     ################################# About US Project #############################################
     path('about_sdc', rp_views.about_sdc, name='about_sdc'),
