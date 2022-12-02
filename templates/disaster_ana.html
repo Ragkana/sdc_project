@@ -94,22 +94,120 @@
 
                 </div>
 
-                <!-- Map Chart -->
-                <div class="row">
+                <!-------- * leaflet Map Chart container * ----------->
 
-                  <div class="col-12 border-bottom py-2">
-                    <h5 class="p-lg-4 p-md-2 p-sm-2 d-flex justify-content-center" id="khm_map_title">Cumulative Deaths
+                <div class="row border-bottom bg-light">
+                  <div class="col-12 d-flex justify-content-center">
+                    <h5 class="p-lg-2 p-md-1 p-sm-1" id="khm_map_title">Cumulative Deaths
                       from DROUGHT by Province (Map Chart)</h5>
-                    <div id="hc_map01_container"></div>
                   </div>
+                </div>
 
+                <div class="row">
+                  <div class="col-lg-12 col-sm-12 col-md-12 border-bottom">
+
+                    <!-- MAP container for HTML2canvas : capture as screenshot and download -->
+                    <div id="cambodia_map_container">
+                      <!-- Map container -->
+                      <div id="hc_map01_container"></div>
+                      <!-- /. Map container -->
+                      <!-- SDC Project with current marker -->
+                      <div class="text-box"
+                        style="z-index: 400;position: absolute;top: calc(100vh - 30.5rem);right: 1.525rem;"
+                        id="KHM_projectbox_show">
+                        <div id="KHM_project_show"></div>
+                      </div>
+                      <!-- /. SDC Project with current marker -->
+                    </div>
+                    <!-- /* End MAP container for HTML1canvas -->
+
+                    <!-- Dropdown button on map -->
+                    <div class="btn-group-vertical"
+                      style="position: absolute;top: 0px;right: 0.225rem;padding: 10px;z-index: 400;">
+                      <div class="row">
+
+                        <!-- Map Tile & SDC project location button -->
+                        <div class="btn-group dropleft">
+                          <button class="btn btn-light" type="button" id="KHM_dropdownmenubuttonLayers"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                            <i class="fa-solid fa-layer-group" style="font-size: 1rem;"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                            aria-labelledby="KHM_dropdownmenubuttonLayers" style="padding:0.425rem; width:fit-content;">
+                            <span>Map tiles</span>
+                            <div class="form-check pt-1">
+                              <input class="form-check-input" type="radio" name="KHM_maptileOptions" id="KHM_BaseMap"
+                                value="base">
+                              <label class="form-check-label" for="KHM_BaseMap">Base</label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="KHM_maptileOptions" id="KHM_Satellite"
+                                value="satellite" checked>
+                              <label class="form-check-label" for="KHM_Satellite">Satellite</label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="KHM_maptileOptions" id="KHM_Terrain"
+                                value="terrain">
+                              <label class="form-check-label" for="KHM_Terrain">Terrain</label>
+                            </div>
+
+                            <div class="dropdown-divider"></div>
+                            <span>SDC projects</span>
+
+                            {% for p in khm_sdc %}
+                            <div class="form-check pt-1">
+
+                              <input class="form-check-input" type="checkbox" id="{{p.project}}" name="KHM_sdc_project"
+                                value="{{p.project}}">
+                              <label class="form-check-label" for="{{p.project}}">{{p.project}}</label>
+                            </div>
+                            {% endfor %}
+
+                          </div>
+                        </div>
+                        <!-- /. Map Tile & SDC project location button -->
+
+                        <!-- Export button -->
+                        <div class="btn-group dropleft">
+                          <button class="btn btn-light" type="button" id="KHM_dropdownmenubuttonDownload"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                            <i class="fa-solid fa-download" style="font-size: 1rem;"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                            aria-labelledby="KHM_dropdownmenubuttonDownload" style="padding:0; min-width:fit-content;">
+                            <a class="dropdown-item" href="#" id="khm_download_jpg">Download
+                              JPEG</a>
+                            <a class="dropdown-item" href="{% url 'hazard_cambodia_csv' %}">Download
+                              CSV</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" id="khm_download_geojson" href="#"
+                              onclick="KHM_onDownload_JSON(khm_map_data)">Download GeoJSON</a>
+                            <a class="dropdown-item" id="khm_download_geotiff" href="#"
+                              onclick="KHM_onDownload_TIFF(khm_map_data)">Download GeoTIFF</a>
+                          </div>
+                        </div>
+                        <!-- /. Export button -->
+
+                      </div>
+                    </div>
+                    <!-- /. Dropdown button on map -->
+
+                  </div>
+                </div>
+                <!----------- /. leaflet Map Chart container ----------->
+
+                <!------------ *  Highchart : bar chart for cumulative impact * ------------>
+                <div class="row">
                   <div class="col-12 py-2">
-                    <h5 class="p-lg-4 p-md-2 p-sm-2 d-flex justify-content-center" id="khm_locchart_title">Cumulative
+                    <h5 class="p-lg-2 p-md-1 p-sm-1 d-flex justify-content-center" id="khm_locchart_title">Cumulative
                       Deaths from DROUGHT by Province (Bar Chart)</h5>
                     <canvas id="KHM_local_Chart" height="100"></canvas>
                   </div>
 
-                </div> <!-- Close map chart -->
+                </div>
+                <!----------- /. Highchart : bar chart for cumulative impact ----------->
 
               </div>
               <!-- Close Cambodia Data-->
@@ -203,25 +301,123 @@
 
                 </div>
 
-                <!-- Map Chart -->
-                <div class="row">
+                <!-------- * leaflet Map Chart container * ----------->
 
-                  <div class="col-12 border-bottom py-2">
-                    <h5 class="p-lg-4 p-md-2 p-sm-2 d-flex justify-content-center" id="lao_map_title">Cumulative Deaths
+                <div class="row border-bottom bg-light">
+                  <div class="col-12 d-flex justify-content-center">
+                    <h5 class="p-lg-2 p-md-1 p-sm-1" id="lao_map_title">Cumulative Deaths
                       from COLD WAVE by Province (Map Chart)</h5>
-                    <div id="hc_map02_container"></div>
                   </div>
+                </div>
 
+                <div class="row">
+                  <div class="col-lg-12 col-sm-12 col-md-12 border-bottom">
+
+                    <!-- MAP container for HTML2canvas : capture as screenshot and download -->
+                    <div id="laos_map_container">
+                      <!-- Map container -->
+                      <div id="hc_map02_container"></div>
+                      <!-- /. Map container -->
+                      <!-- SDC Project with current marker -->
+                      <div class="text-box"
+                        style="z-index: 400;position: absolute;top: calc(100vh - 30.5rem);right: 1.525rem;"
+                        id="LAO_projectbox_show">
+                        <div id="LAO_project_show"></div>
+                      </div>
+                      <!-- /. SDC Project with current marker -->
+                    </div>
+                    <!-- /* End MAP container for HTML1canvas -->
+
+                    <!-- Dropdown button on map -->
+                    <div class="btn-group-vertical"
+                      style="position: absolute;top: 0px;right: 0.225rem;padding: 10px;z-index: 400;">
+                      <div class="row">
+
+                        <!-- Map Tile & SDC project location button -->
+                        <div class="btn-group dropleft">
+                          <button class="btn btn-light" type="button" id="LAO_dropdownmenubuttonLayers"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                            <i class="fa-solid fa-layer-group" style="font-size: 1rem;"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                            aria-labelledby="LAO_dropdownmenubuttonLayers" style="padding:0.425rem; width:fit-content;">
+                            <span>Map tiles</span>
+                            <div class="form-check pt-1">
+                              <input class="form-check-input" type="radio" name="LAO_maptileOptions" id="LAO_BaseMap"
+                                value="base">
+                              <label class="form-check-label" for="LAO_BaseMap">Base</label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="LAO_maptileOptions" id="LAO_Satellite"
+                                value="satellite" checked>
+                              <label class="form-check-label" for="LAO_Satellite">Satellite</label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="LAO_maptileOptions" id="LAO_Terrain"
+                                value="terrain">
+                              <label class="form-check-label" for="LAO_Terrain">Terrain</label>
+                            </div>
+
+                            <div class="dropdown-divider"></div>
+                            <span>SDC projects</span>
+
+                            {% for q in lao_sdc %}
+                            <div class="form-check pt-1">
+
+                              <input class="form-check-input" type="checkbox" id="{{q.project}}" name="LAO_sdc_project"
+                                value="{{q.project}}">
+                              <label class="form-check-label" for="{{q.project}}">{{q.project}}</label>
+                            </div>
+                            {% endfor %}
+
+                          </div>
+                        </div>
+                        <!-- /. Map Tile & SDC project location button -->
+
+                        <!-- Export button -->
+                        <div class="btn-group dropleft">
+                          <button class="btn btn-light" type="button" id="LAO_dropdownmenubuttonDownload"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                            <i class="fa-solid fa-download" style="font-size: 1rem;"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                            aria-labelledby="LAO_dropdownmenubuttonDownload" style="padding:0; min-width:fit-content;">
+                            <a class="dropdown-item" href="#" id="lao_download_jpg">Download
+                              JPEG</a>
+                            <a class="dropdown-item" href="{% url 'hazard_laos_csv' %}">Download
+                              CSV</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" id="lao_download_geojson" href="#"
+                              onclick="LAO_onDownload_JSON(lao_map_data)">Download GeoJSON</a>
+                            <a class="dropdown-item" id="khm_download_geotiff" href="#"
+                              onclick="LAO_onDownload_TIFF(lao_map_data)">Download GeoTIFF</a>
+                          </div>
+                        </div>
+                        <!-- /. Export button -->
+
+                      </div>
+                    </div>
+                    <!-- /. Dropdown button on map -->
+
+                  </div>
+                </div>
+                <!----------- /. leaflet Map Chart container ----------->
+
+                <!------------ *  Highchart : bar chart for cumulative impact * ------------>
+                <div class="row">
                   <div class="col-12 py-2">
-                    <h5 class="p-lg-4 p-md-2 p-sm-2 d-flex justify-content-center" id="lao_locchart_title">Cumulative
+                    <h5 class="p-lg-2 p-md-1 p-sm-1 d-flex justify-content-center" id="laos_locchart_title">Cumulative
                       Deaths from COLD WAVE by Province (Bar Chart)</h5>
                     <canvas id="LAO_local_Chart" height="100"></canvas>
                   </div>
 
-                </div> <!-- Close map chart -->
+                </div>
+                <!----------- /. Highchart : bar chart for cumulative impact ----------->
 
               </div>
-              <!-- Close Cambodia Data-->
+              <!-- Close Laos Data-->
 
 
             </div>
@@ -251,13 +447,213 @@
 
       <!----------------------------------------------------- Myanmar Tab content ----------------------------------------------------->
       <div class="tab-pane fade" id="myanmar">
-        <h4 class="mt-2">Disaster Impact Profile of Myanmar</h4>
 
-        <!-- Myanmar Map Box-->
+        <!---------------------- CamBodia : First Box -------------------------->
+        <div class="row">
+          <div class="card w-100">
+            <div class="card card-small m-0">
+              <div class="card-header border-bottom">
+                <h6 class="m-0">Disaster Impact Profile of Myanmar</h6>
+              </div>
+              <!-- Cambodia Body -->
+              <div class="card-body pt-0">
+                <!-- Disaster select tab -->
+                <div class="row border-bottom py-2 bg-light">
+                  <div class="col-lg-12 col-sm-6 d-flex mb-2 mb-sm-0 w-100">
 
-        <!-- End Map Box-->
+                    <form method="post" class="w-100 py-2" id="mya_form">
+                      {% csrf_token %}
+
+                      <div class="row">
+
+                        <div class="btn-group input-group">
+                          <!-- Disaster Selection -->
+                          <div class="col-lg-2 col-md-12 col-sm-12">
+                            <span>Select Event :</span>
+                            <select class="form-control my-2" name="mya_dis_selected">
+                              {% for k in mya_dis_event %}
+                              <option value="{{k.event}}">{{k.event}}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                          <!-- Disaster Impact selection form -->
+                          <div class="col-lg-2 col-md-12 col-sm-12">
+                            <span>Select Impact :</span>
+                            <select class="form-control my-2" name="mya_impact_selected">
+                              <option value="deaths" selected>Deaths</option>
+                              <option value="injured">Injured</option>
+                              <option value="missing">Missing</option>
+                              <option value="house_destroy">Houses Destroyed</option>
+                              <option value="house_damage">Houses Damaged</option>
+                            </select>
+                          </div>
+                          <!-- level selection form -->
+                          <div class="col-lg-2 col-md-12 col-sm-12">
+                            <span>Select Level :</span>
+                            <select class="form-control my-2" name="mya_level_selected">
+                              <option value="province_name">Province</option>
+                              <option value="district_name">District</option>
+                              <option value="commune_name">Commune</option>
+                            </select>
+                          </div>
+                          <!-- Year selection form -->
+                          <div class="col-lg-6 col-md-12 col-sm-12">
+                            <div class="col-12 w-100" id="mya_year_slider"></div>
+                          </div>
+
+                        </div> <!-- Close button group -->
+                      </div>
+                    </form>
+
+                  </div>
+
+                </div>
+
+                <!-------- * leaflet Map Chart container * ----------->
+
+                <div class="row border-bottom bg-light">
+                  <div class="col-12 d-flex justify-content-center">
+                    <h5 class="p-lg-2 p-md-1 p-sm-1" id="mya_map_title">Cumulative ....
+                      from ... by Province (Map Chart)</h5>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-12 col-sm-12 col-md-12 border-bottom">
+
+                    <!-- MAP container for HTML2canvas : capture as screenshot and download -->
+                    <div id="myanmar_map_container">
+                      <!-- Map container -->
+                      <div id="hc_map03_container"></div>
+                      <!-- /. Map container -->
+                      <!-- SDC Project with current marker -->
+                      <div class="text-box"
+                        style="z-index: 400;position: absolute;top: calc(100vh - 30.5rem);right: 1.525rem;"
+                        id="MYA_projectbox_show">
+                        <div id="MYA_project_show"></div>
+                      </div>
+                      <!-- /. SDC Project with current marker -->
+                    </div>
+                    <!-- /* End MAP container for HTML1canvas -->
+
+                    <!-- Dropdown button on map -->
+                    <div class="btn-group-vertical"
+                      style="position: absolute;top: 0px;right: 0.225rem;padding: 10px;z-index: 400;">
+                      <div class="row">
+
+                        <!-- Map Tile & SDC project location button -->
+                        <div class="btn-group dropleft">
+                          <button class="btn btn-light" type="button" id="MYA_dropdownmenubuttonLayers"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                            <i class="fa-solid fa-layer-group" style="font-size: 1rem;"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                            aria-labelledby="MYA_dropdownmenubuttonLayers" style="padding:0.425rem; width:fit-content;">
+                            <span>Map tiles</span>
+                            <div class="form-check pt-1">
+                              <input class="form-check-input" type="radio" name="MYA_maptileOptions" id="MYA_BaseMap"
+                                value="base">
+                              <label class="form-check-label" for="MYA_BaseMap">Base</label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="MYA_maptileOptions" id="MYA_Satellite"
+                                value="satellite" checked>
+                              <label class="form-check-label" for="MYA_Satellite">Satellite</label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="MYA_maptileOptions" id="MYA_Terrain"
+                                value="terrain">
+                              <label class="form-check-label" for="MYA_Terrain">Terrain</label>
+                            </div>
+
+                            <div class="dropdown-divider"></div>
+                            <span>SDC projects</span>
+
+                            {% for mp in mya_sdc %}
+                            <div class="form-check pt-1">
+
+                              <input class="form-check-input" type="checkbox" id="{{mp.project}}" name="MYA_sdc_project"
+                                value="{{mp.project}}">
+                              <label class="form-check-label" for="{{mp.project}}">{{mp.project}}</label>
+                            </div>
+                            {% endfor %}
+
+                          </div>
+                        </div>
+                        <!-- /. Map Tile & SDC project location button -->
+
+                        <!-- Export button -->
+                        <div class="btn-group dropleft">
+                          <button class="btn btn-light" type="button" id="MYA_dropdownmenubuttonDownload"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                            <i class="fa-solid fa-download" style="font-size: 1rem;"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                            aria-labelledby="MYA_dropdownmenubuttonDownload" style="padding:0; min-width:fit-content;">
+                            <a class="dropdown-item" href="#" id="mya_download_jpg">Download
+                              JPEG</a>
+                            <a class="dropdown-item" href="">Download
+                              CSV</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" id="mya_download_geojson" href="#"
+                              onclick="MYA_onDownload_JSON(mya_map_data)">Download GeoJSON</a>
+                            <a class="dropdown-item" id="khm_download_geotiff" href="#"
+                              onclick="MYA_onDownload_TIFF(mya_map_data)">Download GeoTIFF</a>
+                          </div>
+                        </div>
+                        <!-- /. Export button -->
+
+                      </div>
+                    </div>
+                    <!-- /. Dropdown button on map -->
+
+                  </div>
+                </div>
+                <!----------- /. leaflet Map Chart container ----------->
+
+                <!------------ *  Highchart : bar chart for cumulative impact * ------------>
+                <div class="row">
+                  <div class="col-12 py-2">
+                    <h5 class="p-lg-2 p-md-1 p-sm-1 d-flex justify-content-center" id="mya_locchart_title">Cumulative
+                      ... from ... by Province (Bar Chart)</h5>
+                    <canvas id="MYA_local_Chart" height="100"></canvas>
+                  </div>
+
+                </div>
+                <!----------- /. Highchart : bar chart for cumulative impact ----------->
+
+              </div>
+              <!-- Close Myanmar Data-->
+
+
+            </div>
+            <!-- Close inner card -->
+          </div>
+          <!-- Close card-->
+        </div>
+        <!-- Close row -->
+
+        <!---------------------- Myamar : Secound Box -------------------------->
+        <div class="row">
+          <div class="card w-100">
+            <div class="card card-small m-0">
+              <div class="card-header border-bottom">
+                <h6 class="m-0" id="mya_yearchart_title">Cumulative annual ... from ... by Country</h6>
+              </div>
+              <!-- Cambodia Body -->
+              <div class="card-body pt-0">
+                <canvas class="py-3" id="MYA_year_Chart" height="100"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
       <!-- End Myanmar tab -->
+
+
     </div>
     <!-- End tab content -->
   </div>
@@ -268,6 +664,41 @@
 
 <script src="{% static 'scripts/disaster_ana.js' %}"></script>
 <script type="text/javascript">
+  //---------------------------------------------------------------------------------------------------------//
+  //-------------------------------------- Set variable/Call function ---------------------------------------//
+  //--------------------------------------------------------------------------------------------------------//
+  //---------* SDC Project data *---------//
+  var KHM_project = {{ khm_project| safe }};
+  var LAO_project = {{ lao_project| safe }};
+  //var MYA_project = {{ mya_project| safe }};
+
+  //---------* SDC Project data Checkbox *---------//
+  var KHMproject_arr = [];
+  var LAOproject_arr = [];
+  var MYAproject_arr = [];
+
+
+  //---------* GeoJSON data generate and download *---------//
+  var khm_map_data;
+  var lao_map_data;
+  //var mya_map_data;
+
+  //---------* Variable for selection form *---------//
+  // Set the selection varible, It will use to name a JPEG file too.
+  // Cambodia
+  var khm_dis_sel = $('[name=khm_dis_selected]').val();
+  var khm_impact_sel = $('[name=khm_impact_selected]').val();
+  var khm_lev_sel = $('[name=khm_level_selected]').val();
+  // Laos
+  var lao_dis_sel = $('[name=lao_dis_selected]').val();
+  var lao_impact_sel = $('[name=lao_impact_selected]').val();
+  var lao_lev_sel = $('[name=lao_level_selected]').val();
+  // Myanmar
+  var mya_dis_sel = $('[name=mya_dis_selected]').val();
+  var mya_impact_sel = $('[name=mya_impact_selected]').val();
+  var mya_lev_sel = $('[name=mya_level_selected]').val();
+
+
   //---------------------------------------------------------------------------------------//
   //--------------------------------------AJAX CODE---------------------------------------//
   //--------------------------------------------------------------------------------------//  
@@ -291,12 +722,13 @@
         $('#khm_map_title').text("Cumulative " + ImpactTitleName(khm_data.impact) + " from " + khm_data.dis + " by " + Datalevel(khm_data.level) + " (Map Chart)");
         $('#khm_locchart_title').text("Cumulative " + ImpactTitleName(khm_data.impact) + " from " + khm_data.dis + " by " + Datalevel(khm_data.level) + " (Bar Chart)");
         $('#khm_yearchart_title').text("Cumulative annual " + ImpactTitleName(khm_data.impact) + " from " + khm_data.dis + "  by Country");
-        KHM_MapChart(khm_data);
-        KMH_EventChart(khm_data);
+        KHM_MapChart(khm_data, KHMproject_arr);
+        //console.log(khm_data.map_data);
+        KHM_EventChart(khm_data);
         KHM_YearChart(khm_data);
-        CreateKHM_Slider(khm_data);
-        //alert('Disaster: ' + khm_data.dis + ' Level: ' + khm_data.level + ' Impact: ' + khm_data.impact);
-        //console.log(khm_data.list_impact);
+        CreateKHM_Slider(khm_data, KHMproject_arr);
+        // Add download file
+        khm_map_data = khm_data;
       },
       error: function () {
         alert('error')
@@ -311,13 +743,13 @@
   $(document).on('change', '#khm_form', function (p) {
     p.preventDefault();
 
-    var khm_dis_sel = $('[name=khm_dis_selected]').val();
-    var khm_impact_sel = $('[name=khm_impact_selected]').val();
-    var khm_lev_sel = $('[name=khm_level_selected]').val();
+    khm_dis_sel = $('[name=khm_dis_selected]').val();
+    khm_impact_sel = $('[name=khm_impact_selected]').val();
+    khm_lev_sel = $('[name=khm_level_selected]').val();
     KHM_Ajax(khm_dis_sel, khm_impact_sel, khm_lev_sel);
   });
 
-    // *********************************************** Laos AJAX *********************************************** //
+  // *********************************************** Laos AJAX *********************************************** //
   // Laos Submission
   // Main Laos submit Function 
   function LAO_Ajax(event, impact, level) {
@@ -336,12 +768,15 @@
         $('#lao_map_title').text("Cumulative " + ImpactTitleName(lao_data.impact) + " from " + lao_data.dis + " by " + Datalevel(lao_data.level) + " (Map Chart)");
         $('#lao_locchart_title').text("Cumulative " + ImpactTitleName(lao_data.impact) + " from " + lao_data.dis + " by " + Datalevel(lao_data.level) + " (Bar Chart)");
         $('#lao_yearchart_title').text("Cumulative annual " + ImpactTitleName(lao_data.impact) + " from " + lao_data.dis + "  by Country");
-        LAO_MapChart(lao_data);
+        LAO_MapChart(lao_data, LAOproject_arr);
         LAO_EventChart(lao_data);
         LAO_YearChart(lao_data);
         CreateLAO_Slider(lao_data);
         //alert('Disaster: ' + lao_data.dis + ' Level: ' + lao_data.level + ' Impact: ' + lao_data.impact);
         //console.log(lao_data.list_impact);
+
+        // Add download file
+        lao_map_data = lao_data;
       },
       error: function () {
         alert('error')
@@ -356,25 +791,14 @@
   $(document).on('change', '#lao_form', function (qq) {
     qq.preventDefault();
 
-    var lao_dis_sel = $('[name=lao_dis_selected]').val();
-    var lao_impact_sel = $('[name=lao_impact_selected]').val();
-    var lao_lev_sel = $('[name=lao_level_selected]').val();
+    lao_dis_sel = $('[name=lao_dis_selected]').val();
+    lao_impact_sel = $('[name=lao_impact_selected]').val();
+    lao_lev_sel = $('[name=lao_level_selected]').val();
     LAO_Ajax(lao_dis_sel, lao_impact_sel, lao_lev_sel);
   });
 
-
-  //--------------------------------------------------------------------------------------------//
-  //-------------------------------------- HighChart Map ---------------------------------------//
-  //-------------------------------------------------------------------------------------------//  
-
-  // load all 3 level map
-  const camMap_p = "{% static 'JSON/Cambodia/Cambodia_Province.geojson' %}";
-  const camMap_d = "{% static 'JSON/Cambodia/Cambodia_District.geojson' %}";
-  const camMap_c = "{% static 'JSON/Cambodia/Cambodia_Commune.geojson' %}";
-
-  const laoMap_p = "{% static 'JSON/Laos/Laos_Province.geojson' %}";
-  const laoMap_d = "{% static 'JSON/Laos/Laos_District.geojson' %}";
-
+  // *********************************************** Myanmar AJAX *********************************************** //
+  
   //---------------------------------------------------------------------------------------------//
   //-------------------------------------- Year Selection ---------------------------------------//
   //---------------------------------------------------------------------------------------------// 
@@ -395,7 +819,7 @@
 
   //------------* Cambodia *------------//
   // Create new slider for Cambodia
-  function CreateKHM_Slider(khm_data) {
+  function CreateKHM_Slider(khm_data, arr) {
     destroyExistingSlider(KHM_YearSlider);
 
     KHM_YearSlider = document.getElementById('khm_year_slider');
@@ -439,10 +863,13 @@
         },
         dataType: 'json',
         success: function (khm_year) {
-          KHM_MapChart(khm_year);
-          KMH_EventChart(khm_year);
+          KHM_MapChart(khm_year, arr);
+          KHM_EventChart(khm_year);
           //alert(khm_year.dis + ' + ' + khm_year.impact + ' + ' +  khm_year.level + ' : ' + khm_year.year_start + ' - ' + khm_year.year_end);
           //console.log(khm_year.map_data)
+
+          // Add download file
+          khm_map_data = khm_year;
         },
         error: function () {
           alert('error')
@@ -451,9 +878,9 @@
     });
 
   }
-//------------* Laos *------------//
-// Create new slider for Laos
-function CreateLAO_Slider(lao_data) {
+  //------------* Laos *------------//
+  // Create new slider for Laos
+  function CreateLAO_Slider(lao_data, arr) {
     destroyExistingSlider(LAO_YearSlider);
 
     LAO_YearSlider = document.getElementById('lao_year_slider');
@@ -497,10 +924,13 @@ function CreateLAO_Slider(lao_data) {
         },
         dataType: 'json',
         success: function (lao_year) {
-          LAO_MapChart(lao_year);
+          LAO_MapChart(lao_year, arr);
           LAO_EventChart(lao_year);
           //alert(khm_year.dis + ' + ' + khm_year.impact + ' + ' +  khm_year.level + ' : ' + khm_year.year_start + ' - ' + khm_year.year_end);
           //console.log(khm_year.map_data)
+
+          // Add download file
+          lao_map_data = lao_year;
         },
         error: function () {
           alert('error')
@@ -509,9 +939,95 @@ function CreateLAO_Slider(lao_data) {
     });
 
   }
-//------------* Myanmar *------------//
+  //------------* Myanmar *------------//
+
+  //---------------------------------------------------------------------------------------------------//
+  //-------------------------------------- Map Tile Selection -----------------------------------------//
+  //---------------------------------------------------------------------------------------------------//
+  //--------- * Cambodia map tile selection *-----------*//
+  var KHM_MapTile = 'satellite';
+
+  // KHM map tile selection
+  $(document).on('click', '[name=KHM_maptileOptions]', function () {
+    KHM_MapTile = $('[name=KHM_maptileOptions]:checked').val();
+    //updateDiv("#cam_map");
+    KHM_Ajax($('[name=khm_dis_selected]').val(), $('[name=khm_impact_selected]').val(), $('[name=khm_level_selected]').val());
+    //alert(KHM_MapTile);
+  });
+
+  //--------- * Laos map tile selection *-----------*//
+  var LAO_MapTile = 'satellite';
+
+  // LAO map tile selection
+  $(document).on('click', '[name=LAO_maptileOptions]', function () {
+    LAO_MapTile = $('[name=LAO_maptileOptions]:checked').val();
+    LAO_Ajax($('[name=lao_dis_selected]').val(), $('[name=lao_impact_selected]').val(), $('[name=lao_level_selected]').val());
+  });
+
+  //--------- * Myanmar map tile selection *-----------*//
+  var MYA_MapTile = 'satellite';
+
+  // LAO map tile selection
+  $(document).on('click', '[name=MYA_maptileOptions]', function () {
+    MYA_MapTile = $('[name=MYA_maptileOptions]:checked').val();
+    MYA_Ajax($('[name=mya_dis_selected]').val(), $('[name=mya_impact_selected]').val(), $('[name=mya_level_selected]').val());
+  });
 
 
+  //------------------------------------------------------------------------------------------------------//
+  //-------------------------------------- SDC Project Selection -----------------------------------------//
+  //------------------------------------------------------------------------------------------------------//
+  //--------- * Cambodia project selection *-----------*//
+  // Adding SDC project maker in cambodia
+  $('#KHM_projectbox_show').hide();
+  $(document).on('change', '[name=KHM_sdc_project]', function () {
+    KHMproject_arr = [];
+    {
+      $('[name=KHM_sdc_project]:checked').each(function () {
+        KHMproject_arr.push($(this).val());
+      });
+    }
+    //console.log(KHMproject_arr.length);
+    if (KHMproject_arr.length == 0) {
+      $('#KHM_projectbox_show').hide();
+    }
+    else if (KHMproject_arr.length != 0) {
+      $('#KHM_projectbox_show').show();
+    }
+
+    KHM_Ajax($('[name=khm_dis_selected]').val(), $('[name=khm_impact_selected]').val(), $('[name=khm_level_selected]').val());
+    KHM_MakerNoteBox(KHMproject_arr);
+  });
+
+  //--------- * Laos project selection *-----------*//
+  $('#LAO_projectbox_show').hide();
+  $(document).on('change', '[name=LAO_sdc_project]', function () {
+    LAOproject_arr = [];
+    {
+      $('[name=LAO_sdc_project]:checked').each(function () {
+        LAOproject_arr.push($(this).val());
+      });
+      //console.log(LAOproject_arr);
+    }
+    if (LAOproject_arr.length == 0) {
+      $('#LAO_projectbox_show').hide();
+    }
+    else if (LAOproject_arr.length != 0) {
+      $('#LAO_projectbox_show').show();
+    }
+
+    LAO_Ajax($('[name=lao_dis_selected]').val(), $('[name=lao_impact_selected]').val(), $('[name=lao_level_selected]').val());
+    LAO_MakerNoteBox(LAOproject_arr);
+  });
+
+
+  //-----------------------------------------------------------------------------------------------------// 
+  //---------------------------------- Call Download Map Function ---------------------------------------//
+  //-----------------------------------------------------------------------------------------------------//
+  $(document).ready(function () {
+    KHMdownloadChartasJPEG();
+    LAOdownloadChartasJPEG();
+  });
 
 
 </script>

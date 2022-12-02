@@ -49,11 +49,9 @@ function ThreeDatalevel(dlev) {
 // --------------------------------------------------* Cambodia *-------------------------------------------------------------//
 
 function KHMdownloadChartasJPEG() {
-    var khm_haz = $('[name=khm_haz_selected]').val();
-    var khm_lev = $('[name=khm_level_selected]').val();
     document.getElementById("khm_download_jpg").addEventListener("click", function () {
         html2canvas(document.getElementById("cambodia_map_container"), { allowTaint: true, useCORS: true }).then(function (canvas) {
-            console.log(canvas);
+            //console.log(canvas);
             simulateDownloadImageClick(canvas.toDataURL(), 'KHM_' + khm_haz + '_' + ThreeDatalevel(khm_lev) + '.jpg');
         });
     });
@@ -62,15 +60,14 @@ function KHMdownloadChartasJPEG() {
 // --------------------------------------------------* Laos *-------------------------------------------------------------//
 
 function LAOdownloadChartasJPEG() {
-    var lao_haz = $('[name=lao_haz_selected]').val();
-    var lao_lev = $('[name=lao_level_selected]').val();
     document.getElementById("lao_download_jpg").addEventListener("click", function () {
         html2canvas(document.getElementById("laos_map_container"), { allowTaint: true, useCORS: true }).then(function (canvas) {
-            console.log(canvas);
+            //console.log(canvas);
             simulateDownloadImageClick(canvas.toDataURL(), 'LAO_' + lao_haz + '_' + TwoDatalevel(lao_lev) + '.jpg');
         });
     });
 }
+
 
 //----------------------------------------------------------------------------------------------------------------//
 //--------------------------------------- Global function for leaflet Map ----------------------------------------//
@@ -114,9 +111,9 @@ function getMapTile(mt) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------------------//
-//--------------------------------------- Global leaflet Map  Function ----------------------------------------//
-//-------------------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------------------------------------------------------------------//
+//--------------------------------------- Location marker function for leaflet Map ----------------------------------------//
+//-------------------------------------------------------------------------------------------------------------------------//
 // ------- Location marker image function ------- //
 const pinkDot = new L.icon({
     iconUrl: '/static/images/Project_dot_on_map/pink_dot.png',

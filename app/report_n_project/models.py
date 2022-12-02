@@ -42,3 +42,17 @@ class sdc_project_laos(models.Model):
     class Meta:
         db_table = "sdc_project_laos"
 
+class sdc_project_myanmar(models.Model):
+    id = models.IntegerField(primary_key=True, null=False)
+    project_fullname = models.CharField(max_length=256, null=False)
+    project_shortname = models.CharField(max_length=128, null=False)
+    objective = models.CharField(max_length=512)
+    duration = models.CharField(max_length=256)
+    budget = models.CharField(max_length=256)
+    location = models.CharField(max_length=256)
+    partners = models.CharField(max_length=256)
+    outcome = models.CharField(max_length=512)
+    pdf_download = models.CharField(max_length=256)
+    class Meta:
+        db_table = "sdc_project_myanmar"
+

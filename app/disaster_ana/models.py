@@ -85,3 +85,20 @@ class sdc_project_location_laos(models.Model):
     class Meta:
         db_table = "sdc_project_location_laos"
 
+class sdc_project_location_myanmar(models.Model):
+    id = models.IntegerField(primary_key=True, null=False)
+    project = models.CharField(max_length=256, null=False)
+    country_id = models.CharField(max_length=10)
+    country_name = models.CharField(max_length=128)
+    province_id = models.CharField(max_length=10, null=False)
+    province_name = models.CharField(max_length=128)
+    district_id = models.CharField(max_length=10)
+    district_name = models.CharField(max_length=128)
+    commune_id = models.CharField(max_length=10)
+    commune_name = models.CharField(max_length=128)
+    latitude = models.DecimalField(max_digits=18, decimal_places=11)
+    longitude = models.DecimalField(max_digits=18, decimal_places=11)
+    detail = models.CharField(max_length=512)
+    class Meta:
+        db_table = "sdc_project_location_myanmar"
+
