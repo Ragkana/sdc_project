@@ -93,7 +93,7 @@ function level(lev) {
 }
 
 // Assigning color for selected parameter class
-function getColor(param, level) {
+function getColor(param) {
     return param == undefined ? '#fff' :
         param > 80 ? '#370001' :
             param > 60 ? '#9B0103' :

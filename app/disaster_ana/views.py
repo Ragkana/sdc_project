@@ -403,49 +403,205 @@ def disaster_data_export(level, data, province, district, commune):
 ## Vulnerability Main page ##
 @login_required(login_url='login')
 def vulnerability(request):
-    return render(request, "vulnerability.html", {'url_name': 'vulnerability'})
+    # Sending SDC project value
+    khm_sdc = sdc_project_location_cambodia.objects.values('project').annotate(count=Count('project'))
+    lao_sdc = sdc_project_location_laos.objects.values('project').annotate(count=Count('project'))
+    #mya_sdc = sdc_project_location_myanmar.objects.values('project').annotate(count=Count('project'))
+
+    ## Sending SDC project latitude and longitude ##
+    # Cambodia
+    khm_loc = pd.DataFrame(sdc_project_location_cambodia.objects.values('id', 'project', 'country_id', 'country_name', 'province_id', 'province_name', 'district_id', 'district_name',
+    'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
+    khm_data = project_location_JSON(khm_loc)
+        
+    # Laos
+    lao_loc = pd.DataFrame(sdc_project_location_laos.objects.values('id', 'project', 'country_id', 'country_name', 'province_id', 'province_name', 'district_id', 'district_name',
+    'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
+    lao_data = project_location_JSON(lao_loc)
+
+    # Myanmar
+    #mya_loc = pd.DataFrame(sdc_project_location_myanmar.objects.values('id', 'project', 'country_id', 'country_name', 'province_id', 'province_name', 'district_id', 'district_name',
+    #'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
+    #mya_data = project_location_JSON(mya_loc)
+    return render(request, "vulnerability.html", {'url_name': 'vulnerability', 'khm_project':khm_data, 'lao_project':lao_data, 'khm_sdc':khm_sdc, 'lao_sdc':lao_sdc})
 
 #### Cambodia ####
 def vul_khm_population(request):
     pop_select = request.POST['khm_pop_type']
+    # import GEOJSON file
+    khm_province, khm_province2 = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
+
     pop_data = vulnerability_mpi.objects.values('country_id',pop_select, 'province_name').filter(country_id='KHM')
     value = list(pop_data.values_list(pop_select, flat=True))
     value = listConvertDataType(value)
     area = list(pop_data.values_list('province_name', flat=True))
 
-    popmap_sum = [list(e) for e in zip(area,value)]
-    return JsonResponse({'pop_select':pop_select, 'pop_map_data':popmap_sum}, status=200)
+    df = pd.DataFrame(list(zip(area ,value)), columns =['code', 'value'])
+    df['percentage'] = (df['value'] / df['value'].max()) * 100
+    # After calculate, we've got NaN in some record. Thus, we have to set NaN to 0.
+    df = df.fillna(0)
+    popmap_sum = disaster_data('province_name', df, khm_province, district=None, commune=None)
+    popmap_export = disaster_data_export('province_name', df, khm_province2, district=None, commune=None)
+    #popmap_sum = [list(e) for e in zip(area,value)]
+    return JsonResponse({'pop_select':pop_select, 'pop_map_data':popmap_sum, 'map_export':popmap_export}, status=200)
 
 def vul_khm_mpi(request):
     mpi_select = request.POST['khm_mpi_type']
+    # import GEOJSON file
+    khm_province, khm_province2 = json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson')), json.load(open('static/JSON/Cambodia/Cambodia_Province.geojson'))
+
     mpi_data = vulnerability_mpi.objects.values('country_id', mpi_select, 'province_name').filter(country_id='KHM')
     value = list(mpi_data.values_list(mpi_select, flat=True))
     value = listConvertDataType(value)
     area = list(mpi_data.values_list('province_name', flat=True))
 
-    mpimap_sum = [list(e) for e in zip(area,value)]
-    return JsonResponse({'mpi_select':mpi_select, 'mpi_map_data':mpimap_sum}, status=200)
+    df = pd.DataFrame(list(zip(area ,value)), columns =['code', 'value'])
+    df['percentage'] = (df['value'] / df['value'].max()) * 100
+    # After calculate, we've got NaN in some record. Thus, we have to set NaN to 0.
+    df = df.fillna(0)
+    mpimap_sum = disaster_data('province_name', df, khm_province, district=None, commune=None)
+    mpimap_export = disaster_data_export('province_name', df, khm_province2, district=None, commune=None)
+    #mpimap_sum = [list(e) for e in zip(area,value)]
+    return JsonResponse({'mpi_select':mpi_select, 'mpi_map_data':mpimap_sum, 'map_export':mpimap_export}, status=200)
+
+    # For Cambodia csv file download
+def population_khm_csv(request):
+	# response content type
+	response = HttpResponse(content_type='text/csv')
+	#decide the file name
+	response['Content-Disposition'] = 'attachment; filename="cambodia_population.csv"'
+
+	writer = csv.writer(response, csv.excel)
+	response.write(u'\ufeff'.encode('utf8'))
+
+	#write the headers
+	writer.writerow([
+		smart_str(u"province_id"),
+		smart_str(u"province_name"),
+		smart_str(u"population_size"),
+        smart_str(u"number_of_mpi")
+	])
+	#get data from database or from text file....
+	data = vulnerability_mpi.objects.values_list('province_id','province_name','population_size','number_of_mpi').filter(province_id__startswith='KHM')
+	for a in data:
+		writer.writerow(a)
+
+	return response
+
+def mpi_khm_csv(request):
+	# response content type
+	response = HttpResponse(content_type='text/csv')
+	#decide the file name
+	response['Content-Disposition'] = 'attachment; filename="cambodia_mpi.csv"'
+
+	writer = csv.writer(response, csv.excel)
+	response.write(u'\ufeff'.encode('utf8'))
+
+	#write the headers
+	writer.writerow([
+		smart_str(u"province_id"),
+		smart_str(u"province_name"),
+		smart_str(u"mpi"),
+        smart_str(u"population_in_mpi"),
+        smart_str(u"intensity_of_deprivation"),
+        smart_str(u"vulnerable_to_poverty"),
+        smart_str(u"in_severe_poverty")
+	])
+	#get data from database or from text file....
+	data = vulnerability_mpi.objects.values_list('province_id','province_name','mpi','population_in_mpi', "intensity_of_deprivation", "vulnerable_to_poverty", "in_severe_poverty").filter(province_id__startswith='KHM')
+	for a in data:
+		writer.writerow(a)
+
+	return response
 
 #### Laos ####
 def vul_lao_population(request):
     pop_select = request.POST['lao_pop_type']
+    # import GEOJSON file
+    lao_province, lao_province2 = json.load(open('static/JSON/Laos/Laos_Province.geojson')), json.load(open('static/JSON/Laos/Laos_Province.geojson'))
+
     pop_data = vulnerability_mpi.objects.values('country_id',pop_select, 'province_name').filter(country_id='LAO')
     value = list(pop_data.values_list(pop_select, flat=True))
     value = listConvertDataType(value)
     area = list(pop_data.values_list('province_name', flat=True))
 
-    popmap_sum = [list(e) for e in zip(area,value)]
-    return JsonResponse({'pop_select':pop_select, 'pop_map_data':popmap_sum}, status=200)
+    df = pd.DataFrame(list(zip(area ,value)), columns =['code', 'value'])
+    df['percentage'] = (df['value'] / df['value'].max()) * 100
+    # After calculate, we've got NaN in some record. Thus, we have to set NaN to 0.
+    df = df.fillna(0)
+    popmap_sum = disaster_data('province_name', df, lao_province, district=None, commune=None)
+    popmap_export = disaster_data_export('province_name', df, lao_province2, district=None, commune=None)
+    #popmap_sum = [list(e) for e in zip(area,value)]
+    return JsonResponse({'pop_select':pop_select, 'pop_map_data':popmap_sum, 'map_export':popmap_export}, status=200)
 
 def vul_lao_mpi(request):
     mpi_select = request.POST['lao_mpi_type']
+    # import GEOJSON file
+    lao_province, lao_province2 = json.load(open('static/JSON/Laos/Laos_Province.geojson')), json.load(open('static/JSON/Laos/Laos_Province.geojson'))
+
     mpi_data = vulnerability_mpi.objects.values('country_id', mpi_select, 'province_name').filter(country_id='LAO')
     value = list(mpi_data.values_list(mpi_select, flat=True))
     value = listConvertDataType(value)
     area = list(mpi_data.values_list('province_name', flat=True))
 
-    mpimap_sum = [list(e) for e in zip(area,value)]
-    return JsonResponse({'mpi_select':mpi_select, 'mpi_map_data':mpimap_sum}, status=200)
+    df = pd.DataFrame(list(zip(area ,value)), columns =['code', 'value'])
+    df['percentage'] = (df['value'] / df['value'].max()) * 100
+    # After calculate, we've got NaN in some record. Thus, we have to set NaN to 0.
+    df = df.fillna(0)
+    mpimap_sum = disaster_data('province_name', df, lao_province, district=None, commune=None)
+    mpimap_export = disaster_data_export('province_name', df, lao_province2, district=None, commune=None)
+    #mpimap_sum = [list(e) for e in zip(area,value)]
+    return JsonResponse({'mpi_select':mpi_select, 'mpi_map_data':mpimap_sum, 'map_export':mpimap_export}, status=200)
+
+    # For Laos csv file download
+def population_lao_csv(request):
+	# response content type
+	response = HttpResponse(content_type='text/csv')
+	#decide the file name
+	response['Content-Disposition'] = 'attachment; filename="laos_population.csv"'
+
+	writer = csv.writer(response, csv.excel)
+	response.write(u'\ufeff'.encode('utf8'))
+
+	#write the headers
+	writer.writerow([
+		smart_str(u"province_id"),
+		smart_str(u"province_name"),
+		smart_str(u"population_size"),
+        smart_str(u"number_of_mpi")
+	])
+	#get data from database or from text file....
+	data = vulnerability_mpi.objects.values_list('province_id','province_name','population_size','number_of_mpi').filter(province_id__startswith='LAO')
+	for a in data:
+		writer.writerow(a)
+
+	return response
+
+def mpi_lao_csv(request):
+	# response content type
+	response = HttpResponse(content_type='text/csv')
+	#decide the file name
+	response['Content-Disposition'] = 'attachment; filename="laos_mpi.csv"'
+
+	writer = csv.writer(response, csv.excel)
+	response.write(u'\ufeff'.encode('utf8'))
+
+	#write the headers
+	writer.writerow([
+		smart_str(u"province_id"),
+		smart_str(u"province_name"),
+		smart_str(u"mpi"),
+        smart_str(u"population_in_mpi"),
+        smart_str(u"intensity_of_deprivation"),
+        smart_str(u"vulnerable_to_poverty"),
+        smart_str(u"in_severe_poverty")
+	])
+	#get data from database or from text file....
+	data = vulnerability_mpi.objects.values_list('province_id','province_name','mpi','population_in_mpi', "intensity_of_deprivation", "vulnerable_to_poverty", "in_severe_poverty").filter(province_id__startswith='LAO')
+	for a in data:
+		writer.writerow(a)
+
+	return response
 
 ##########################################################################################################################################################
 ######################################################### Hazard Module ##################################################################################
