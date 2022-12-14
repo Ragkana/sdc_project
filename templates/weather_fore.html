@@ -43,42 +43,150 @@
             <div class="card-body pt-0">
               <!-- Day slider -->
               <div class="col-12">
-              <div class="row border-bottom py-2">
-                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
-                  <div id="khm_date_slider" name="khm_selected_date"></div>
+                <div class="row border-bottom py-2">
+                  <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div id="khm_date_slider" name="khm_selected_date"></div>
+                  </div>
                 </div>
               </div>
-              </div>
-              
-              <!-- Myanmar Map Box-->
-              <div class="row">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                
-                <div class="map" style="height: calc(70vh - 7.5rem);width: 100%;margin: 0 auto;" id="cam_map"></div>
-                <!-- Cambodia Weather parameter button-->
-                <form method="post" class="py-2" id="khm_form">
-                  {% csrf_token %}
-                <div class="btn btn-group-vertical btn-group-toggle" data-toggle="buttons" style="position: absolute;top: 0px;right: 10px;padding: 10px;z-index: 400;">
-                  <label class="btn btn-white active" data-toggle="tooltip" data-placement="left" title="Rainfall (mm)">
-                    <input type="radio" name="khm_wf_param" id="rainfall" value='rainfall' autocomplete="off"> <i class="fa-solid fa-cloud-rain" style="font-size: 1.25rem;"></i>
-                  </label>
-                  <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Relative Humidity (%)">
-                    <input type="radio" name="khm_wf_param" id="humidity" value='humidity' autocomplete="off"> <i class="fa-solid fa-droplet" style="font-size: 1.25rem;"></i>
-                  </label>
-                  <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Max Temperature (°C)">
-                    <input type="radio" name="khm_wf_param" id="max_temp" value='max_temp' autocomplete="off"> <i class="fa-solid fa-temperature-high" style="font-size: 1.25rem;"></i>
-                    </label>
-                    <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Min Temperature (°C)">
-                      <input type="radio" name="khm_wf_param" id="min_temp" value='min_temp' autocomplete="off"> <i class="fa-solid fa-temperature-low" style="font-size: 1.25rem;"></i>
-                    </label>
-                    <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Wind Speed (km/h)">
-                      <input type="radio" name="khm_wf_param" id="windspeed" value='windspeed' autocomplete="off"> <i class="fa-solid fa-wind" style="font-size: 1.25rem;"></i>
-                    </label>
-                </div>
-              </form>
 
+              <!-- Map Box-->
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+
+                  <div class="map" style="height: calc(70vh - 7.5rem);width: 100%;margin: 0 auto;" id="cam_map">
+                    <!-- Map Legend -->
+                    <div class="leaflet-bottom leaflet-right">
+                      <div id="khm_cbar">
+                        <table style="width:100%;">
+                          <tbody>
+                            <tr id="khm_cbar_value">
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <!-- /. Map Legend -->
+
+                    <!-- SDC project Map Legend -->
+                    <div class="leaflet-bottom leaflet-left">
+                      <div class="text-box" style="margin: 5px;"
+                        id="KHM_projectbox_show">
+                        <div id="KHM_project_show"></div>
+                      </div>
+                    </div>
+                    <!-- /. SDC project Map Legend -->
+                  </div>
+                  <!-- /. Map box -->
+                  
+                  <!-- Cambodia Weather parameter button-->
+                  <form method="post" class="py-2" id="khm_form">
+                    {% csrf_token %}
+                    <div class="btn btn-group-vertical btn-group-toggle" data-toggle="buttons"
+                      style="position: absolute;top: 0px;right: 10px;padding: 10px;z-index: 400;">
+                      <label class="btn btn-white active" data-toggle="tooltip" data-placement="left"
+                        title="Rainfall (mm)">
+                        <input type="radio" name="khm_wf_param" id="rainfall" value='rainfall' autocomplete="off"> <i
+                          class="fa-solid fa-cloud-rain" style="font-size: 1.25rem;"></i>
+                      </label>
+                      <label class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                        title="Relative Humidity (%)">
+                        <input type="radio" name="khm_wf_param" id="humidity" value='humidity' autocomplete="off"> <i
+                          class="fa-solid fa-droplet" style="font-size: 1.25rem;"></i>
+                      </label>
+                      <label class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                        title="Max Temperature (°C)">
+                        <input type="radio" name="khm_wf_param" id="max_temp" value='max_temp' autocomplete="off"> <i
+                          class="fa-solid fa-temperature-high" style="font-size: 1.25rem;"></i>
+                      </label>
+                      <label class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                        title="Min Temperature (°C)">
+                        <input type="radio" name="khm_wf_param" id="min_temp" value='min_temp' autocomplete="off"> <i
+                          class="fa-solid fa-temperature-low" style="font-size: 1.25rem;"></i>
+                      </label>
+                      <label class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                        title="Wind Speed (km/h)">
+                        <input type="radio" name="khm_wf_param" id="windspeed" value='windspeed' autocomplete="off"> <i
+                          class="fa-solid fa-wind" style="font-size: 1.25rem;"></i>
+                      </label>
+                    </div>
+                  </form>
+
+                  <!-- Dropdown button on map -->
+                  <div class="btn-group-vertical"
+                    style="position: absolute;top: 4.725rem;left: 1.9rem;padding: 10px;z-index: 400;">
+                    <div class="row">
+
+                      <!-- Map Tile & SDC project location button -->
+                      <div class="btn-group dropright">
+                        <button class="btn btn-light" type="button" id="KHM_dropdownmenubuttonLayers"
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                          style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                          <i class="fa-solid fa-layer-group" style="font-size: 1rem;"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                          aria-labelledby="KHM_dropdownmenubuttonLayers" style="padding:0.425rem; width:fit-content;">
+                          <span>Map tiles</span>
+                          <div class="form-check pt-1">
+                            <input class="form-check-input" type="radio" name="KHM_maptileOptions" id="KHM_BaseMap"
+                              value="base">
+                            <label class="form-check-label" for="KHM_BaseMap">Base</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="KHM_maptileOptions" id="KHM_Satellite"
+                              value="satellite" checked>
+                            <label class="form-check-label" for="KHM_Satellite">Satellite</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="KHM_maptileOptions" id="KHM_Terrain"
+                              value="terrain">
+                            <label class="form-check-label" for="KHM_Terrain">Terrain</label>
+                          </div>
+
+                          <div class="dropdown-divider"></div>
+                          <span>SDC projects</span>
+
+                          {% for p in khm_sdc %}
+                          <div class="form-check pt-1">
+
+                            <input class="form-check-input" type="checkbox" id="{{p.project}}" name="KHM_sdc_project"
+                              value="{{p.project}}">
+                            <label class="form-check-label" for="{{p.project}}">{{p.project}}</label>
+                          </div>
+                          {% endfor %}
+
+                        </div>
+                      </div>
+                      <!-- /. Map Tile & SDC project location button -->
+
+                      <!-- Export button -->
+                      <!--<div class="btn-group dropleft">
+                      <button class="btn btn-light" type="button" id="KHM_dropdownmenubuttonDownload"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                        <i class="fa-solid fa-download" style="font-size: 1rem;"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                        aria-labelledby="KHM_dropdownmenubuttonDownload" style="padding:0; min-width:fit-content;">
+                        <a class="dropdown-item" href="#" id="khm_download_jpg">Download
+                          JPEG</a>
+                        <a class="dropdown-item" href="{% url 'hazard_cambodia_csv' %}">Download
+                          CSV</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" id="khm_download_geojson" href="#"
+                          onclick="KHM_onDownload_JSON(khm_map_data)">Download GeoJSON</a>
+                        <a class="dropdown-item" id="khm_download_geotiff" href="#"
+                          onclick="KHM_onDownload_TIFF(khm_map_data)">Download GeoTIFF</a>
+                      </div>
+                    </div>-->
+                      <!-- /. Export button -->
+
+                    </div>
+                  </div>
+                  <!-- /. Dropdown button on map -->
+
+                </div>
               </div>
-            </div>
             </div> <!-- End card body -->
           </div><!-- End card -->
         </div> <!-- End row-->
@@ -98,42 +206,149 @@
             <div class="card-body pt-0">
               <!-- Day slider -->
               <div class="col-12">
-              <div class="row border-bottom py-2">
-                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
-                  <div id="lao_date_slider" name="lao_selected_date"></div>
+                <div class="row border-bottom py-2">
+                  <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div id="lao_date_slider" name="lao_selected_date"></div>
+                  </div>
                 </div>
               </div>
-              </div>
-              
+
               <!-- Laos Map Box-->
               <div class="row">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                
-                <div class="map w-100" style="height: calc(70vh - 7.5rem);" id="lao_map"></div>
-                <!-- Cambodia Weather parameter button-->
-                <form method="post" class="py-2" id="lao_form">
-                  {% csrf_token %}
-                <div class="btn btn-group-vertical btn-group-toggle" data-toggle="buttons" style="position: absolute;top: 0px;right: 10px;padding: 10px;z-index: 400;">
-                  <label class="btn btn-white active" data-toggle="tooltip" data-placement="left" title="Rainfall (mm)">
-                    <input type="radio" name="lao_wf_param" id="rainfall" value='rainfall' autocomplete="off"> <i class="fa-solid fa-cloud-rain" style="font-size: 1.25rem;"></i>
-                  </label>
-                  <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Relative Humidity (%)">
-                    <input type="radio" name="lao_wf_param" id="humidity" value='humidity' autocomplete="off"> <i class="fa-solid fa-droplet" style="font-size: 1.25rem;"></i>
-                  </label>
-                  <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Max Temperature (°C)">
-                    <input type="radio" name="lao_wf_param" id="max_temp" value='max_temp' autocomplete="off"> <i class="fa-solid fa-temperature-high" style="font-size: 1.25rem;"></i>
-                    </label>
-                    <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Min Temperature (°C)">
-                      <input type="radio" name="lao_wf_param" id="min_temp" value='min_temp' autocomplete="off"> <i class="fa-solid fa-temperature-low" style="font-size: 1.25rem;"></i>
-                    </label>
-                    <label class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Wind Speed (km/h)">
-                      <input type="radio" name="lao_wf_param" id="windspeed" value='windspeed' autocomplete="off"> <i class="fa-solid fa-wind" style="font-size: 1.25rem;"></i>
-                    </label>
-                </div>
-              </form>
+                <div class="col-lg-12 col-md-12 col-sm-12">
 
+                  <div class="map" style="height: calc(70vh - 7.5rem);width: 100%;margin: 0 auto;" id="lao_map">
+                    <!-- Map Legend -->
+                    <div class="leaflet-bottom leaflet-right">
+                      <div id="lao_cbar">
+                        <table style="width:100%;">
+                          <tbody>
+                            <tr id="lao_cbar_value">
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <!-- /. Map Legend -->
+
+                    <!-- SDC project Map Legend -->
+                    <div class="leaflet-bottom leaflet-left">
+                      <div class="text-box" style="margin: 5px;"
+                        id="LAO_projectbox_show">
+                        <div id="LAO_project_show"></div>
+                      </div>
+                    </div>
+                    <!-- /. SDC project Map Legend -->
+                  </div>
+
+                  <!-- Cambodia Weather parameter button-->
+                  <form method="post" class="py-2" id="lao_form">
+                    {% csrf_token %}
+                    <div class="btn btn-group-vertical btn-group-toggle" data-toggle="buttons"
+                      style="position: absolute;top: 0px;right: 10px;padding: 10px;z-index: 400;">
+                      <label class="btn btn-white active" data-toggle="tooltip" data-placement="left"
+                        title="Rainfall (mm)">
+                        <input type="radio" name="lao_wf_param" id="rainfall" value='rainfall' autocomplete="off"> <i
+                          class="fa-solid fa-cloud-rain" style="font-size: 1.25rem;"></i>
+                      </label>
+                      <label class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                        title="Relative Humidity (%)">
+                        <input type="radio" name="lao_wf_param" id="humidity" value='humidity' autocomplete="off"> <i
+                          class="fa-solid fa-droplet" style="font-size: 1.25rem;"></i>
+                      </label>
+                      <label class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                        title="Max Temperature (°C)">
+                        <input type="radio" name="lao_wf_param" id="max_temp" value='max_temp' autocomplete="off"> <i
+                          class="fa-solid fa-temperature-high" style="font-size: 1.25rem;"></i>
+                      </label>
+                      <label class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                        title="Min Temperature (°C)">
+                        <input type="radio" name="lao_wf_param" id="min_temp" value='min_temp' autocomplete="off"> <i
+                          class="fa-solid fa-temperature-low" style="font-size: 1.25rem;"></i>
+                      </label>
+                      <label class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                        title="Wind Speed (km/h)">
+                        <input type="radio" name="lao_wf_param" id="windspeed" value='windspeed' autocomplete="off"> <i
+                          class="fa-solid fa-wind" style="font-size: 1.25rem;"></i>
+                      </label>
+                    </div>
+                  </form>
+
+                  <!-- Dropdown button on map -->
+                  <div class="btn-group-vertical"
+                    style="position: absolute;top: 4.725rem;left: 1.9rem;padding: 10px;z-index: 400;">
+                    <div class="row">
+
+                      <!-- Map Tile & SDC project location button -->
+                      <div class="btn-group dropright">
+                        <button class="btn btn-light" type="button" id="LAO_dropdownmenubuttonLayers"
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                          style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                          <i class="fa-solid fa-layer-group" style="font-size: 1rem;"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                          aria-labelledby="LAO_dropdownmenubuttonLayers" style="padding:0.425rem; width:fit-content;">
+                          <span>Map tiles</span>
+                          <div class="form-check pt-1">
+                            <input class="form-check-input" type="radio" name="LAO_maptileOptions" id="LAO_BaseMap"
+                              value="base">
+                            <label class="form-check-label" for="LAO_BaseMap">Base</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="LAO_maptileOptions" id="LAO_Satellite"
+                              value="satellite" checked>
+                            <label class="form-check-label" for="LAO_Satellite">Satellite</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="LAO_maptileOptions" id="LAO_Terrain"
+                              value="terrain">
+                            <label class="form-check-label" for="LAO_Terrain">Terrain</label>
+                          </div>
+
+                          <div class="dropdown-divider"></div>
+                          <span>SDC projects</span>
+
+                          {% for q in lao_sdc %}
+                          <div class="form-check pt-1">
+
+                            <input class="form-check-input" type="checkbox" id="{{q.project}}" name="LAO_sdc_project"
+                              value="{{q.project}}">
+                            <label class="form-check-label" for="{{q.project}}">{{q.project}}</label>
+                          </div>
+                          {% endfor %}
+
+                        </div>
+                      </div>
+                      <!-- /. Map Tile & SDC project location button -->
+
+                      <!-- Export button -->
+                      <!--<div class="btn-group dropleft">
+                      <button class="btn btn-light" type="button" id="KHM_dropdownmenubuttonDownload"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        style="border-radius: 0.2rem; max-width: 40px; padding: 0.5rem;">
+                        <i class="fa-solid fa-download" style="font-size: 1rem;"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-small dropdown-menu-change"
+                        aria-labelledby="KHM_dropdownmenubuttonDownload" style="padding:0; min-width:fit-content;">
+                        <a class="dropdown-item" href="#" id="khm_download_jpg">Download
+                          JPEG</a>
+                        <a class="dropdown-item" href="{% url 'hazard_cambodia_csv' %}">Download
+                          CSV</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" id="khm_download_geojson" href="#"
+                          onclick="KHM_onDownload_JSON(khm_map_data)">Download GeoJSON</a>
+                        <a class="dropdown-item" id="khm_download_geotiff" href="#"
+                          onclick="KHM_onDownload_TIFF(khm_map_data)">Download GeoTIFF</a>
+                      </div>
+                    </div>-->
+                      <!-- /. Export button -->
+
+                    </div>
+                  </div>
+                  <!-- /. Dropdown button on map -->
+
+                </div>
               </div>
-            </div>
             </div> <!-- End card body -->
           </div><!-- End card -->
         </div> <!-- End row-->
@@ -153,34 +368,40 @@
             <div class="card-body pt-0">
               <!-- Day slider -->
               <div class="col-12">
-              <div class="row border-bottom py-2">
-                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
-                  <div id="mya_date_slider"></div>
+                <div class="row border-bottom py-2">
+                  <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div id="mya_date_slider"></div>
+                  </div>
                 </div>
               </div>
-              </div>
-              
+
               <!-- Myanmar Map Box-->
               <div class="row">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                
-                <div class="map w-100" style="height: calc(70vh - 7.5rem);" id="mya_map"></div>
-                <!-- Myanmar Weather parameter button-->
-                <div class="btn btn-group-vertical" role="group" style="position: absolute;top: 10px;right: 10px;padding: 10px;z-index: 400;">
-                  <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Rainfall (mm)">
-                    <i class="fa-solid fa-cloud-rain" style="font-size: 1.25rem;"></i></button>
-                  <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Relative Humidity (%)">
-                    <i class="fa-solid fa-droplet" style="font-size: 1.25rem;"></i></button>
-                  <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Max Temperature (°C)">
-                    <i class="fa-solid fa-temperature-high" style="font-size: 1.25rem;"></i></i></button>
-                  <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Min Temperature (°C)">
-                    <i class="fa-solid fa-temperature-low" style="font-size: 1.25rem;"></i></button>
-                  <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left" title="Wind Speed (km/h)">
-                    <i class="fa-solid fa-wind" style="font-size: 1.25rem;"></i></button>
-                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12">
 
+                  <div class="map w-100" style="height: calc(70vh - 7.5rem);" id="mya_map"></div>
+                  <!-- Myanmar Weather parameter button-->
+                  <div class="btn btn-group-vertical" role="group"
+                    style="position: absolute;top: 10px;right: 10px;padding: 10px;z-index: 400;">
+                    <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                      title="Rainfall (mm)">
+                      <i class="fa-solid fa-cloud-rain" style="font-size: 1.25rem;"></i></button>
+                    <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                      title="Relative Humidity (%)">
+                      <i class="fa-solid fa-droplet" style="font-size: 1.25rem;"></i></button>
+                    <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                      title="Max Temperature (°C)">
+                      <i class="fa-solid fa-temperature-high" style="font-size: 1.25rem;"></i></i></button>
+                    <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                      title="Min Temperature (°C)">
+                      <i class="fa-solid fa-temperature-low" style="font-size: 1.25rem;"></i></button>
+                    <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="left"
+                      title="Wind Speed (km/h)">
+                      <i class="fa-solid fa-wind" style="font-size: 1.25rem;"></i></button>
+                  </div>
+
+                </div>
               </div>
-            </div>
             </div> <!-- End card body -->
           </div><!-- End card -->
         </div> <!-- End row-->
@@ -198,6 +419,19 @@
 {% include "structure/footer.html" %}
 
 <script type="text/javascript">
+  //---------------------------------------------------------------------------------------------------------//
+  //-------------------------------------- Set variable/Call function ---------------------------------------//
+  //--------------------------------------------------------------------------------------------------------//
+  //---------* SDC Project data *---------//
+  var KHM_project = {{ khm_project| safe }};
+  var LAO_project = {{ lao_project| safe }};
+  //var MYA_project = {{ mya_project| safe }};
+
+  //---------* SDC Project data Checkbox *---------//
+  var KHMproject_arr = [];
+  var LAOproject_arr = [];
+  var MYAproject_arr = [];
+
   //-----------------------------------------------------------------------------------------------//
   //--------------------------------------Cambodia AJAX CODE---------------------------------------//
   //----------------------------------------------------------------------------------------------//  
@@ -216,37 +450,37 @@
       cache: false,
 
       success: function (khm_data) {
-        KHM_MapChart(khm_data);
-        //CreateKHM_Slider();
-        //alert(khm_data.date_sel + ' & ' + khm_data.wf_param);
+        KHM_MapChart(khm_data, KHMproject_arr);
+        KHM_LegendBar(khm_data.wf_param);
       },
       error: function () {
         alert('error')
       }
     });
   }
-  
+
   // Cambodia : AJAX default
   // Set today date as default
   var today = new Date();
   today = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
   // Call AJAX
   KHMSubmitAJAX(today, 'rainfall');
-  
+
 
   // Cambodia : AJAX for parameter selection
   // Set default value
   var khm_wf_param;
+  var khm_date_selected;
   if (khm_wf_param == undefined || khm_date_selected == undefined) {
     khm_wf_param = 'rainfall';
     khm_date_selected = today;
   }
   // Retrieve weather parameter data from button
   $(document).on('click', '#khm_form', function () {
-        khm_wf_param = $("input[name=khm_wf_param]:checked").val();
-        console.log(khm_wf_param);
-        // Call AJAX to send data to views.py
-        KHMSubmitAJAX(khm_date_selected, khm_wf_param);
+    khm_wf_param = $("input[name=khm_wf_param]:checked").val();
+    console.log(khm_wf_param);
+    // Call AJAX to send data to views.py
+    KHMSubmitAJAX(khm_date_selected, khm_wf_param);
   });
 
 
@@ -268,41 +502,112 @@
       cache: false,
 
       success: function (lao_data) {
-        LAO_MapChart(lao_data);
-        //CreateKHM_Slider();
-        //alert(lao_data.date_sel + ' & ' + lao_data.wf_param);
+        LAO_MapChart(lao_data, LAOproject_arr);
+        LAO_LegendBar(lao_data.wf_param);
       },
       error: function () {
         alert('error')
       }
     });
   }
-  
+
   // Laos : AJAX default
   LAOSubmitAJAX(today, 'rainfall');
 
   // Laos : AJAX for parameter selection
   // Set default value
   var lao_wf_param;
+  var lao_date_selected;
   if (lao_wf_param == undefined || lao_date_selected == undefined) {
     lao_wf_param = 'rainfall';
     lao_date_selected = today;
   }
   // Retrieve weather parameter data from button
   $(document).on('click', '#lao_form', function () {
-        lao_wf_param = $("input[name=lao_wf_param]:checked").val();
-        console.log(lao_wf_param);
-        // Call AJAX to send data to views.py
-        LAOSubmitAJAX(lao_date_selected, lao_wf_param);
+    lao_wf_param = $("input[name=lao_wf_param]:checked").val();
+    console.log(lao_wf_param);
+    // Call AJAX to send data to views.py
+    LAOSubmitAJAX(lao_date_selected, lao_wf_param);
   });
 
 
-//--------------------------------------------------------------------------------------------------------//
-//---------------------------------- Tooltips Functions for button --------------------------------------//
-//------------------------------------------------------------------------------------------------------// 
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-});
+  //--------------------------------------------------------------------------------------------------------//
+  //---------------------------------- Tooltips Functions for button --------------------------------------//
+  //------------------------------------------------------------------------------------------------------// 
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  });
+
+  //---------------------------------------------------------------------------------------------------//
+  //-------------------------------------- Map Tile Selection -----------------------------------------//
+  //---------------------------------------------------------------------------------------------------//
+  //--------- * Cambodia map tile selection *-----------*//
+  var KHM_MapTile = 'satellite';
+
+  // KHM map tile selection
+  $(document).on('click', '[name=KHM_maptileOptions]', function () {
+    KHM_MapTile = $('[name=KHM_maptileOptions]:checked').val();
+    KHMSubmitAJAX(khm_date_selected, khm_wf_param);
+  });
+
+  //--------- * Laos map tile selection *-----------*//
+  var LAO_MapTile = 'satellite';
+
+  // LAO map tile selection
+  $(document).on('click', '[name=LAO_maptileOptions]', function () {
+    LAO_MapTile = $('[name=LAO_maptileOptions]:checked').val();
+    LAOSubmitAJAX(lao_date_selected, lao_wf_param);
+  });
+
+  //--------- * Myanmar map tile selection *-----------*//
+  var MYA_MapTile = 'satellite';
+
+
+  //------------------------------------------------------------------------------------------------------//
+  //-------------------------------------- SDC Project Selection -----------------------------------------//
+  //------------------------------------------------------------------------------------------------------//
+  //--------- * Cambodia project selection *-----------*//
+  // Adding SDC project maker in cambodia
+  $('#KHM_projectbox_show').hide();
+  $(document).on('change', '[name=KHM_sdc_project]', function () {
+    KHMproject_arr = [];
+    {
+      $('[name=KHM_sdc_project]:checked').each(function () {
+        KHMproject_arr.push($(this).val());
+      });
+    }
+    //console.log(KHMproject_arr.length);
+    if (KHMproject_arr.length == 0) {
+      $('#KHM_projectbox_show').hide();
+    }
+    else if (KHMproject_arr.length != 0) {
+      $('#KHM_projectbox_show').show();
+    }
+
+    KHMSubmitAJAX(khm_date_selected, khm_wf_param);
+    KHM_MakerNoteBox(KHMproject_arr);
+  });
+
+  //--------- * Laos project selection *-----------*//
+  $('#LAO_projectbox_show').hide();
+  $(document).on('change', '[name=LAO_sdc_project]', function () {
+    LAOproject_arr = [];
+    {
+      $('[name=LAO_sdc_project]:checked').each(function () {
+        LAOproject_arr.push($(this).val());
+      });
+      //console.log(LAOproject_arr);
+    }
+    if (LAOproject_arr.length == 0) {
+      $('#LAO_projectbox_show').hide();
+    }
+    else if (LAOproject_arr.length != 0) {
+      $('#LAO_projectbox_show').show();
+    }
+
+    LAOSubmitAJAX(lao_date_selected, lao_wf_param);
+    LAO_MakerNoteBox(LAOproject_arr);
+  });
 
 </script>
 

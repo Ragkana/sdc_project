@@ -279,7 +279,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	}
 .leaflet-bar a,
 .leaflet-bar a:hover {
-	background-color: #fff;
+	background-color: #fff; /* Change zoom button background */
 	border-bottom: 1px solid #ccc;
 	width: 26px;
 	height: 26px;
