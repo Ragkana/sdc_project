@@ -3,7 +3,10 @@ import datetime as dt
 from itertools import count
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+# Database
 from app.weather.models import observation_metdata,weather_forecast_cambodia,weather_forecast_laos
+from app.disaster_ana.models import sdc_project_location_cambodia, sdc_project_location_laos, sdc_project_location_myanmar
+
 from django.db.models import Avg, Count, Min, Max
 from django.contrib.auth.decorators import login_required, permission_required
 
@@ -19,8 +22,27 @@ import json
 
 @login_required(login_url='login')
 def weather_forecast_mod(request):
+    # Sending SDC project value
+    khm_sdc = sdc_project_location_cambodia.objects.values('project').annotate(count=Count('project'))
+    lao_sdc = sdc_project_location_laos.objects.values('project').annotate(count=Count('project'))
+    #mya_sdc = sdc_project_location_myanmar.objects.values('project').annotate(count=Count('project'))
 
-    return render(request, "weather_fore.html", {'url_name': 'weather_forecast'})
+    ## Sending SDC project latitude and longitude ##
+    # Cambodia
+    khm_loc = pd.DataFrame(sdc_project_location_cambodia.objects.values('id', 'project', 'country_id', 'country_name', 'province_id', 'province_name', 'district_id', 'district_name',
+    'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
+    khm_data = project_location_JSON(khm_loc)
+        
+    # Laos
+    lao_loc = pd.DataFrame(sdc_project_location_laos.objects.values('id', 'project', 'country_id', 'country_name', 'province_id', 'province_name', 'district_id', 'district_name',
+    'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
+    lao_data = project_location_JSON(lao_loc)
+
+    # Myanmar
+    #mya_loc = pd.DataFrame(sdc_project_location_myanmar.objects.values('id', 'project', 'country_id', 'country_name', 'province_id', 'province_name', 'district_id', 'district_name',
+    #'commune_id', 'commune_name', 'latitude', 'longitude', 'detail'))
+    #mya_data = project_location_JSON(mya_loc)
+    return render(request, "weather_fore.html", {'url_name': 'weather_forecast', 'khm_project':khm_data, 'lao_project':lao_data, 'khm_sdc':khm_sdc, 'lao_sdc':lao_sdc})
 
 # Function for cambodia AJAX in weather forecate module
 def wf_cambodia_submit(request):
@@ -177,3 +199,17 @@ def listConvertDataType(li):
 
 def earthquake(request):
     return render(request, "earthquake.html", {'url_name': 'earthquake'})
+
+#### For Location data display ####
+def project_location_JSON(df):
+    project = df['project'].to_list() 
+    index = df['id'].to_list()
+    lat, long = df['latitude'].to_list(), df['longitude'].to_list()
+    # Convert data type from decimal to float
+    lat, long = np.array(lat, float), np.array(long, float)
+    location = [list(x) for x in zip(lat,long)]
+    dict_data = {}
+    for a, b, c in zip(index, project, location):
+        dict_data[a] = dict(Project=b, location=c)
+    json_data = json.dumps(dict_data)
+    return json_data
