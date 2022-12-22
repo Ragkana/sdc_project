@@ -57,28 +57,31 @@
                   <div class="map" style="height: calc(70vh - 7.5rem);width: 100%;margin: 0 auto;" id="cam_map">
                     <!-- Map Legend -->
                     <div class="leaflet-bottom leaflet-right">
-                      <div id="khm_cbar">
-                        <table style="width:100%;">
-                          <tbody>
-                            <tr id="khm_cbar_value">
-                            </tr>
-                          </tbody>
-                        </table>
+                      <!-- SDC project Map Legend -->
+                      <div class="row justify-content-end" style="padding-right: 1rem;">
+                        <div class="text-box" style="margin: 5px;" id="KHM_projectbox_show">
+                          <div id="KHM_project_show"></div>
+                        </div>
                       </div>
+                      <!-- /. SDC project Map Legend -->
+                      <!-- leaflet map legend -->
+                      <div class="row" style="padding-right: 1rem;">
+                        <div id="khm_cbar">
+                          <table style="width:100%;">
+                            <tbody>
+                              <tr id="khm_cbar_value">
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <!-- /. leaflet map legend -->
                     </div>
                     <!-- /. Map Legend -->
 
-                    <!-- SDC project Map Legend -->
-                    <div class="leaflet-bottom leaflet-left">
-                      <div class="text-box" style="margin: 5px;"
-                        id="KHM_projectbox_show">
-                        <div id="KHM_project_show"></div>
-                      </div>
-                    </div>
-                    <!-- /. SDC project Map Legend -->
                   </div>
                   <!-- /. Map box -->
-                  
+
                   <!-- Cambodia Weather parameter button-->
                   <form method="post" class="py-2" id="khm_form">
                     {% csrf_token %}
@@ -220,25 +223,30 @@
                   <div class="map" style="height: calc(70vh - 7.5rem);width: 100%;margin: 0 auto;" id="lao_map">
                     <!-- Map Legend -->
                     <div class="leaflet-bottom leaflet-right">
-                      <div id="lao_cbar">
-                        <table style="width:100%;">
-                          <tbody>
-                            <tr id="lao_cbar_value">
-                            </tr>
-                          </tbody>
-                        </table>
+                      <!-- SDC project Map Legend -->
+                      <div class="row justify-content-end" style="padding-right: 1rem;">
+                        <div class="text-box" style="margin: 5px;" id="LAO_projectbox_show">
+                          <div id="LAO_project_show"></div>
+                        </div>
                       </div>
+                      <!-- /. SDC project Map Legend -->
+                      <!-- leaflet map legend -->
+                      <div class="row" style="padding-right: 1rem;">
+                        <div id="lao_cbar">
+                          <table style="width:100%;">
+                            <tbody>
+                              <tr id="lao_cbar_value">
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <!-- /. leaflet map legend -->
                     </div>
                     <!-- /. Map Legend -->
 
-                    <!-- SDC project Map Legend -->
-                    <div class="leaflet-bottom leaflet-left">
-                      <div class="text-box" style="margin: 5px;"
-                        id="LAO_projectbox_show">
-                        <div id="LAO_project_show"></div>
-                      </div>
-                    </div>
-                    <!-- /. SDC project Map Legend -->
+
+
                   </div>
 
                   <!-- Cambodia Weather parameter button-->
