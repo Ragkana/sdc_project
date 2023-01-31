@@ -110,7 +110,7 @@ urlpatterns = [
     ################################# Reports And Project #############################################
     path('reports', rp_views.reports, name='reports'),
     path('upload_data/country_event', rp_views.country_event, name='report_country'),
-    path('reports/reports_pdf', rp_views.report_pdf, name='reports_pdf'),
+    path('reports/reports_pdf', rp_views.html_to_pdf, name='reports_pdf'),
     ################################# About US Project #############################################
     path('about_sdc', rp_views.about_sdc, name='about_sdc'),
   

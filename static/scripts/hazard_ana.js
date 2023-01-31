@@ -278,7 +278,7 @@ function KHM_MakerNoteBox(arr) {
         else if (i >= 9) {
             marker_arr.push("<img src='/static/images/Project_dot_on_map/lightpink_dot.png' style='width:1rem'> " + arr[i]);
         }
-        
+
     }
     return document.getElementById('KHM_project_show').innerHTML = marker_arr;
 }
@@ -317,7 +317,7 @@ function LAO_MakerNoteBox(arr) {
         else if (i >= 9) {
             marker_arr.push("<img src='/static/images/Project_dot_on_map/lightpink_dot.png' style='width:1rem'> " + arr[i]);
         }
-        
+
     }
     return document.getElementById('LAO_project_show').innerHTML = marker_arr;
 }
@@ -357,10 +357,16 @@ function KHM_MapChart(data, arr) {
     }).setView([12.562108, 104.888535], 7);
     //L.tileLayer('https://api.mapbox.com/styles/v1/nazmul-rimes/ck9wljpn30kbx1is5a630hmtb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibmF6bXVsLXJpbWVzIiwiYSI6ImNrOWFzeHNtcDA3MjAzbG50dnB0YmkxNnAifQ.usNB6Kf9PyFtKTUF1XI38g').addTo(cam_map);
     //L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-    L.tileLayer(getMapTile(KHM_MapTile), {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }).addTo(cam_map);
+    if (KHM_MapTile == 'base_w') {
+        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(cam_map);
+    }
+    else {
+        L.tileLayer(getMapTile(KHM_MapTile), {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        }).addTo(cam_map);
+    }
+
 
     // Add Zoom button
     L.control.zoom({
@@ -481,10 +487,15 @@ function LAO_MapChart(data, arr) {
         scrollWheelZoom: false, // You can't get the correct screenshot If allow to use scroll.
         preferCanvas: true
     }).setView([17.6384, 105.2195], 6);
-    L.tileLayer(getMapTile(LAO_MapTile), {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }).addTo(lao_map);
+    if (LAO_MapTile == 'base_w') {
+        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(lao_map);
+    }
+    else {
+        L.tileLayer(getMapTile(LAO_MapTile), {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        }).addTo(lao_map);
+    }
 
     // Add Zoom button
     L.control.zoom({
