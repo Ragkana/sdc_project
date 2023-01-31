@@ -2,12 +2,12 @@
 // Assigning color for selected parameter class
 function getColor(cond, param) {
     if (cond == 'rainfall') {
-        return param > 225.10 ? '#A20543' :
-            param > 175.30 ? '#F99155' :
-                param > 125.50 ? '#FEF4AC' :
-                    param > 75.70 ? '#93D4A5' :
-                        param > 25.90 ? '#4596BE' :
-                            '#5B54A4';
+        return param > 225.10 ? '#F1F624' :
+            param > 175.30 ? '#FA9C3C' :
+                param > 125.50 ? '#DA5A69' :
+                    param > 75.70 ? '#A62098' :
+                        param > 25.90 ? '#6400A7' :
+                            '#120789';
     }
     if (cond == 'humidity') {
         return param > 86.00 ? '#058266' :

@@ -56,3 +56,13 @@ class sdc_project_myanmar(models.Model):
     class Meta:
         db_table = "sdc_project_myanmar"
 
+class reports_temporary(models.Model):
+    id = models.IntegerField(primary_key=True, null=False)
+    country_id = models.CharField(max_length=10)
+    hazard_type = models.CharField(max_length=50)
+    hazard_p = models.IntegerField()
+    disaster_p = models.IntegerField()
+    vulnerability_p = models.IntegerField()
+    class Meta:
+        db_table = "reports_temporary"
+

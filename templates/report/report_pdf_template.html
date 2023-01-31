@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html class="no-js h-100" lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>SDC Reports PDF</title>
+
+    <style>
+        @page {
+            size: a4 portrait;
+
+            /* header <Static frame> */
+            @frame header_frame {
+                /* Static Frame */
+                -pdf-frame-content: header_content;
+                top: 0pt;
+            }
+
+            /* Content body */
+            @frame content_frame {
+                left: 1in;
+                right: 1in;
+                top: 90pt;
+                height: 650pt;
+                /*-pdf-frame-border: 1;*/
+                /* for debugging the layout */
+            }
+
+            /* page number <Static frame> */
+            @frame page_number {
+                -pdf-frame-content: page_num;
+                left: 500pt;
+                right: 1in;
+                top: 750pt;
+            }
+
+            /* Footer <Static frame> */
+            @frame footer_frame {
+                /* Static frame */
+                -pdf-frame-content: footer_content;
+                top: 769pt;
+            }
+
+        }
+
+        .banner_top {
+            top: 0px;
+            height: auto;
+            width: auto;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .banner_bottom {
+            height: auto;
+            width: auto;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 18pt;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+        }
+
+        p {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 10pt;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <!-- Header -->
+    <div id="header_content">
+        <img class="banner_top" src="images/report_img/sdc_report_header.png" />
+    </div>
+    <!-- /. Header -->
+
+    <!----------------------------------------- Content ----------------------------------------->
+    <!-- Hazard Profile -->
+    {% if hazard_p == 1 %}
+    <div class="row col-12">
+        <h1>{{country}} Hazard Analytics</h1>
+        <!-- ***** Province ******-->
+        <p style="text-align: left;"><b>Province - wise Frequency of {{event}} ({{hprov_ys}} - {{hprov_ye}})</b></p>
+    </div>
+    <!-- Map display-->
+    <div class="row col-12">
+        <img src={{haz_prov_img}} />
+    </div>
+    <!-- /. Map display-->
+
+    <div class="row col-12">
+        <p>Description</p>
+    </div>
+
+    <pdf:nextpage />
+
+    <!-- ***** District ******-->
+    <div class="row col-12">
+        <p style="text-align: left;"><b>District - wise Frequency of {{event}} ({{hdist_ys}} - {{hdist_ye}})</b></p>
+    </div>
+    <!-- Map display-->
+    <div class="row col-12">
+        <img src={{haz_dist_img}} />
+    </div>
+    <!-- /. Map display-->
+    <div class="row col-12">
+        <p>Description</p>
+    </div>
+
+    <!-- ***** Commune ******-->
+    {% if country == 'Cambodia' or country == 'Myanmar' %}
+    <pdf:nextpage />
+
+    <div class="row col-12">
+        <p style="text-align: left;"><b>Commune - wise Frequency of {{event}} ({{hcomm_ys}} - {{hcomm_ye}})</b></p>
+    </div>
+    <!-- Map display-->
+    <div class="row col-12">
+        <img src={{haz_comm_img}} />
+    </div>
+    <!-- /. Map display-->
+    <div class="row col-12">
+        <p>Description</p>
+    </div>
+    {% endif %}
+
+
+    <pdf:nextpage />
+    {% endif %}
+    <!-- /. Hazard Profile -->
+
+    <!----------------------------------------------------------------------------------------------------------------------------------------->
+
+    <!-- Disaster Profile -->
+    {% if disaster_p == 1 %}
+    <div class="row col-12">
+        <h1>{{country}} Disaster Analytics</h1>
+    </div>
+
+
+    <!-------------------- Deaths -------------------->
+    <p style="text-align: left;"><b>1. Cumulative Deaths from {{event}} in {{country}} ({{hprov_ys}} - {{hprov_ye}})</b>
+    </p>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Annual Accumulated deaths due to {{event}} for {{country}}</b></p>
+        <img src={{dis_ann_d}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <!-- ***** Province ******-->
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Province - wise map chart for deaths due to {{event}}</b></p>
+        <img src={{dis_prov_d_img}} />
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Province - wise bar chart for deaths due to {{event}}</b></p>
+        <img src={{dis_prov_d_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <!-- ***** District ******-->
+    <pdf:nextpage />
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>District - wise map chart for deaths due to {{event}}</b></p>
+        <img src={{dis_dist_d_img}} />
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>District - wise bar chart for deaths due to {{event}}</b></p>
+        <img src={{dis_dist_d_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+
+    <!-- ***** Commune ******-->
+    {% if country == 'Cambodia' or country == 'Myanmar' %}
+    <pdf:nextpage />
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Commune - wise map chart for deaths due to {{event}}</b></p>
+        <img src={{dis_comm_d_img}} />
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Commune - wise bar chart for deaths due to {{event}}</b></p>
+        <img src={{dis_comm_d_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    {% endif %}
+
+    <div class="row ">
+        <p>Data Source: Data used for the analysis were collected from various sources including the
+            CAMDI,
+            EMDAT, and other sources.</p>
+    </div>
+
+    <pdf:nextpage />
+
+    <!-------------------- injury -------------------->
+    <p style="text-align: left;"><b>2. Cumulative injury from {{event}} in {{country}} ({{hprov_ys}} - {{hprov_ye}})</b>
+    </p>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Annual Accumulated injury due to {{event}} for {{country}}</b></p>
+        <img src={{dis_ann_i}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <!-- ***** Province ******-->
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Province - wise map chart for injury due to {{event}}</b></p>
+        <img src={{dis_prov_i_img}} />
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Province - wise bar chart for injury due to {{event}}</b></p>
+        <img src={{dis_prov_i_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <!-- ***** District ******-->
+    <pdf:nextpage />
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>District - wise map chart for injury due to {{event}}</b></p>
+        <img src={{dis_dist_i_img}} />
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>District - wise bar chart for injury due to {{event}}</b></p>
+        <img src={{dis_dist_i_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+
+    <!-- ***** Commune ******-->
+    {% if country == 'Cambodia' or country == 'Myanmar' %}
+    <pdf:nextpage />
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Commune - wise map chart for injury due to {{event}}</b></p>
+        <img src={{dis_comm_i_img}} />
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Commune - wise bar chart for injury due to {{event}}</b></p>
+        <img src={{dis_comm_i_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    {% endif %}
+
+    <div class="row ">
+        <p>Data Source: Data used for the analysis were collected from various sources including the
+            CAMDI,
+            EMDAT, and other sources.</p>
+    </div>
+
+    <pdf:nextpage />
+
+    <!-------------------- Missing -------------------->
+    <p style="text-align: left;"><b>3. Cumulative missing from {{event}} in {{country}} ({{hprov_ys}} -
+            {{hprov_ye}})</b>
+    </p>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Annual Accumulated missing due to {{event}} for {{country}}</b></p>
+        <img src={{dis_ann_m}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <!-- ***** Province ******-->
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Province - wise map chart for missing due to {{event}}</b></p>
+        <img src={{dis_prov_m_img}} />
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Province - wise bar chart for missing due to {{event}}</b></p>
+        <img src={{dis_prov_m_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <!-- ***** District ******-->
+    <pdf:nextpage />
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>District - wise map chart for missing due to {{event}}</b></p>
+        <img src={{dis_dist_m_img}} />
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>District - wise bar chart for missing due to {{event}}</b></p>
+        <img src={{dis_dist_m_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+
+    <!-- ***** Commune ******-->
+    {% if country == 'Cambodia' or country == 'Myanmar' %}
+    <pdf:nextpage />
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Commune - wise map chart for missing due to {{event}}</b></p>
+        <img src={{dis_comm_m_img}} />
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Commune - wise bar chart for missing due to {{event}}</b></p>
+        <img src={{dis_comm_m_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    {% endif %}
+
+    <div class="row ">
+        <p>Data Source: Data used for the analysis were collected from various sources including the
+            CAMDI,
+            EMDAT, and other sources.</p>
+    </div>
+
+    <pdf:nextpage />
+
+    <!-------------------- Houses destryoed -------------------->
+    <p style="text-align: left;"><b>4. Cumulative houses destroyed from {{event}} in {{country}} ({{hprov_ys}} -
+            {{hprov_ye}})</b>
+    </p>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Annual Accumulated houses destroyed due to {{event}} for {{country}}</b></p>
+        <img src={{dis_ann_hdt}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <!-- ***** Province ******-->
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Province - wise map chart for houses destroyed due to {{event}}</b></p>
+        <img src={{dis_prov_hdt_img}} />
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Province - wise bar chart for houses destroyed due to {{event}}</b></p>
+        <img src={{dis_prov_hdt_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <!-- ***** District ******-->
+    <pdf:nextpage />
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>District - wise map chart for houses destroyed due to {{event}}</b></p>
+        <img src={{dis_dist_hdt_img}} />
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>District - wise bar chart for houses destroyed due to {{event}}</b></p>
+        <img src={{dis_dist_hdt_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+
+    <!-- ***** Commune ******-->
+    {% if country == 'Cambodia' or country == 'Myanmar' %}
+    <pdf:nextpage />
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Commune - wise map chart for houses destroyed due to {{event}}</b></p>
+        <img src={{dis_comm_hdt_img}} />
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Commune - wise bar chart for houses destroyed due to {{event}}</b></p>
+        <img src={{dis_comm_hdt_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    {% endif %}
+
+    <div class="row ">
+        <p>Data Source: Data used for the analysis were collected from various sources including the
+            CAMDI,
+            EMDAT, and other sources.</p>
+    </div>
+
+    <pdf:nextpage />
+
+    <!-------------------- Houses Damage -------------------->
+    <p style="text-align: left;"><b>2. Cumulative houses damage from {{event}} in {{country}} ({{hprov_ys}} -
+            {{hprov_ye}})</b>
+    </p>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Annual Accumulated houses damage due to {{event}} for {{country}}</b></p>
+        <img src={{dis_ann_hdm}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <!-- ***** Province ******-->
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Province - wise map chart for houses damage due to {{event}}</b></p>
+        <img src={{dis_prov_hdm_img}} />
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Province - wise bar chart for houses damage due to {{event}}</b></p>
+        <img src={{dis_prov_hdm_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    <!-- ***** District ******-->
+    <pdf:nextpage />
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>District - wise map chart for houses damage due to {{event}}</b></p>
+        <img src={{dis_dist_hdm_img}} />
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>District - wise bar chart for houses damage due to {{event}}</b></p>
+        <img src={{dis_dist_hdm_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+
+    <!-- ***** Commune ******-->
+    {% if country == 'Cambodia' or country == 'Myanmar' %}
+    <pdf:nextpage />
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Commune - wise map chart for houses damage due to {{event}}</b></p>
+        <img src={{dis_comm_hdm_img}} />
+        <p>&nbsp;</p>
+    </div>
+
+    <div class="row col-12">
+        <p style="text-align: center;"><b>Commune - wise bar chart for houses damage due to {{event}}</b></p>
+        <img src={{dis_comm_hdm_bar}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+
+    {% endif %}
+
+    <div class="row ">
+        <p>Data Source: Data used for the analysis were collected from various sources including the
+            CAMDI,
+            EMDAT, and other sources.</p>
+    </div>
+
+
+    <pdf:nextpage />
+    {% endif %}
+    <!-- /. Disaster Profile -->
+
+    <!----------------------------------------------------------------------------------------------------------------------------------------->
+
+    <!-- Vulnerability Profile -->
+    {% if vulnerability_p == 1 %}
+
+    <div class="row">
+        <h1>{{country}} Hazard Analytics</h1>
+    </div>
+
+    <!-------------------- Total population by Province -------------------->
+    <div class="row col-12 bottom:0px;">
+        <p style="text-align: left;"><b>1. Total population in {{ country }} by Province</b></p>
+    </div>
+
+    <div class="row">
+        <p style="text-align: center;"><b>Population size</b></p>
+        <img src={{vul_pop_size}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p style="text-align: center;"><b>Number of MPI poor</b></p>
+        <img src={{vul_pop_mpi}} />
+        <p>Description</p>
+
+    </div>
+
+    <pdf:nextpage />
+    <!-------------------- Multidimensional poverty (MPI) by region -------------------->
+    <div class="row col-12 bottom:0px;">
+        <p style="text-align: left;"><b>2. Multidimensional poverty (MPI) in {{ country }} by region</b></p>
+    </div>
+
+    <div class="row">
+        <p style="text-align: center;"><b>MPI</b></p>
+        <img src={{vul_mpi_mpi}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+
+        <p style="text-align: center;"><b>Population in MPI</b></p>
+        <img src={{vul_mpi_pop}} />
+        <p>Description</p>
+        <pdf:nextpage />
+
+        <p style="text-align: center;"><b>Intensity of deprovation among the poor</b></p>
+        <img src={{vul_mpi_in}} />
+        <p>Description</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+
+        <p style="text-align: center;"><b>Vulnerable to poverty</b></p>
+        <img src={{vul_mpi_vul}} />
+        <p>Description</p>
+        <pdf:nextpage />
+
+        <p style="text-align: center;"><b>In severe poverty</b></p>
+        <img src={{vul_mpi_se}} />
+        <p>Description</p>
+        
+    </div>
+
+    {% endif %}
+    <!-- /. Vulnerability Profile -->
+
+
+
+
+
+    <!----------------------------------------- /. Content ----------------------------------------->
+
+    <!-- Page Number -->
+    <div id="page_num">
+        Page&nbsp;<pdf:pagenumber>
+    </div>
+    <!-- /. Page Number -->
+
+    <!-- Footer -->
+    <div id="footer_content">
+        <img class="banner_bottom" src="images/report_img/sdc_template.png" />
+    </div>
+    <!-- /. Footer -->
+
+</body>
+
+</html>

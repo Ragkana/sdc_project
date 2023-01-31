@@ -362,11 +362,15 @@ function KHM_MapChart(data, arr) {
         scrollWheelZoom: false, // You can't get the correct screenshot If allow to use scroll.
         preferCanvas: true
     }).setView([12.562108, 104.888535], 7);
-    L.tileLayer(getMapTile(KHM_MapTile), {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }).addTo(KHM_MapData);
-
+    if (KHM_MapTile == 'base_w') {
+        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(KHM_MapData);
+    }
+    else {
+        L.tileLayer(getMapTile(KHM_MapTile), {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        }).addTo(KHM_MapData);
+    }
     // Add Zoom button
     L.control.zoom({
         position: 'topleft'
@@ -484,10 +488,15 @@ function LAO_MapChart(data, arr) {
         scrollWheelZoom: false, // You can't get the correct screenshot If allow to use scroll.
         preferCanvas: true
     }).setView([17.6384, 105.2195], 6);
-    L.tileLayer(getMapTile(LAO_MapTile), {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }).addTo(LAO_MapData);
+    if (LAO_MapTile == 'base_w') {
+        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(LAO_MapData);
+    }
+    else {
+        L.tileLayer(getMapTile(LAO_MapTile), {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        }).addTo(LAO_MapData);
+    }
 
     // Add Zoom button
     L.control.zoom({

@@ -1,30 +1,23 @@
-from enum import auto
-from itertools import count
-from django.shortcuts import render, redirect
-from django.http import FileResponse, JsonResponse, HttpResponseRedirect, HttpResponse
+from django.shortcuts import render
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 ## import database ##
-from app.report_n_project.models import sdc_project_cambodia, sdc_project_laos, country
+from app.report_n_project.models import sdc_project_cambodia, sdc_project_laos, country, reports_temporary
 from app.disaster_ana.models import sdc_project_location_cambodia, sdc_project_location_laos
 from app.disaster_ana.models import disaster
-import io
-from django.db.models import Count, Q
-from django.contrib.auth.decorators import login_required, permission_required
-
-## PDF Generator || reportlab ##
+from django.db.models import Count
+from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4 # 210*270 mm
-from reportlab.lib.units import mm
-from io import BytesIO
+
 ## PDF Generator || xhtml2pdf ##
 from xhtml2pdf import pisa
 from django.template.loader import get_template
+from django.contrib.staticfiles import finders
 
 from django.conf import settings
 import pandas as pd
 import numpy as np
-
+import os
 
 # Create your views here.
 ##########################################################################
@@ -250,7 +243,26 @@ def country_project_choose(request):
 ## Main Page ##
 @login_required(login_url='login')
 def reports(request):
-    return render(request, "reports.html", {'url_name': 'reports'})
+    country = ""
+    hazard = ""
+    profile = ""
+    haz_p, dis_p, vul_p = "0", "0", "0"
+    if request.method=='POST' and 'pdf_gen' in request.POST:
+        country = request.POST.get('country_selected')
+        hazard = request.POST.get('haz_selected')
+        profile = request.POST.getlist('profile')
+        for p in profile:
+            if p == "hazard_profile":
+                haz_p = 1
+            if p == "disaster_profile":
+                dis_p = 1
+            if p == "vulnerability_profile":
+                vul_p = 1
+        data = reports_temporary(country_id=country, hazard_type=hazard, hazard_p=haz_p, disaster_p=dis_p, vulnerability_p=vul_p)
+        data.save()
+        return HttpResponseRedirect('reports/reports_pdf')
+
+    return render(request, "report/reports.html", {'url_name': 'reports'})
 
 def country_event(request):
     country_val = request.POST['country']
@@ -267,58 +279,222 @@ def country_event(request):
     return JsonResponse({'country':country_val, 'event':event})
 
 ## PDF Generator ##
-def report_pdf(request):
-    country = ""
-    if request.method=='POST' in request.POST:
-        ## Retrieve data from form ##
-        country = request.POST.get('country_select')
+def link_callback(uri, rel):
+    """
+    Convert HTML URIs to absolute system paths so xhtml2pdf can access those resources
+    """
+    result = finders.find(uri)
+    if result:
+        if not isinstance(result, (list, tuple)):
+            result = [result]
+        result = list(os.path.realpath(path) for path in result)
+        path=result[0]
+    else:
+        sUrl = settings.STATIC_URL        # Typically /static/
+        sRoot = settings.STATIC_ROOT      # Typically /home/userX/project_static/
+        mUrl = settings.MEDIA_URL         # Typically /media/
+        mRoot = settings.MEDIA_ROOT       # Typically /home/userX/project_static/media/
 
-    buffer = io.BytesIO()
-    report = canvas.Canvas(buffer, pagesize=A4)
+        if uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+        elif uri.startswith(sUrl):
+            path = os.path.join(sRoot, uri.replace(sUrl, ""))
+        else:
+            return uri
+
+        # make sure that file exists
+        if not os.path.isfile(path):
+            raise Exception(
+                'media URI must start with %s or %s' % (sUrl, mUrl)
+            )
+    return path
+
+def html_to_pdf(request):
+    template_path = 'report/report_pdf_template.html'
+    ## Send data to template ##
+    data = reports_temporary.objects.values('country_id', 'hazard_type', 'hazard_p', 'disaster_p', 'vulnerability_p').last()
+    country = data['country_id']
+    country_name = country_trans(country)
+    event = data['hazard_type']
+    hazard_p = data['hazard_p']
+    disaster_p = int(data['disaster_p'])
+    vul_p = int(data['vulnerability_p'])
+
+    hprov_ys, hprov_ye = "", ""
+    hdist_ys, hdist_ye = "", ""
+    hcomm_ys, hcomm_ye = "", ""
+
+    ## Hazard Profile ##
+    if country == "KHM":
+        haz_province = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(province_id__startswith='KHM'))
+        haz_district = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(district_id__startswith='KHM'))
+        haz_commune = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(commune_id__startswith='KHM'))
+    if country == "LAO":
+        haz_province = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(province_id__startswith='LAO'))
+        haz_district = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(district_id__startswith='LAO'))
+    if country == "MYA":
+        haz_province = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(province_id__startswith='MYA'))
+        haz_district = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(district_id__startswith='MYA'))
+        haz_commune = pd.DataFrame(disaster.objects.values('province_id','province_name','district_id','district_name', 'commune_id','commune_name','date_data','event').filter(commune_id__startswith='MYA'))
+
+    # Add year 
+    if country == "KHM" or country == "MYA":
+        haz_province['year'] = pd.DatetimeIndex(haz_province['date_data']).year
+        haz_district['year'] = pd.DatetimeIndex(haz_district['date_data']).year
+        haz_commune['year'] = pd.DatetimeIndex(haz_commune['date_data']).year
+        # Filter by hazard selection
+        haz_province = haz_province[haz_province['event']==event]
+        haz_district = haz_district[haz_district['event']==event]
+        haz_commune = haz_commune[haz_commune['event']==event]
+        # Get max-Min Year
+        hprov_ys = int(haz_province['year'].min())
+        hprov_ye = int(haz_province['year'].max())
+
+        hdist_ys = int(haz_district['year'].min())
+        hdist_ye = int(haz_district['year'].max())
+
+        hcomm_ys = int(haz_commune['year'].min())
+        hcomm_ye = int(haz_commune['year'].max())
+    if country == "LAO":
+        haz_province['year'] = pd.DatetimeIndex(haz_province['date_data']).year
+        haz_district['year'] = pd.DatetimeIndex(haz_district['date_data']).year
+        # Filter by hazard selection
+        haz_province = haz_province[haz_province['event']==event]
+        haz_district = haz_district[haz_district['event']==event]
+        # Get max-Min Year
+        hprov_ys = int(haz_province['year'].min())
+        hprov_ye = int(haz_province['year'].max())
+
+        hdist_ys = int(haz_district['year'].min())
+        hdist_ye = int(haz_district['year'].max())
+
+    event_n = event
+    # Event name change
+    if event_n == 'COLD WAVE':
+        event_n = 'COLDWAVE'
+    if event_n == 'FLASH FLOOD':
+        event_n = 'FLASHFLOOD'
+    if event_n == 'RIVER BANK COLLAPSE':
+        event_n = 'RIVERBANKCOLLAPSE'
     
-    ## Title :: set font ##
-    # Set title name that will show in browser.
-    report.setTitle("SDC reports")
-    # Set title name that will show in document
-    report.drawString(100, 100, "Test for Reports.")
-    # set font style and size for pdf
-    report.set_font('Arial', size= 16)
-    report.drawString(100, 10, country + " Test")
-    
-    ## Template :: Draw top & bottom gradient image ##
-    # Banner Top
-    report.drawInlineImage('static/images/report_img/sdc_template.png', x=0, y=272*mm, width=210*mm, height=25*mm)
-    # Banner Bottom
-    report.drawInlineImage('static/images/report_img/sdc_template.png', x=0, y=0, width=210*mm, height=25*mm)
-    # SDC logo
-    report.drawImage('static/images/report_img/swiss-logo.png', x=460, y=775, width=45*mm, height=25*mm)
-    drawMyRuler(report)
-    report.showPage()
-    report.save()
-    buffer.seek(0)
+    # Hazard image
+    haz_prov_img = "images/report_img/" + country + "/hazard_profile/" + country + "_" + event_n + "_Province.jpg"
+    haz_dist_img = "images/report_img/" + country + "/hazard_profile/" + country + "_" + event_n + "_District.jpg"
+    haz_comm_img = "images/report_img/" + country + "/hazard_profile/" + country + "_" + event_n + "_Commune.jpg"
 
-    return FileResponse(buffer, as_attachment=True, filename='report_test.pdf')
+    ## Disaster Profile ##
+    # Deaths #
+    # map
+    dis_prov_d_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_deaths_Province.jpg"
+    dis_dist_d_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_deaths_District.jpg"
+    dis_comm_d_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_deaths_Commune.jpg"
+    # Bar
+    dis_prov_d_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_deaths_Province.png"
+    dis_dist_d_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_deaths_District.png"
+    dis_comm_d_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_deaths_Commune.png"
+    # Annual
+    dis_ann_d = "images/report_img/" + country + "/disaster_profile/annual/" + country + "_" + event_n + "_deaths.png"
 
+    # Injury #
+    # Map
+    dis_prov_i_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_injured_Province.jpg"
+    dis_dist_i_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_injured_District.jpg"
+    dis_comm_i_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_injured_Commune.jpg"
+    # Bar 
+    dis_prov_i_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_injured_Province.png"
+    dis_dist_i_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_injured_District.png"
+    dis_comm_i_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_injured_Commune.png"
+    # Annual
+    dis_ann_i = "images/report_img/" + country + "/disaster_profile/annual/" + country + "_" + event_n + "_injured.png"
 
-## Draw ruler in pdf 
-def drawMyRuler(pdf):
-    pdf.drawString(100,810, 'x100')
-    pdf.drawString(200,810, 'x200')
-    pdf.drawString(300,810, 'x300')
-    pdf.drawString(400,810, 'x400')
-    pdf.drawString(500,810, 'x500')
+    # Missing #
+    # Map
+    dis_prov_m_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_missing_Province.jpg"
+    dis_dist_m_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_missing_District.jpg"
+    dis_comm_m_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_missing_Commune.jpg"
+    # Bar
+    dis_prov_m_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_missing_Province.png"
+    dis_dist_m_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_missing_District.png"
+    dis_comm_m_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_missing_Commune.png"
+    # Annual
+    dis_ann_m = "images/report_img/" + country + "/disaster_profile/annual/" + country + "_" + event_n + "_missing.png"
 
-    pdf.drawString(10,100, 'y100')
-    pdf.drawString(10,200, 'y200')
-    pdf.drawString(10,300, 'y300')
-    pdf.drawString(10,400, 'y400')
-    pdf.drawString(10,500, 'y500')
-    pdf.drawString(10,600, 'y600')
-    pdf.drawString(10,700, 'y700')
-    pdf.drawString(10,800, 'y800')
+    # houses destroyed #
+    # Map
+    dis_prov_hdt_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_house_destroy_Province.jpg"
+    dis_dist_hdt_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_house_destroy_District.jpg"
+    dis_comm_hdt_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_house_destroy_Commune.jpg"
+    # Bar
+    dis_prov_hdt_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_house_destroy_Province.png"
+    dis_dist_hdt_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_house_destroy_District.png"
+    dis_comm_hdt_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_house_destroy_Commune.png"
+    # Annual
+    dis_ann_hdt = "images/report_img/" + country + "/disaster_profile/annual/" + country + "_" + event_n + "_house_destroy.png"
 
+    # houses damage #
+    # Map
+    dis_prov_hdm_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_house_damage_Province.jpg"
+    dis_dist_hdm_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_house_damage_District.jpg"
+    dis_comm_hdm_img =  "images/report_img/" + country + "/disaster_profile/map/" + country + "_" + event_n + "_house_damage_Commune.jpg"
+    # Bar
+    dis_prov_hdm_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_house_damage_Province.png"
+    dis_dist_hdm_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_house_damage_District.png"
+    dis_comm_hdm_bar =  "images/report_img/" + country + "/disaster_profile/bar/" + country + "_" + event_n + "_house_damage_Commune.png"
+    # Annual
+    dis_ann_hdm = "images/report_img/" + country + "/disaster_profile/annual/" + country + "_" + event_n + "_house_damage.png"
 
+    ## Disaster Profile ##
+    # Population
+    vul_pop_size = "images/report_img/" + country + "/vul_profile/population/pop_size.png"
+    vul_pop_mpi = "images/report_img/" + country + "/vul_profile/population/pop_mpi.png"
+    # MPI
+    vul_mpi_mpi = "images/report_img/" + country + "/vul_profile/mpi/mpi.png"
+    vul_mpi_pop = "images/report_img/" + country + "/vul_profile/mpi/mpi_pop.png"
+    vul_mpi_in = "images/report_img/" + country + "/vul_profile/mpi/mpi_in.png"
+    vul_mpi_se = "images/report_img/" + country + "/vul_profile/mpi/mpi_se.png"
+    vul_mpi_vul = "images/report_img/" + country + "/vul_profile/mpi/mpi_vul.png"
 
+    context = {'event':event, 'country':country_name, 'hazard_p':hazard_p, 'disaster_p':disaster_p, 'vulnerability_p':vul_p, 'hprov_ys':hprov_ys, 
+    'hprov_ye':hprov_ye, 'hdist_ys':hdist_ys, 'hdist_ye':hdist_ye, 'hcomm_ys':hcomm_ys, 'hcomm_ye':hcomm_ye, 'haz_prov_img':haz_prov_img, 
+    'haz_dist_img':haz_dist_img, 'haz_comm_img':haz_comm_img, 'dis_prov_d_img':dis_prov_d_img, 'dis_dist_d_img':dis_dist_d_img, 'dis_comm_d_img':dis_comm_d_img,
+    'dis_prov_i_img':dis_prov_i_img, 'dis_dist_i_img':dis_dist_i_img, 'dis_comm_i_img':dis_comm_i_img, 'dis_prov_m_img':dis_prov_m_img, 
+    'dis_dist_m_img':dis_dist_m_img, 'dis_comm_m_img':dis_comm_m_img, 'dis_prov_hdt_img':dis_prov_hdt_img, 'dis_dist_hdt_img':dis_dist_hdt_img,
+     'dis_comm_hdt_img':dis_comm_hdt_img, 'dis_prov_hdm_img':dis_prov_hdm_img, 'dis_dist_hdm_img':dis_dist_hdm_img, 'dis_comm_hdm_img':dis_comm_hdm_img,
+     
+     'dis_prov_d_bar':dis_prov_d_bar, 'dis_dist_d_bar':dis_dist_d_bar, 'dis_comm_d_bar':dis_comm_d_bar,
+    'dis_prov_i_bar':dis_prov_i_bar, 'dis_dist_i_bar':dis_dist_i_bar, 'dis_comm_i_bar':dis_comm_i_bar, 'dis_prov_m_bar':dis_prov_m_bar, 
+    'dis_dist_m_bar':dis_dist_m_bar, 'dis_comm_m_bar':dis_comm_m_bar, 'dis_prov_hdt_bar':dis_prov_hdt_bar, 'dis_dist_hdt_bar':dis_dist_hdt_bar,
+     'dis_comm_hdt_bar':dis_comm_hdt_bar, 'dis_prov_hdm_bar':dis_prov_hdm_bar, 'dis_dist_hdm_bar':dis_dist_hdm_bar, 'dis_comm_hdm_bar':dis_comm_hdm_bar,
+     
+     'dis_ann_d':dis_ann_d, 'dis_ann_i':dis_ann_i, 'dis_ann_m':dis_ann_m, 'dis_ann_hdt':dis_ann_hdt, 'dis_ann_hdm':dis_ann_hdm,
+
+     'vul_pop_size':vul_pop_size, 'vul_pop_mpi':vul_pop_mpi, 'vul_mpi_mpi':vul_mpi_mpi, 'vul_mpi_vul':vul_mpi_vul, 'vul_mpi_pop':vul_mpi_pop,
+     'vul_mpi_in':vul_mpi_in, 'vul_mpi_se':vul_mpi_se}
+
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="SDC_report.pdf"'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+       html, dest=response, link_callback=link_callback)
+    # if error then show some funny view
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
+## Change country_id to full name
+def country_trans(country):
+    if country == 'KHM':
+        result = 'Cambodia'
+    if country == 'LAO':
+        result = 'Laos'
+    if country == 'MYA':
+        result = 'Myanmar'
+    return result
 
 #######################################################################
 ########################### About us Module ###########################

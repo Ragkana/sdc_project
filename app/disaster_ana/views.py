@@ -89,7 +89,13 @@ def disaster_ana_khm(request):
     map_export = disaster_data_export(level_selected, summ, khm_province2, khm_district2, khm_commune2)
 
     ## Extract year from date column ##
-    dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(province_id__startswith='KHM')
+    if level_selected == 'province_name':
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(province_id__startswith='KHM')
+    if level_selected == 'district_name':
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(district_id__startswith='KHM')
+    if level_selected == 'commune_name':
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(commune_id__startswith='KHM')
+
     # set to dataframe
     df = pd.DataFrame(dis_year)
     # change column type
@@ -182,7 +188,11 @@ def disaster_ana_lao(request):
     map_export = disaster_data_export(level_selected, summ, lao_province2, lao_district2, commune=None)
 
     ## Extract year from date column ##
-    dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(province_id__startswith='LAO')
+    if level_selected == 'province_name':
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(province_id__startswith='LAO')
+    if level_selected == 'district_name':
+        dis_year = disaster.objects.values('date_data', 'event', 'deaths', 'injured', 'missing', 'house_destroy', 'house_damage').filter(district_id__startswith='LAO')
+        
     # set to dataframe
     df = pd.DataFrame(dis_year)
     # change column type
