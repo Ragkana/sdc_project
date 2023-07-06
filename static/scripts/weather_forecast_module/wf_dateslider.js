@@ -47,9 +47,8 @@ var MYA_DateSlider;
 
 //---------------* Cambodia Date Slider *----------------//
 $(document).ready(function () {
-    var khm_date_selected;
-
-    KHM_DateSlider = document.getElementById('khm_date_slider');
+    //var khm_date_selected;
+    destroyExistingSlider(KHM_DateSlider);
 
     noUiSlider.create(KHM_DateSlider, {
         behaviour: 'tap',
@@ -85,12 +84,14 @@ $(document).ready(function () {
         // Add AJAX for selection
         KHMSubmitAJAX(khm_date_selected, khm_wf_param);
     });
+   
+    
 });
 //---------------------------------------------------------------------------------------------------------//
 //------------------------------------------ Laos Date Slider --------------------------------------------//
 //-------------------------------------------------------------------------------------------------------//
 $(document).ready(function () {
-    var lao_date_selected;
+    //var lao_date_selected;
 
     LAO_DateSlider = document.getElementById('lao_date_slider');
 

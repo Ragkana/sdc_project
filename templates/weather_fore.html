@@ -486,6 +486,7 @@
   // Retrieve weather parameter data from button
   $(document).on('click', '#khm_form', function () {
     khm_wf_param = $("input[name=khm_wf_param]:checked").val();
+    KHM_DateSlider.noUiSlider.reset();
     console.log(khm_wf_param);
     // Call AJAX to send data to views.py
     KHMSubmitAJAX(khm_date_selected, khm_wf_param);
@@ -533,6 +534,7 @@
   // Retrieve weather parameter data from button
   $(document).on('click', '#lao_form', function () {
     lao_wf_param = $("input[name=lao_wf_param]:checked").val();
+    LAO_DateSlider.noUiSlider.reset();
     console.log(lao_wf_param);
     // Call AJAX to send data to views.py
     LAOSubmitAJAX(lao_date_selected, lao_wf_param);
